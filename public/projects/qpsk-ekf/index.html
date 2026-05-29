@@ -1,0 +1,581 @@
+
+
+
+
+
+
+<!doctype html>
+<html
+  lang="en-us"
+  dir="ltr"
+  class="scroll-smooth"
+  data-default-appearance="light"
+  data-auto-appearance="true"
+><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#FFFFFF" />
+  
+  <title>Carrier Offset Tracking and Phase-Locking in a QPSK Digital Receiver &middot; Santiago | Project Portfolio</title>
+    <meta name="title" content="Carrier Offset Tracking and Phase-Locking in a QPSK Digital Receiver &middot; Santiago | Project Portfolio" />
+  
+  
+  
+  
+  
+  <script
+    type="text/javascript"
+    src="http://localhost:1313/js/appearance.min.8a082f81b27f3cb2ee528df0b0bdc39787034cf2cc34d4669fbc9977c929023c.js"
+    integrity="sha256-iggvgbJ/PLLuUo3wsL3Dl4cDTPLMNNRmn7yZd8kpAjw="
+  ></script>
+  
+  
+  
+  
+  
+  
+  
+  
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="http://localhost:1313/css/main.bundle.min.8a4c8f35e41ce0a9eaaf9d6a8077492d4c94f3598bdca18bdf28bf5cf2394803.css"
+    integrity="sha256-ikyPNeQc4Knqr51qgHdJLUyU81mL3KGL3yi/XPI5SAM="
+  />
+  
+  
+  
+  
+  
+  
+  
+  <meta
+    name="description"
+    content="
+      
+        test
+      
+    "
+  />
+  
+  
+  
+  
+    <link rel="canonical" href="http://localhost:1313/projects/qpsk-ekf/" />
+  
+  
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+  
+  
+  
+  
+  
+  
+  
+  
+  <meta property="og:url" content="http://localhost:1313/projects/qpsk-ekf/">
+	<meta property="og:site_name" content="Santiago | Project Portfolio">
+	<meta property="og:title" content="Carrier Offset Tracking and Phase-Locking in a QPSK Digital Receiver">
+	<meta property="og:description" content="test">
+	<meta property="og:locale" content="en_us">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="projects">
+		<meta property="article:published_time" content="2026-04-01T00:00:00+00:00">
+		<meta property="article:modified_time" content="2026-04-01T00:00:00+00:00">
+		<meta property="article:tag" content="MATLAB">
+		<meta property="article:tag" content="Simulink">
+		<meta property="article:tag" content="Kalman Filter">
+		<meta property="article:tag" content="DSP">
+		<meta property="article:tag" content="Communications">
+
+  
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Carrier Offset Tracking and Phase-Locking in a QPSK Digital Receiver">
+	<meta name="twitter:description" content="test">
+
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "articleSection": "Projects",
+    "name": "Carrier Offset Tracking and Phase-Locking in a QPSK Digital Receiver",
+    "headline": "Carrier Offset Tracking and Phase-Locking in a QPSK Digital Receiver",
+    
+    "abstract": "test",
+    "inLanguage": "en-us",
+    "url" : "http:\/\/localhost:1313\/projects\/qpsk-ekf\/",
+    "author" : {
+      "@type": "Person",
+      "name": ""
+    },
+    "copyrightYear": "2026",
+    "dateCreated": "2026-04-01T00:00:00\u002b00:00",
+    "datePublished": "2026-04-01T00:00:00\u002b00:00",
+    
+    "dateModified": "2026-04-01T00:00:00\u002b00:00",
+    
+    "keywords": ["MATLAB","Simulink","Kalman Filter","DSP","Communications"],
+    
+    "mainEntityOfPage": "true",
+    "wordCount": "1259"
+  }
+  </script>
+    
+    <script type="application/ld+json">
+    {
+   "@context": "https://schema.org",
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+     {
+       "@type": "ListItem",
+       "item": "http://localhost:1313/",
+       "name": "Testing",
+       "position": 1
+     },
+     {
+       "@type": "ListItem",
+       "item": "http://localhost:1313/projects/",
+       "name": "Projects",
+       "position": 2
+     },
+     {
+       "@type": "ListItem",
+       "name": "Carrier Offset Tracking and Phase Locking in a Qpsk Digital Receiver",
+       "position": 3
+     }
+   ]
+ }
+  </script>
+
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+  
+  
+
+  
+  
+</head>
+<body
+    class="m-auto flex h-screen max-w-7xl flex-col bg-neutral px-6 text-lg leading-7 text-neutral-900 dark:bg-neutral-800 dark:text-neutral sm:px-14 md:px-24 lg:px-32"
+  >
+    <div id="the-top" class="absolute flex self-center">
+      <a
+        class="-translate-y-8 rounded-b-lg bg-primary-200 px-3 py-1 text-sm focus:translate-y-0 dark:bg-neutral-600"
+        href="#main-content"
+        ><span class="pe-2 font-bold text-primary-600 dark:text-primary-400">&darr;</span
+        >Skip to main content</a
+      >
+    </div>
+    
+    
+      <header class="py-6 font-semibold text-neutral-900 dark:text-neutral sm:py-10 print:hidden">
+  <nav class="flex items-start justify-between sm:items-center">
+    
+    <div class="flex flex-row items-center">
+      
+  <a
+    class="decoration-primary-500 hover:underline hover:decoration-2 hover:underline-offset-2"
+    rel="me"
+    href="/"
+    >Santiago | Project Portfolio</a
+  >
+
+    </div>
+    
+    
+      <ul class="flex list-none flex-col text-end sm:flex-row">
+        
+          
+            
+            <li class="group mb-1 sm:mb-0 sm:me-7 sm:last:me-0.5">
+              
+                <a
+                  href="/projects/"
+                  title="Projects"
+                  
+                  
+                  ><span
+                      class="decoration-primary-500 group-hover:underline group-hover:decoration-2 group-hover:underline-offset-2"
+                      >Projects</span
+                    >
+                  </a
+                >
+              
+            </li>
+          
+            
+            <li class="group mb-1 sm:mb-0 sm:me-7 sm:last:me-0.5">
+              
+                <a
+                  href=""
+                  title=""
+                  
+                  
+                  ><span
+                      class="decoration-primary-500 group-hover:underline group-hover:decoration-2 group-hover:underline-offset-2"
+                      >About</span
+                    >
+                  </a
+                >
+              
+            </li>
+          
+          
+        
+      </ul>
+    
+  </nav>
+</header>
+
+    
+    <div class="relative flex grow flex-col">
+      <main id="main-content" class="grow">
+        
+  <article>
+    <header class="max-w-prose">
+      
+      <h1 class="mb-8 mt-0 text-4xl font-extrabold text-neutral-900 dark:text-neutral">
+        Carrier Offset Tracking and Phase-Locking in a QPSK Digital Receiver
+      </h1>
+      
+        <div class="mb-10 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
+          
+
+
+
+
+
+  
+  
+
+
+
+  
+
+  
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2026-04-01 00:00:00 &#43;0000 UTC">1 April 2026</time><span class="px-2 text-primary-500">&middot;</span><span title="Reading time">6 mins</span>
+    
+
+    
+    
+  </div>
+
+  
+  
+
+
+        </div>
+      
+      
+    </header>
+    <section class="prose mt-0 flex max-w-full flex-col dark:prose-invert lg:flex-row">
+      
+      <div class="min-h-0 min-w-0 max-w-prose grow">
+        <h2 id="overview" class="relative group">Overview <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#overview" aria-label="Anchor">#</a></span></h2><p>Accurate demodulation in a digital communication system requires the receiver to stay synchronized with the incoming RF carrier. In practice, several physical effects make this difficult: carrier frequency offset (CFO) from oscillator inaccuracies or Doppler shifts causes a continuously rotating phase in the received baseband signal, channel fading varies the signal amplitude, and additive noise corrupts every measurement.</p>
+<p>This project models a QPSK receiver in MATLAB and Simulink and implements an Extended Kalman Filter (EKF) to jointly estimate all four distortion states in real time, enabling correction of the received IQ samples and accurate symbol recovery.</p>
+<hr>
+<h2 id="system-model" class="relative group">System Model <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#system-model" aria-label="Anchor">#</a></span></h2><h3 id="qpsk-signal" class="relative group">QPSK Signal <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#qpsk-signal" aria-label="Anchor">#</a></span></h3><p>In QPSK, each transmitted symbol sits on one of four constellation points on the unit circle, each separated by 90°:</p>
+<pre tabindex="0"><code>s_k ∈ { (±1 ± j) / sqrt(2) }
+</code></pre><p>The received baseband signal after passing through the channel is modeled as:</p>
+<pre tabindex="0"><code>r_k = a_k * s_k * exp(j*theta_k) + v_k
+</code></pre><p>where <code>theta_k</code> is the carrier phase offset, <code>a_k</code> is the signal amplitude, and <code>v_k</code> is complex AWGN. The trigonometric dependence of the IQ components on <code>theta_k</code> introduces the nonlinearity that prevents a standard linear Kalman filter from being used directly.</p>
+<h3 id="state-vector" class="relative group">State Vector <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#state-vector" aria-label="Anchor">#</a></span></h3><p>Four internal states are tracked by the estimator:</p>
+<table>
+	<thead>
+			<tr>
+					<th>State</th>
+					<th>Symbol</th>
+					<th>Description</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Carrier phase</td>
+					<td>θₖ</td>
+					<td>Instantaneous phase offset</td>
+			</tr>
+			<tr>
+					<td>Frequency offset</td>
+					<td>ωₖ</td>
+					<td>CFO from oscillator mismatch</td>
+			</tr>
+			<tr>
+					<td>Frequency drift</td>
+					<td>αₖ</td>
+					<td>Rate of change of frequency offset</td>
+			</tr>
+			<tr>
+					<td>Signal amplitude</td>
+					<td>aₖ</td>
+					<td>Channel fading amplitude</td>
+			</tr>
+	</tbody>
+</table>
+<h3 id="state-equations" class="relative group">State Equations <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#state-equations" aria-label="Anchor">#</a></span></h3><p>Phase, frequency, and drift are coupled through integrator relationships. The amplitude is modeled as a random walk. The full discrete-time state equation in matrix form is:</p>
+<pre tabindex="0"><code>x_{k+1} = Φ * x_k + Γ * u_k + n_k
+</code></pre><p>where <code>u_k</code> is the oscillator correction input and <code>n_k</code> is zero-mean Gaussian process noise with covariance Q. The state transition and input matrices are:</p>
+<pre tabindex="0"><code>Φ = | 1   T   T²/2   0 |       Γ = | -T |
+    | 0   1   T      0 |           | -1 |
+    | 0   0   1      0 |           |  0 |
+    | 0   0   0      1 |           |  0 |
+</code></pre><h3 id="measurement-equation" class="relative group">Measurement Equation <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#measurement-equation" aria-label="Anchor">#</a></span></h3><p>The measurement is the received IQ sample, split into in-phase and quadrature components:</p>
+<pre tabindex="0"><code>y_k = h(x_k, s_k) + v_k
+
+h = | a_k * ( Re(s_k)*cos(θ_k) - Im(s_k)*sin(θ_k) ) |
+    | a_k * ( Re(s_k)*sin(θ_k) + Im(s_k)*cos(θ_k) ) |
+</code></pre><p>The transmitted symbol <code>s_k</code> is assumed known at the receiver via pilot symbols. The process model is linear; the measurement equation is nonlinear — specifically requiring an EKF rather than a standard Kalman filter.</p>
+<hr>
+<h2 id="simulation-parameters" class="relative group">Simulation Parameters <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#simulation-parameters" aria-label="Anchor">#</a></span></h2><table>
+	<thead>
+			<tr>
+					<th>Parameter</th>
+					<th>Value</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Number of symbols N</td>
+					<td>500</td>
+			</tr>
+			<tr>
+					<td>Symbol period T</td>
+					<td>1×10⁻⁴ s</td>
+			</tr>
+			<tr>
+					<td>Symbol rate</td>
+					<td>10,000 symbols/s</td>
+			</tr>
+			<tr>
+					<td>Initial phase offset θ₀</td>
+					<td>π/3 rad</td>
+			</tr>
+			<tr>
+					<td>Initial frequency offset ω₀</td>
+					<td>2π×200 rad/s</td>
+			</tr>
+			<tr>
+					<td>Initial frequency drift α₀</td>
+					<td>2π×0.5 rad/s²</td>
+			</tr>
+			<tr>
+					<td>Initial amplitude a₀</td>
+					<td>1.0</td>
+			</tr>
+			<tr>
+					<td>SNR</td>
+					<td>10 dB</td>
+			</tr>
+	</tbody>
+</table>
+<hr>
+<h2 id="open-loop-characterization" class="relative group">Open-Loop Characterization <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#open-loop-characterization" aria-label="Anchor">#</a></span></h2><p>Before applying the EKF, two open-loop scenarios were simulated in Simulink to understand the effect of the carrier offsets.</p>
+<h3 id="no-synchronization-u_k--0" class="relative group">No Synchronization (u_k = 0) <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#no-synchronization-u_k--0" aria-label="Anchor">#</a></span></h3><p>With no correction applied, the carrier phase accumulates linearly over time due to the constant frequency offset of ω₀ = 200 Hz. Over 500 symbols the phase accumulates roughly 20π radians — approximately 10 full rotations of the constellation. The received IQ plot shows a ring of samples rather than four clusters, because the rotating phase smears all four constellation points uniformly around the unit circle.</p>
+<h3 id="ideal-impulse-correction" class="relative group">Ideal Impulse Correction <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#ideal-impulse-correction" aria-label="Anchor">#</a></span></h3><p>A unit impulse equal to the true frequency offset ω₀ was applied at k=0 — an unrealizable but instructive scenario. The frequency offset drops to near zero immediately, stopping the linear phase accumulation. The constellation now shows four distinct clusters, but they are rotated by the initial phase offset θ₀ = π/3 from the correct QPSK positions. This demonstrates a key limitation: frequency-only correction is insufficient. The initial phase offset has no mechanism to be removed by the control input <code>u_k</code> alone, motivating the need for full state estimation.</p>
+<hr>
+<h2 id="extended-kalman-filter" class="relative group">Extended Kalman Filter <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#extended-kalman-filter" aria-label="Anchor">#</a></span></h2><h3 id="why-ekf" class="relative group">Why EKF <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#why-ekf" aria-label="Anchor">#</a></span></h3><p>The measurement function <code>h</code> is nonlinear in <code>θ_k</code> — the received IQ samples depend on <code>cos(θ_k)</code> and <code>sin(θ_k)</code>. The EKF handles this by linearizing <code>h</code> around the current state estimate at each time step using a Jacobian matrix, then applying standard Kalman filter equations to the linearized model. The process model is already linear, so no linearization is needed in the prediction step.</p>
+<h3 id="measurement-jacobian" class="relative group">Measurement Jacobian <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#measurement-jacobian" aria-label="Anchor">#</a></span></h3><p>Defining shorthand terms evaluated at the predicted state estimate:</p>
+<pre tabindex="0"><code>A_k = Re(s_k)*cos(θ̂_k) - Im(s_k)*sin(θ̂_k)
+B_k = Re(s_k)*sin(θ̂_k) + Im(s_k)*cos(θ̂_k)
+</code></pre><p>The Jacobian of the measurement function with respect to the state vector is:</p>
+<pre tabindex="0"><code>H_k = | -a_k*B_k   0   0   A_k |
+      |  a_k*A_k   0   0   B_k |
+</code></pre><p>The zero columns for ω_k and α_k reflect that these states do not appear in the measurement equation directly — they are only observable indirectly through the accumulation of phase over time via the integrator chain in the process model.</p>
+<h3 id="ekf-algorithm" class="relative group">EKF Algorithm <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#ekf-algorithm" aria-label="Anchor">#</a></span></h3><p>The filter runs recursively at each symbol period, alternating between a measurement update and a time propagation step.</p>
+<p><strong>Initialization</strong> — The filter starts cold with no prior knowledge of phase or frequency:</p>
+<pre tabindex="0"><code>x̂_0 = [0, 0, 0, a_nom]
+
+P_0 = diag([(π/2)², (2π×500)², (2π×5)², 0.25])
+</code></pre><p><strong>Step 1 — Measurement Update:</strong></p>
+<pre tabindex="0"><code>K_k   = P⁻_k * H_kᵀ * (H_k * P⁻_k * H_kᵀ + R)⁻¹
+x̂⁺_k = x̂⁻_k + K_k * (y_k - h(x̂⁻_k, s_k))
+P⁺_k  = (I - K_k * H_k) * P⁻_k
+</code></pre><p><strong>Step 2 — Time Propagation:</strong></p>
+<pre tabindex="0"><code>x̂⁻_{k+1} = Φ * x̂⁺_k + Γ * u_k
+P⁻_{k+1}  = Φ * P⁺_k * Φᵀ + Q
+</code></pre><p>Because the process model is linear, no Jacobian is required in the prediction step. All linearization error in the EKF is confined to the measurement update.</p>
+<h3 id="convergence" class="relative group">Convergence <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#convergence" aria-label="Anchor">#</a></span></h3><p>The EKF estimates of phase and amplitude converge quickly to the true states after a short transient at startup. The frequency offset ω_k and drift α_k take longer to converge since they are not directly observed — the filter must infer them from the accumulated effect on phase over multiple symbol periods. Once converged, the estimation errors remain small relative to the noise floor.</p>
+<hr>
+<h2 id="signal-correction-and-symbol-recovery" class="relative group">Signal Correction and Symbol Recovery <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#signal-correction-and-symbol-recovery" aria-label="Anchor">#</a></span></h2><p>The EKF state estimate is used to undo the phase and amplitude distortions on each received sample:</p>
+<pre tabindex="0"><code>r̃_k = (r_k * exp(-j*θ̂_k)) / â_k
+</code></pre><p>As the EKF converges and <code>θ̂_k → θ_k</code> and <code>â_k → a_k</code>, the corrected sample approaches the ideal transmitted symbol plus residual noise only. A nearest-neighbor decision rule then maps each corrected sample to the closest QPSK constellation point:</p>
+<pre tabindex="0"><code>ŝ_k = argmin over s in S of |r̃_k - s|
+</code></pre><p>The corrected IQ constellation shows tight clustering around all four QPSK points, confirming successful synchronization.</p>
+<hr>
+<h2 id="observability" class="relative group">Observability <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#observability" aria-label="Anchor">#</a></span></h2><p>A necessary condition for EKF convergence is that all states are observable from the measurements. Only θ_k and a_k appear directly in <code>H_k</code>. The states ω_k and α_k are not directly observed but become observable over time through the integrator structure: ω_k drives the accumulation of θ_k, and α_k drives the drift of ω_k. The filter builds sufficient observability for these states after several symbol periods, which explains the longer initial transient in their estimates.</p>
+<hr>
+<h2 id="closed-loop-extension-future-work" class="relative group">Closed-Loop Extension (Future Work) <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#closed-loop-extension-future-work" aria-label="Anchor">#</a></span></h2><p>In the current implementation, the oscillator correction input <code>u_k</code> is held at zero throughout the simulation and correction is applied as a post-processing step. In a fully closed-loop receiver, the EKF frequency estimate would be fed back to drive the oscillator in real time:</p>
+<pre tabindex="0"><code>u_k = ω̂⁺_k
+</code></pre><p>This would actively reduce the frequency offset at each step, shrinking the residual the filter needs to track and improving both convergence speed and steady-state accuracy.</p>
+<hr>
+<h2 id="tools-used" class="relative group">Tools Used <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#tools-used" aria-label="Anchor">#</a></span></h2><ul>
+<li><strong>MATLAB</strong> — EKF implementation, signal correction, constellation plots</li>
+<li><strong>Simulink</strong> — Open-loop state-space plant model</li>
+</ul>
+<p><a href="https://github.com/scast3/qpsk_receiver" target="_blank" rel="noreferrer">View on GitHub →</a></p>
+
+      </div>
+    </section>
+    <footer class="max-w-prose pt-8 print:hidden">
+      
+  <div class="flex">
+    
+    
+    
+    <div class="place-self-center">
+      
+      
+      <div class="text-2xl sm:text-lg">
+</div>
+    </div>
+  </div>
+
+
+      
+
+      
+  
+    
+    
+    
+    <div class="pt-8">
+      <hr class="border-dotted border-neutral-300 dark:border-neutral-600" />
+      <div class="flex justify-between pt-3">
+        <span>
+          
+            <a class="group flex" href="http://localhost:1313/projects/fpga-oscilloscope/">
+              <span
+                class="me-2 text-neutral-700 transition-transform group-hover:-translate-x-[2px] group-hover:text-primary-600 dark:text-neutral dark:group-hover:text-primary-400"
+                ><span class="ltr:inline rtl:hidden">&larr;</span
+                ><span class="ltr:hidden rtl:inline">&rarr;</span></span
+              >
+              <span class="flex flex-col">
+                <span
+                  class="mt-[0.1rem] leading-6 group-hover:underline group-hover:decoration-primary-500"
+                  >Oscilloscope FPGA Design in VHDL</span
+                >
+                <span class="mt-[0.1rem] text-xs text-neutral-500 dark:text-neutral-400">
+                  
+                    <time datetime="2025-12-01 00:00:00 &#43;0000 UTC">1 December 2025</time>
+                  
+                </span>
+              </span>
+            </a>
+          
+        </span>
+        <span>
+          
+            <a class="group flex text-right" href="http://localhost:1313/projects/patch-antenna/">
+              <span class="flex flex-col">
+                <span
+                  class="mt-[0.1rem] leading-6 group-hover:underline group-hover:decoration-primary-500"
+                  >Microstrip Patch Antenna Array Design and Fabrication</span
+                >
+                <span class="mt-[0.1rem] text-xs text-neutral-500 dark:text-neutral-400">
+                  
+                    <time datetime="2026-05-01 00:00:00 &#43;0000 UTC">1 May 2026</time>
+                  
+                </span>
+              </span>
+              <span
+                class="ms-2 text-neutral-700 transition-transform group-hover:-translate-x-[-2px] group-hover:text-primary-600 dark:text-neutral dark:group-hover:text-primary-400"
+                ><span class="ltr:inline rtl:hidden">&rarr;</span
+                ><span class="ltr:hidden rtl:inline">&larr;</span></span
+              >
+            </a>
+          
+        </span>
+      </div>
+    </div>
+  
+
+
+      
+    </footer>
+  </article>
+
+      </main>
+      
+        <div
+          class="pointer-events-none absolute bottom-0 end-0 top-[100vh] w-12"
+          id="to-top"
+          hidden="true"
+        >
+          <a
+            href="#the-top"
+            class="pointer-events-auto sticky top-[calc(100vh-5.5rem)] flex h-12 w-12 items-center justify-center rounded-full bg-neutral/50 text-xl text-neutral-700 backdrop-blur hover:text-primary-600 dark:bg-neutral-800/50 dark:text-neutral dark:hover:text-primary-400"
+            aria-label="Scroll to top"
+            title="Scroll to top"
+          >
+            &uarr;
+          </a>
+        </div>
+      <footer class="py-10 print:hidden">
+  
+  
+  <div class="flex items-center justify-between">
+    <div>
+      
+      
+        <p class="text-sm text-neutral-500 dark:text-neutral-400">
+            &copy;
+            2026
+            
+        </p>
+      
+      
+      
+        <p class="text-xs text-neutral-500 dark:text-neutral-400">
+          
+          
+          Powered by <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
+            href="https://gohugo.io/" target="_blank" rel="noopener noreferrer">Hugo</a> &amp; <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500" href="https://github.com/jpanther/congo" target="_blank" rel="noopener noreferrer">Congo</a>
+        </p>
+      
+    </div>
+    <div class="flex flex-row items-center">
+      
+      
+      
+      
+    </div>
+  </div>
+  
+  
+</footer>
+
+    </div>
+  </body>
+</html>

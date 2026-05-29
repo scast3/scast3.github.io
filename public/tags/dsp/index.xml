@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
-		<title>DSP on Santiago | EE Portfolio</title>
+		<title>DSP on Santiago | Project Portfolio</title>
 		<link>http://localhost:1313/tags/dsp/</link>
-		<description>Recent content in DSP on Santiago | EE Portfolio</description>
+		<description>Recent content in DSP on Santiago | Project Portfolio</description>
 		<generator>Hugo</generator>
 		<language>en-us</language>
 		
 		
 		
 		
-			<lastBuildDate>Sun, 10 Nov 2024 00:00:00 +0000</lastBuildDate>
+			<lastBuildDate>Wed, 01 Apr 2026 00:00:00 +0000</lastBuildDate>
 		
 			<atom:link href="http://localhost:1313/tags/dsp/index.xml" rel="self" type="application/rss+xml" />
 			<item>
-				<title>FIR Filter on FPGA</title>
-				<link>http://localhost:1313/projects/fpga-oscilloscope/</link>
-				<pubDate>Sun, 10 Nov 2024 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/projects/fpga-oscilloscope/</guid>
-				<description>Pipelined 32-tap FIR low-pass filter implemented in VHDL, targeting a Xilinx Artix-7. Achieves 200 MHz clock with full parallel MAC units.</description>
+				<title>Carrier Offset Tracking and Phase-Locking in a QPSK Digital Receiver</title>
+				<link>http://localhost:1313/projects/qpsk-ekf/</link>
+				<pubDate>Wed, 01 Apr 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/projects/qpsk-ekf/</guid>
+				<description>test</description>
 			</item>
 	</channel>
 </rss>

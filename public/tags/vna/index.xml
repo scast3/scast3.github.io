@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>VNA on Santiago | Project Portfolio</title>
+		<link>http://localhost:1313/tags/vna/</link>
+		<description>Recent content in VNA on Santiago | Project Portfolio</description>
+		<generator>Hugo</generator>
+		<language>en-us</language>
+		
+		
+		
+		
+			<lastBuildDate>Fri, 01 May 2026 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="http://localhost:1313/tags/vna/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Microstrip Patch Antenna Array Design and Fabrication</title>
+				<link>http://localhost:1313/projects/patch-antenna/</link>
+				<pubDate>Fri, 01 May 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/projects/patch-antenna/</guid>
+				<description>test</description>
+			</item>
+	</channel>
+</rss>

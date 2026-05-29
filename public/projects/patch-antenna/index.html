@@ -1,0 +1,617 @@
+
+
+
+
+
+
+<!doctype html>
+<html
+  lang="en-us"
+  dir="ltr"
+  class="scroll-smooth"
+  data-default-appearance="light"
+  data-auto-appearance="true"
+><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#FFFFFF" />
+  
+  <title>Microstrip Patch Antenna Array Design and Fabrication &middot; Santiago | Project Portfolio</title>
+    <meta name="title" content="Microstrip Patch Antenna Array Design and Fabrication &middot; Santiago | Project Portfolio" />
+  
+  
+  
+  
+  
+  <script
+    type="text/javascript"
+    src="http://localhost:1313/js/appearance.min.8a082f81b27f3cb2ee528df0b0bdc39787034cf2cc34d4669fbc9977c929023c.js"
+    integrity="sha256-iggvgbJ/PLLuUo3wsL3Dl4cDTPLMNNRmn7yZd8kpAjw="
+  ></script>
+  
+  
+  
+  
+  
+  
+  
+  
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="http://localhost:1313/css/main.bundle.min.8a4c8f35e41ce0a9eaaf9d6a8077492d4c94f3598bdca18bdf28bf5cf2394803.css"
+    integrity="sha256-ikyPNeQc4Knqr51qgHdJLUyU81mL3KGL3yi/XPI5SAM="
+  />
+  
+  
+  
+  
+  
+  
+  
+  <meta
+    name="description"
+    content="
+      
+        test
+      
+    "
+  />
+  
+  
+  
+  
+    <link rel="canonical" href="http://localhost:1313/projects/patch-antenna/" />
+  
+  
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+  
+  
+  
+  
+  
+  
+  
+  
+  <meta property="og:url" content="http://localhost:1313/projects/patch-antenna/">
+	<meta property="og:site_name" content="Santiago | Project Portfolio">
+	<meta property="og:title" content="Microstrip Patch Antenna Array Design and Fabrication">
+	<meta property="og:description" content="test">
+	<meta property="og:locale" content="en_us">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="projects">
+		<meta property="article:published_time" content="2026-05-01T00:00:00+00:00">
+		<meta property="article:modified_time" content="2026-05-01T00:00:00+00:00">
+		<meta property="article:tag" content="HFSS">
+		<meta property="article:tag" content="RF Design">
+		<meta property="article:tag" content="Antenna Theory">
+		<meta property="article:tag" content="VNA">
+
+  
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Microstrip Patch Antenna Array Design and Fabrication">
+	<meta name="twitter:description" content="test">
+
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "articleSection": "Projects",
+    "name": "Microstrip Patch Antenna Array Design and Fabrication",
+    "headline": "Microstrip Patch Antenna Array Design and Fabrication",
+    
+    "abstract": "test",
+    "inLanguage": "en-us",
+    "url" : "http:\/\/localhost:1313\/projects\/patch-antenna\/",
+    "author" : {
+      "@type": "Person",
+      "name": ""
+    },
+    "copyrightYear": "2026",
+    "dateCreated": "2026-05-01T00:00:00\u002b00:00",
+    "datePublished": "2026-05-01T00:00:00\u002b00:00",
+    
+    "dateModified": "2026-05-01T00:00:00\u002b00:00",
+    
+    "keywords": ["HFSS","RF Design","Antenna Theory","VNA"],
+    
+    "mainEntityOfPage": "true",
+    "wordCount": "1038"
+  }
+  </script>
+    
+    <script type="application/ld+json">
+    {
+   "@context": "https://schema.org",
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+     {
+       "@type": "ListItem",
+       "item": "http://localhost:1313/",
+       "name": "Testing",
+       "position": 1
+     },
+     {
+       "@type": "ListItem",
+       "item": "http://localhost:1313/projects/",
+       "name": "Projects",
+       "position": 2
+     },
+     {
+       "@type": "ListItem",
+       "name": "Microstrip Patch Antenna Array Design and Fabrication",
+       "position": 3
+     }
+   ]
+ }
+  </script>
+
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+  
+  
+
+  
+  
+</head>
+<body
+    class="m-auto flex h-screen max-w-7xl flex-col bg-neutral px-6 text-lg leading-7 text-neutral-900 dark:bg-neutral-800 dark:text-neutral sm:px-14 md:px-24 lg:px-32"
+  >
+    <div id="the-top" class="absolute flex self-center">
+      <a
+        class="-translate-y-8 rounded-b-lg bg-primary-200 px-3 py-1 text-sm focus:translate-y-0 dark:bg-neutral-600"
+        href="#main-content"
+        ><span class="pe-2 font-bold text-primary-600 dark:text-primary-400">&darr;</span
+        >Skip to main content</a
+      >
+    </div>
+    
+    
+      <header class="py-6 font-semibold text-neutral-900 dark:text-neutral sm:py-10 print:hidden">
+  <nav class="flex items-start justify-between sm:items-center">
+    
+    <div class="flex flex-row items-center">
+      
+  <a
+    class="decoration-primary-500 hover:underline hover:decoration-2 hover:underline-offset-2"
+    rel="me"
+    href="/"
+    >Santiago | Project Portfolio</a
+  >
+
+    </div>
+    
+    
+      <ul class="flex list-none flex-col text-end sm:flex-row">
+        
+          
+            
+            <li class="group mb-1 sm:mb-0 sm:me-7 sm:last:me-0.5">
+              
+                <a
+                  href="/projects/"
+                  title="Projects"
+                  
+                  
+                  ><span
+                      class="decoration-primary-500 group-hover:underline group-hover:decoration-2 group-hover:underline-offset-2"
+                      >Projects</span
+                    >
+                  </a
+                >
+              
+            </li>
+          
+            
+            <li class="group mb-1 sm:mb-0 sm:me-7 sm:last:me-0.5">
+              
+                <a
+                  href=""
+                  title=""
+                  
+                  
+                  ><span
+                      class="decoration-primary-500 group-hover:underline group-hover:decoration-2 group-hover:underline-offset-2"
+                      >About</span
+                    >
+                  </a
+                >
+              
+            </li>
+          
+          
+        
+      </ul>
+    
+  </nav>
+</header>
+
+    
+    <div class="relative flex grow flex-col">
+      <main id="main-content" class="grow">
+        
+  <article>
+    <header class="max-w-prose">
+      
+      <h1 class="mb-8 mt-0 text-4xl font-extrabold text-neutral-900 dark:text-neutral">
+        Microstrip Patch Antenna Array Design and Fabrication
+      </h1>
+      
+        <div class="mb-10 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
+          
+
+
+
+
+
+  
+  
+
+
+
+  
+
+  
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2026-05-01 00:00:00 &#43;0000 UTC">1 May 2026</time><span class="px-2 text-primary-500">&middot;</span><span title="Reading time">5 mins</span>
+    
+
+    
+    
+  </div>
+
+  
+  
+
+
+        </div>
+      
+      
+    </header>
+    <section class="prose mt-0 flex max-w-full flex-col dark:prose-invert lg:flex-row">
+      
+      <div class="min-h-0 min-w-0 max-w-prose grow">
+        <h2 id="overview" class="relative group">Overview <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#overview" aria-label="Anchor">#</a></span></h2><p>This project covers the full design-to-fabrication workflow for a circularly polarized (CP) microstrip patch antenna operating at 8.75 GHz, along with a 4-element circular array configuration. Circular polarization is achieved through a corner-chamfered square patch fed by a coaxial probe. All simulations were performed in Ansys HFSS, array pattern calculations in MATLAB, and the single element was physically fabricated and measured.</p>
+<p><strong>Design targets:</strong></p>
+<table>
+	<thead>
+			<tr>
+					<th>Parameter</th>
+					<th>Requirement</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Center frequency</td>
+					<td>8.75 GHz</td>
+			</tr>
+			<tr>
+					<td>Bandwidth (S11 &lt; -10 dB)</td>
+					<td>8.5 – 9.0 GHz</td>
+			</tr>
+			<tr>
+					<td>Axial ratio at broadside</td>
+					<td>&lt; 3 dB</td>
+			</tr>
+			<tr>
+					<td>RHCP/LHCP gain difference</td>
+					<td>≥ 15 dB</td>
+			</tr>
+	</tbody>
+</table>
+<hr>
+<h2 id="antenna-design" class="relative group">Antenna Design <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#antenna-design" aria-label="Anchor">#</a></span></h2><h3 id="patch-dimensions" class="relative group">Patch Dimensions <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#patch-dimensions" aria-label="Anchor">#</a></span></h3><p>A square patch geometry is required to support the two orthogonal modes (TM10 and TM01) needed for circular polarization. Closed-form design equations were used to get initial dimensions on a Rogers RO3003 substrate (εr = 3.0, h = 1.52 mm), then refined through HFSS parametric sweeps and optimization.</p>
+<p>The effective dielectric constant and fringing field extension were calculated analytically, yielding a starting patch size of approximately 9.11 × 9.11 mm. The coaxial feed offset for a 50 Ω match was estimated at y₀ ≈ 2.84 mm from the radiating edge.</p>
+<h3 id="circular-polarization-via-corner-chamfer" class="relative group">Circular Polarization via Corner Chamfer <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#circular-polarization-via-corner-chamfer" aria-label="Anchor">#</a></span></h3><p>Two opposite corners of the square patch are truncated by a length dL. This perturbation splits the fundamental resonant mode into two orthogonal modes with a 90° phase shift between them, producing circular polarization from a single feed. The truncation length is related to the antenna quality factor Q₀:</p>
+<pre tabindex="0"><code>dL = L * sqrt(1 / (2 * Q0))
+</code></pre><p>With Q₀ ≈ 40, the initial chamfer estimate was dL ≈ 1.02 mm.</p>
+<h3 id="final-optimized-parameters" class="relative group">Final Optimized Parameters <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#final-optimized-parameters" aria-label="Anchor">#</a></span></h3><table>
+	<thead>
+			<tr>
+					<th>Parameter</th>
+					<th>Value</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Substrate</td>
+					<td>Rogers RO3003</td>
+			</tr>
+			<tr>
+					<td>Relative permittivity</td>
+					<td>3.0</td>
+			</tr>
+			<tr>
+					<td>Loss tangent</td>
+					<td>0.0013</td>
+			</tr>
+			<tr>
+					<td>Substrate thickness</td>
+					<td>0.508 mm</td>
+			</tr>
+			<tr>
+					<td>Substrate / ground size</td>
+					<td>35 × 35 mm</td>
+			</tr>
+			<tr>
+					<td>Patch width W</td>
+					<td>9.00 mm</td>
+			</tr>
+			<tr>
+					<td>Patch length L</td>
+					<td>9.25 mm</td>
+			</tr>
+			<tr>
+					<td>Chamfer cut dL</td>
+					<td>1.8 mm</td>
+			</tr>
+			<tr>
+					<td>Feed offset y₀</td>
+					<td>2.3 mm</td>
+			</tr>
+	</tbody>
+</table>
+<p>The final patch is slightly non-square (9.00 × 9.25 mm) — this asymmetry was intentional, found through optimization to simultaneously satisfy bandwidth and axial ratio requirements.</p>
+<hr>
+<h2 id="single-element-simulation-results" class="relative group">Single Element Simulation Results <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#single-element-simulation-results" aria-label="Anchor">#</a></span></h2><h3 id="s11--impedance-bandwidth" class="relative group">S11 — Impedance Bandwidth <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#s11--impedance-bandwidth" aria-label="Anchor">#</a></span></h3><p>Two resonant dips appear at approximately 8.5 GHz and 9.0 GHz, corresponding to the two orthogonal modes introduced by the chamfer. Both remain below -10 dB, yielding a simulated bandwidth of 8.353 – 9.307 GHz (10.8%), comfortably exceeding the 8.5 – 9.0 GHz requirement.</p>
+<h3 id="axial-ratio" class="relative group">Axial Ratio <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#axial-ratio" aria-label="Anchor">#</a></span></h3><p>At broadside (θ = 0°), an axial ratio of 2.89 dB was achieved at 8.75 GHz, confirming good circular polarization quality just under the 3 dB requirement.</p>
+<h3 id="polarization-performance" class="relative group">Polarization Performance <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#polarization-performance" aria-label="Anchor">#</a></span></h3><p>The RHCP realized gain exceeds the LHCP gain by <strong>15.68 dB</strong> at broadside, meeting the ≥ 15 dB isolation requirement. The patch radiates left-hand circular polarization (LHCP).</p>
+<h3 id="gain-and-directivity" class="relative group">Gain and Directivity <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#gain-and-directivity" aria-label="Anchor">#</a></span></h3><table>
+	<thead>
+			<tr>
+					<th>Parameter</th>
+					<th>Value</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Maximum realized gain</td>
+					<td>6.43 dBic</td>
+			</tr>
+			<tr>
+					<td>Maximum directivity</td>
+					<td>6.55 dBi</td>
+			</tr>
+	</tbody>
+</table>
+<h3 id="performance-vs-requirements" class="relative group">Performance vs. Requirements <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#performance-vs-requirements" aria-label="Anchor">#</a></span></h3><table>
+	<thead>
+			<tr>
+					<th>Parameter</th>
+					<th>Requirement</th>
+					<th>Simulated</th>
+					<th>Met?</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Center frequency</td>
+					<td>8.75 GHz</td>
+					<td>8.83 GHz</td>
+					<td>Yes</td>
+			</tr>
+			<tr>
+					<td>Bandwidth</td>
+					<td>8.5 – 9.0 GHz</td>
+					<td>8.353 – 9.307 GHz</td>
+					<td>Yes</td>
+			</tr>
+			<tr>
+					<td>Axial ratio</td>
+					<td>&lt; 3 dB</td>
+					<td>2.89 dB</td>
+					<td>Yes</td>
+			</tr>
+			<tr>
+					<td>RHCP/LHCP difference</td>
+					<td>≥ 15 dB</td>
+					<td>15.68 dB</td>
+					<td>Yes</td>
+			</tr>
+	</tbody>
+</table>
+<hr>
+<h2 id="4-element-circular-array" class="relative group">4-Element Circular Array <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#4-element-circular-array" aria-label="Anchor">#</a></span></h2><h3 id="configuration" class="relative group">Configuration <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#configuration" aria-label="Anchor">#</a></span></h3><p>Four single elements were arranged in a circular array and independently fed with equal amplitude and phase. The array radius was evaluated at three spacings relative to the free-space wavelength at 8.75 GHz (λ ≈ 34.3 mm):</p>
+<table>
+	<thead>
+			<tr>
+					<th>Configuration</th>
+					<th>Spacing</th>
+					<th>Radius</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td>Config 1</td>
+					<td>0.5λ</td>
+					<td>17.15 mm</td>
+			</tr>
+			<tr>
+					<td>Config 2</td>
+					<td>0.75λ</td>
+					<td>25.73 mm</td>
+			</tr>
+			<tr>
+					<td>Config 3</td>
+					<td>1.0λ</td>
+					<td>34.30 mm</td>
+			</tr>
+	</tbody>
+</table>
+<h3 id="mutual-coupling" class="relative group">Mutual Coupling <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#mutual-coupling" aria-label="Anchor">#</a></span></h3><p>S-parameter analysis was performed for both single-port excitation (passive) and all-port excitation (active) at each spacing. Across all three configurations, coupling between elements (S21, S31) remained consistently below -20 dB, indicating minimal mutual coupling. With all four ports active, each element maintained its impedance bandwidth within specification.</p>
+<h3 id="radiation-pattern-calculation" class="relative group">Radiation Pattern Calculation <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#radiation-pattern-calculation" aria-label="Anchor">#</a></span></h3><p>Array patterns were computed using pattern multiplication in MATLAB — the single-element HFSS gain pattern (converted to linear scale) was combined with the analytically derived array factor for a circular array:</p>
+<pre tabindex="0"><code>AF(theta, phi) = sum over n of exp(j*k*(x_n*sin(theta)*cos(phi) + y_n*sin(theta)*sin(phi)))
+</code></pre><p>MATLAB results were compared against HFSS full-array simulations and showed good agreement across all three spacings.</p>
+<h3 id="array-observations" class="relative group">Array Observations <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#array-observations" aria-label="Anchor">#</a></span></h3><ul>
+<li>The 0.5λ configuration produced the highest total realized gain with wide, clean main beam and low sidelobes</li>
+<li>The 0.75λ and 1.0λ configurations produced narrower main beams but with significantly larger sidelobes</li>
+<li>No grating lobes were observed at 0.5λ spacing; sidelobe performance degraded at larger radii as expected</li>
+</ul>
+<hr>
+<h2 id="fabrication-and-measurement" class="relative group">Fabrication and Measurement <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#fabrication-and-measurement" aria-label="Anchor">#</a></span></h2><p>The single-element antenna was milled from Rogers RO3003 substrate using a <strong>Bantam Tools Desktop CNC PCB Mill</strong>. A coaxial probe feed was implemented with an SMA connector soldered through the ground plane to the patch.</p>
+<p>The fabricated antenna was measured using an <strong>R140 1-port VNA</strong>. The measured S11 showed a clear resonance at approximately 9.3 GHz — higher than the simulated 8.75 GHz.</p>
+<h3 id="diagnosing-the-frequency-shift" class="relative group">Diagnosing the Frequency Shift <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#diagnosing-the-frequency-shift" aria-label="Anchor">#</a></span></h3><p>A parametric HFSS sweep over εr was conducted to identify the true substrate permittivity. Shifting εr from 3.0 to <strong>2.85</strong> moved the upper resonant dip to 9.3 GHz, matching the measured result. The slight permittivity variation is consistent with typical manufacturing tolerances in Rogers substrates.</p>
+<p>Additional fabrication factors that likely contributed to the shift:</p>
+<ul>
+<li>CNC milling tolerances on patch edge dimensions</li>
+<li>SMA connector required physical modification; connector body required clearance from the ground plane to avoid shorting</li>
+</ul>
+<hr>
+<h2 id="key-takeaways" class="relative group">Key Takeaways <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#key-takeaways" aria-label="Anchor">#</a></span></h2><p><strong>On CP design:</strong> The chamfer size dL simultaneously controls axial ratio and S11 dip separation — they are not independent parameters. Increasing dL improves axial ratio but spreads the two resonant dips apart, risking a mid-band peak. Finding the right dL is a direct tradeoff between CP quality and impedance bandwidth, which simulation makes much clearer than equations alone.</p>
+<p><strong>On HFSS optimization:</strong> When Optimetrics wouldn&rsquo;t converge, understanding the behavior of gradient-based vs. pattern search algorithms and choosing appropriate parameter starting points was critical. Cost function weighting on axial ratio vs. S11 helped guide the optimizer to a useful solution.</p>
+<p><strong>On fabrication:</strong> Exporting to Gerber for the Bantam mill required careful attention to layer ordering and drill file formatting. Physical connector modification and ground plane trimming were needed post-fabrication before measurement was possible.</p>
+<hr>
+<h2 id="tools-used" class="relative group">Tools Used <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#tools-used" aria-label="Anchor">#</a></span></h2><ul>
+<li><strong>Ansys HFSS</strong> — full-wave EM simulation, parametric sweeps, Optimetrics optimization</li>
+<li><strong>MATLAB</strong> — array factor calculation, pattern multiplication, data visualization</li>
+<li><strong>Bantam Tools CNC Mill</strong> — PCB fabrication</li>
+<li><strong>R140 VNA</strong> — S11 measurement</li>
+</ul>
+<p><a href="https://github.com/scast3/antenna" target="_blank" rel="noreferrer">View on GitHub →</a></p>
+
+      </div>
+    </section>
+    <footer class="max-w-prose pt-8 print:hidden">
+      
+  <div class="flex">
+    
+    
+    
+    <div class="place-self-center">
+      
+      
+      <div class="text-2xl sm:text-lg">
+</div>
+    </div>
+  </div>
+
+
+      
+
+      
+  
+    
+    
+    
+    <div class="pt-8">
+      <hr class="border-dotted border-neutral-300 dark:border-neutral-600" />
+      <div class="flex justify-between pt-3">
+        <span>
+          
+            <a class="group flex" href="http://localhost:1313/projects/qpsk-ekf/">
+              <span
+                class="me-2 text-neutral-700 transition-transform group-hover:-translate-x-[2px] group-hover:text-primary-600 dark:text-neutral dark:group-hover:text-primary-400"
+                ><span class="ltr:inline rtl:hidden">&larr;</span
+                ><span class="ltr:hidden rtl:inline">&rarr;</span></span
+              >
+              <span class="flex flex-col">
+                <span
+                  class="mt-[0.1rem] leading-6 group-hover:underline group-hover:decoration-primary-500"
+                  >Carrier Offset Tracking and Phase-Locking in a QPSK Digital Receiver</span
+                >
+                <span class="mt-[0.1rem] text-xs text-neutral-500 dark:text-neutral-400">
+                  
+                    <time datetime="2026-04-01 00:00:00 &#43;0000 UTC">1 April 2026</time>
+                  
+                </span>
+              </span>
+            </a>
+          
+        </span>
+        <span>
+          
+        </span>
+      </div>
+    </div>
+  
+
+
+      
+    </footer>
+  </article>
+
+      </main>
+      
+        <div
+          class="pointer-events-none absolute bottom-0 end-0 top-[100vh] w-12"
+          id="to-top"
+          hidden="true"
+        >
+          <a
+            href="#the-top"
+            class="pointer-events-auto sticky top-[calc(100vh-5.5rem)] flex h-12 w-12 items-center justify-center rounded-full bg-neutral/50 text-xl text-neutral-700 backdrop-blur hover:text-primary-600 dark:bg-neutral-800/50 dark:text-neutral dark:hover:text-primary-400"
+            aria-label="Scroll to top"
+            title="Scroll to top"
+          >
+            &uarr;
+          </a>
+        </div>
+      <footer class="py-10 print:hidden">
+  
+  
+  <div class="flex items-center justify-between">
+    <div>
+      
+      
+        <p class="text-sm text-neutral-500 dark:text-neutral-400">
+            &copy;
+            2026
+            
+        </p>
+      
+      
+      
+        <p class="text-xs text-neutral-500 dark:text-neutral-400">
+          
+          
+          Powered by <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
+            href="https://gohugo.io/" target="_blank" rel="noopener noreferrer">Hugo</a> &amp; <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500" href="https://github.com/jpanther/congo" target="_blank" rel="noopener noreferrer">Congo</a>
+        </p>
+      
+    </div>
+    <div class="flex flex-row items-center">
+      
+      
+      
+      
+    </div>
+  </div>
+  
+  
+</footer>
+
+    </div>
+  </body>
+</html>
