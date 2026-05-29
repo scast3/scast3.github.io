@@ -85,6 +85,6 @@ The coefficient ROM is currently hard-coded at synthesis time. A more flexible d
 
 ## Repository
 
-{{< github-link url="https://github.com/scast3/oscilloscope" >}}
+[View on GitHub →](https://github.com/scast3/oscilloscope)
 
 Full source, testbenches, and the MATLAB coefficient generation script are in the repo.
