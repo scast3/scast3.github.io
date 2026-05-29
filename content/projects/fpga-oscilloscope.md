@@ -1,10 +1,10 @@
 ---
-title: "FIR Filter on FPGA"
-date: 2024-11-10
-summary: "Pipelined 32-tap FIR low-pass filter implemented in VHDL, targeting a Xilinx Artix-7. Achieves 200 MHz clock with full parallel MAC units."
-tags: ["FPGA", "VHDL", "DSP", "Xilinx"]
+title: "Oscilloscope FPGA Design in VHDL"
+date: 2025-12-01
+summary: "Designed an oscilloscope on an fpga in vhdl"
+tags: ["FPGA", "VHDL", "Verification", "Xilinx"]
 github: "https://github.com/scast3/oscilloscope"
-tools: ["Vivado", "ModelSim", "MATLAB"]
+tools: ["Vivado", "Vitis"]
 status: "complete"          # complete | in-progress
 weight: 1                   # lower = appears first in listings
 ---
@@ -23,21 +23,21 @@ The filter is structured as a fully pipelined direct-form transposed FIR, with o
 
 ```
 Input (16-bit signed)
-        │
-        ▼
- ┌─────────────┐     ┌─────────────┐
- │  Shift Reg  │────▶│ Coefficient │
- │  (32 taps)  │     │  ROM (32×16)│
- └─────────────┘     └──────┬──────┘
-                            │
-                     ┌──────▼──────┐
-                     │  32× MAC    │  ← parallel, pipelined
-                     └──────┬──────┘
-                            │
-                     ┌──────▼──────┐
-                     │ Adder tree  │
-                     └──────┬──────┘
-                            │
+        |
+        v
+ +-------------+     +-------------+
+ |  Shift Reg  |---->| Coefficient |
+ |  (32 taps)  |     |  ROM (32x16)|
+ +-------------+     +------+------+
+                            |
+                     +------v------+
+                     |  32x MAC    |
+                     +------+------+
+                            |
+                     +------v------+
+                     | Adder tree  |
+                     +------+------+
+                            |
                       Output (32-bit)
 ```
 

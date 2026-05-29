@@ -1,54 +1,24 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
-		<title>Congo</title>
+		<title>Testing on Santiago | EE Portfolio</title>
 		<link>http://localhost:1313/</link>
-		<description>Recent content on Congo</description>
+		<description>Recent content in Testing on Santiago | EE Portfolio</description>
 		<generator>Hugo</generator>
-		<language>en-AU</language>
+		<language>en-us</language>
 		
 		
 		
-			<copyright>&amp;copy; 2024 Congo contributors</copyright>
 		
-		
-			<lastBuildDate>Fri, 29 May 2026 11:10:10 -0600</lastBuildDate>
+			<lastBuildDate>Mon, 01 Dec 2025 00:00:00 +0000</lastBuildDate>
 		
 			<atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
 			<item>
-				<title>FIR Filter on FPGA</title>
+				<title>Oscilloscope FPGA Design in VHDL</title>
 				<link>http://localhost:1313/projects/fpga-oscilloscope/</link>
-				<pubDate>Sun, 10 Nov 2024 00:00:00 +0000</pubDate>
+				<pubDate>Mon, 01 Dec 2025 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/projects/fpga-oscilloscope/</guid>
-				<description>Pipelined 32-tap FIR low-pass filter implemented in VHDL, targeting a Xilinx Artix-7. Achieves 200 MHz clock with full parallel MAC units.</description>
-			</item>
-			<item>
-				<title>Pcb Musicbox</title>
-				<link>http://localhost:1313/projects/pcb-musicbox/</link>
-				<pubDate>Fri, 29 May 2026 11:10:10 -0600</pubDate>
-				<guid>http://localhost:1313/projects/pcb-musicbox/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>Patch Antenna</title>
-				<link>http://localhost:1313/projects/patch-antenna/</link>
-				<pubDate>Thu, 28 May 2026 21:10:55 -0600</pubDate>
-				<guid>http://localhost:1313/projects/patch-antenna/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>Kalman Qpsk</title>
-				<link>http://localhost:1313/projects/kalman-qpsk/</link>
-				<pubDate>Thu, 28 May 2026 21:10:51 -0600</pubDate>
-				<guid>http://localhost:1313/projects/kalman-qpsk/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>Deauth Detect</title>
-				<link>http://localhost:1313/projects/deauth-detect/</link>
-				<pubDate>Thu, 28 May 2026 21:10:24 -0600</pubDate>
-				<guid>http://localhost:1313/projects/deauth-detect/</guid>
-				<description></description>
+				<description>Designed an oscilloscope on an fpga in vhdl</description>
 			</item>
 	</channel>
 </rss>

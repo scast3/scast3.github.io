@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
-		<title>VHDL on Congo</title>
+		<title>VHDL on Santiago | EE Portfolio</title>
 		<link>http://localhost:1313/tags/vhdl/</link>
-		<description>Recent content in VHDL on Congo</description>
+		<description>Recent content in VHDL on Santiago | EE Portfolio</description>
 		<generator>Hugo</generator>
-		<language>en-AU</language>
+		<language>en-us</language>
 		
 		
-		
-			<copyright>&amp;copy; 2024 Congo contributors</copyright>
 		
 		
 			<lastBuildDate>Sun, 10 Nov 2024 00:00:00 +0000</lastBuildDate>
