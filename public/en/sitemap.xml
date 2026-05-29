@@ -4,12 +4,15 @@
   
     
       <url>
+            <loc>http://localhost:1313/projects/fpga-oscilloscope/</loc>
+            <lastmod>2024-11-10T00:00:00+00:00</lastmod>
+          </url>
+    
+  
+    
+      <url>
             <loc>http://localhost:1313/</loc>
-            <xhtml:link
-              rel="alternate"
-              hreflang="zh-hans"
-              href="http://localhost:1313/zh-hans/"
-              />
+            <lastmod>2026-05-29T11:10:10-06:00</lastmod>
             <xhtml:link
               rel="alternate"
               hreflang="es"
@@ -22,6 +25,11 @@
               />
             <xhtml:link
               rel="alternate"
+              hreflang="zh-hans"
+              href="http://localhost:1313/zh-hans/"
+              />
+            <xhtml:link
+              rel="alternate"
               hreflang="de"
               href="http://localhost:1313/de/"
               />
@@ -31,6 +39,49 @@
               href="http://localhost:1313/"
               />
           </url>
+    
+  
+    
+      <url>
+            <loc>http://localhost:1313/projects/pcb-musicbox/</loc>
+            <lastmod>2026-05-29T11:10:10-06:00</lastmod>
+          </url>
+    
+  
+    
+      <url>
+            <loc>http://localhost:1313/projects/</loc>
+            <lastmod>2026-05-29T11:10:10-06:00</lastmod>
+          </url>
+    
+  
+    
+      <url>
+            <loc>http://localhost:1313/projects/patch-antenna/</loc>
+            <lastmod>2026-05-28T21:10:55-06:00</lastmod>
+          </url>
+    
+  
+    
+      <url>
+            <loc>http://localhost:1313/projects/kalman-qpsk/</loc>
+            <lastmod>2026-05-28T21:10:51-06:00</lastmod>
+          </url>
+    
+  
+    
+      <url>
+            <loc>http://localhost:1313/projects/deauth-detect/</loc>
+            <lastmod>2026-05-28T21:10:24-06:00</lastmod>
+          </url>
+    
+  
+    
+  
+    
+  
+    
+  
     
   
     
