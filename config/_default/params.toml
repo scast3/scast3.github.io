@@ -1,4 +1,5 @@
 colorScheme = "ocean"
+math = true
 
 [homepage]
   layout = "profile"

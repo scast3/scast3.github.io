@@ -10,9 +10,30 @@
 		
 		
 		
-			<lastBuildDate>Fri, 01 May 2026 00:00:00 +0000</lastBuildDate>
+			<lastBuildDate>Wed, 20 May 2026 00:00:00 +0000</lastBuildDate>
 		
 			<atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Arduino</title>
+				<link>http://localhost:1313/tags/arduino/</link>
+				<pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/tags/arduino/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Embedded</title>
+				<link>http://localhost:1313/tags/embedded/</link>
+				<pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/tags/embedded/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>KiCad</title>
+				<link>http://localhost:1313/tags/kicad/</link>
+				<pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/tags/kicad/</guid>
+				<description></description>
+			</item>
 			<item>
 				<title>Antenna Theory</title>
 				<link>http://localhost:1313/tags/antenna-theory/</link>
@@ -44,64 +65,92 @@
 			<item>
 				<title>Communications</title>
 				<link>http://localhost:1313/tags/communications/</link>
-				<pubDate>Wed, 01 Apr 2026 00:00:00 +0000</pubDate>
+				<pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/tags/communications/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>DSP</title>
 				<link>http://localhost:1313/tags/dsp/</link>
-				<pubDate>Wed, 01 Apr 2026 00:00:00 +0000</pubDate>
+				<pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/tags/dsp/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Kalman Filter</title>
 				<link>http://localhost:1313/tags/kalman-filter/</link>
-				<pubDate>Wed, 01 Apr 2026 00:00:00 +0000</pubDate>
+				<pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/tags/kalman-filter/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>MATLAB</title>
 				<link>http://localhost:1313/tags/matlab/</link>
-				<pubDate>Wed, 01 Apr 2026 00:00:00 +0000</pubDate>
+				<pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/tags/matlab/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Simulink</title>
 				<link>http://localhost:1313/tags/simulink/</link>
-				<pubDate>Wed, 01 Apr 2026 00:00:00 +0000</pubDate>
+				<pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/tags/simulink/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>FPGA</title>
 				<link>http://localhost:1313/tags/fpga/</link>
-				<pubDate>Mon, 01 Dec 2025 00:00:00 +0000</pubDate>
+				<pubDate>Wed, 10 Dec 2025 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/tags/fpga/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Verification</title>
 				<link>http://localhost:1313/tags/verification/</link>
-				<pubDate>Mon, 01 Dec 2025 00:00:00 +0000</pubDate>
+				<pubDate>Wed, 10 Dec 2025 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/tags/verification/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>VHDL</title>
 				<link>http://localhost:1313/tags/vhdl/</link>
-				<pubDate>Mon, 01 Dec 2025 00:00:00 +0000</pubDate>
+				<pubDate>Wed, 10 Dec 2025 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/tags/vhdl/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Xilinx</title>
 				<link>http://localhost:1313/tags/xilinx/</link>
-				<pubDate>Mon, 01 Dec 2025 00:00:00 +0000</pubDate>
+				<pubDate>Wed, 10 Dec 2025 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/tags/xilinx/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>ESP32</title>
+				<link>http://localhost:1313/tags/esp32/</link>
+				<pubDate>Sun, 30 Nov 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/tags/esp32/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Triangulation</title>
+				<link>http://localhost:1313/tags/triangulation/</link>
+				<pubDate>Sun, 30 Nov 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/tags/triangulation/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Testbenching</title>
+				<link>http://localhost:1313/tags/testbenching/</link>
+				<pubDate>Tue, 01 Jul 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/tags/testbenching/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Verilog</title>
+				<link>http://localhost:1313/tags/verilog/</link>
+				<pubDate>Tue, 01 Jul 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/tags/verilog/</guid>
 				<description></description>
 			</item>
 	</channel>

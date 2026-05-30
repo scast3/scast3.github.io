@@ -10,9 +10,16 @@
 		
 		
 		
-			<lastBuildDate>Fri, 01 May 2026 00:00:00 +0000</lastBuildDate>
+			<lastBuildDate>Fri, 29 May 2026 17:54:41 -0600</lastBuildDate>
 		
 			<atom:link href="http://localhost:1313/projects/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>AtTiny85 Music Box PCB</title>
+				<link>http://localhost:1313/projects/pcb-musicbox/</link>
+				<pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/projects/pcb-musicbox/</guid>
+				<description>test</description>
+			</item>
 			<item>
 				<title>Microstrip Patch Antenna Array Design and Fabrication</title>
 				<link>http://localhost:1313/projects/patch-antenna/</link>
@@ -23,16 +30,37 @@
 			<item>
 				<title>Carrier Offset Tracking and Phase-Locking in a QPSK Digital Receiver</title>
 				<link>http://localhost:1313/projects/qpsk-ekf/</link>
-				<pubDate>Wed, 01 Apr 2026 00:00:00 +0000</pubDate>
+				<pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/projects/qpsk-ekf/</guid>
 				<description>test</description>
 			</item>
 			<item>
 				<title>Oscilloscope FPGA Design in VHDL</title>
 				<link>http://localhost:1313/projects/fpga-oscilloscope/</link>
-				<pubDate>Mon, 01 Dec 2025 00:00:00 +0000</pubDate>
+				<pubDate>Wed, 10 Dec 2025 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/projects/fpga-oscilloscope/</guid>
 				<description>Designed an oscilloscope on an fpga in vhdl</description>
+			</item>
+			<item>
+				<title>ESP32 WiFi Sentry</title>
+				<link>http://localhost:1313/projects/deauth-esp/</link>
+				<pubDate>Sun, 30 Nov 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/projects/deauth-esp/</guid>
+				<description>test</description>
+			</item>
+			<item>
+				<title>Design of 8-bit CPU in Verilog</title>
+				<link>http://localhost:1313/projects/8bit/</link>
+				<pubDate>Tue, 01 Jul 2025 00:00:00 +0000</pubDate>
+				<guid>http://localhost:1313/projects/8bit/</guid>
+				<description>test</description>
+			</item>
+			<item>
+				<title>Robotic Loc</title>
+				<link>http://localhost:1313/projects/robotic-loc/</link>
+				<pubDate>Fri, 29 May 2026 17:54:41 -0600</pubDate>
+				<guid>http://localhost:1313/projects/robotic-loc/</guid>
+				<description></description>
 			</item>
 	</channel>
 </rss>

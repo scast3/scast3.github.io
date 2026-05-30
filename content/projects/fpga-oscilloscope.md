@@ -1,6 +1,6 @@
 ---
 title: "Oscilloscope FPGA Design in VHDL"
-date: 2025-12-01
+date: 2025-12-10
 summary: "Designed an oscilloscope on an fpga in vhdl"
 tags: ["FPGA", "VHDL", "Verification", "Xilinx"]
 github: "https://github.com/scast3/oscilloscope"

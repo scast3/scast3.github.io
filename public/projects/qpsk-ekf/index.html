@@ -84,8 +84,8 @@
 	<meta property="og:locale" content="en_us">
 	<meta property="og:type" content="article">
 		<meta property="article:section" content="projects">
-		<meta property="article:published_time" content="2026-04-01T00:00:00+00:00">
-		<meta property="article:modified_time" content="2026-04-01T00:00:00+00:00">
+		<meta property="article:published_time" content="2026-04-30T00:00:00+00:00">
+		<meta property="article:modified_time" content="2026-04-30T00:00:00+00:00">
 		<meta property="article:tag" content="MATLAB">
 		<meta property="article:tag" content="Simulink">
 		<meta property="article:tag" content="Kalman Filter">
@@ -114,15 +114,15 @@
       "name": ""
     },
     "copyrightYear": "2026",
-    "dateCreated": "2026-04-01T00:00:00\u002b00:00",
-    "datePublished": "2026-04-01T00:00:00\u002b00:00",
+    "dateCreated": "2026-04-30T00:00:00\u002b00:00",
+    "datePublished": "2026-04-30T00:00:00\u002b00:00",
     
-    "dateModified": "2026-04-01T00:00:00\u002b00:00",
+    "dateModified": "2026-04-30T00:00:00\u002b00:00",
     
     "keywords": ["MATLAB","Simulink","Kalman Filter","DSP","Communications"],
     
     "mainEntityOfPage": "true",
-    "wordCount": "1259"
+    "wordCount": "1252"
   }
   </script>
     
@@ -168,6 +168,25 @@
   
 
   
+  
+    
+  
+  <link rel="stylesheet" href="/lib/katex/katex.min.css">
+  
+  <script defer src="/lib/katex/katex.min.js"></script>
+  
+  <script defer src="/lib/katex/auto-render.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: "$$", right: "$$", display: true},
+          {left: "$", right: "$", display: false}
+        ]
+      });
+    });
+  </script>
+
   
 </head>
 <body
@@ -222,8 +241,8 @@
             <li class="group mb-1 sm:mb-0 sm:me-7 sm:last:me-0.5">
               
                 <a
-                  href=""
-                  title=""
+                  href="/about/"
+                  title="About"
                   
                   
                   ><span
@@ -286,7 +305,7 @@
   <div class="flex flex-row flex-wrap items-center">
     
     
-      <time datetime="2026-04-01 00:00:00 &#43;0000 UTC">1 April 2026</time><span class="px-2 text-primary-500">&middot;</span><span title="Reading time">6 mins</span>
+      <time datetime="2026-04-30 00:00:00 &#43;0000 UTC">30 April 2026</time><span class="px-2 text-primary-500">&middot;</span><span title="Reading time">6 mins</span>
     
 
     
@@ -308,10 +327,10 @@
 <p>This project models a QPSK receiver in MATLAB and Simulink and implements an Extended Kalman Filter (EKF) to jointly estimate all four distortion states in real time, enabling correction of the received IQ samples and accurate symbol recovery.</p>
 <hr>
 <h2 id="system-model" class="relative group">System Model <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#system-model" aria-label="Anchor">#</a></span></h2><h3 id="qpsk-signal" class="relative group">QPSK Signal <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#qpsk-signal" aria-label="Anchor">#</a></span></h3><p>In QPSK, each transmitted symbol sits on one of four constellation points on the unit circle, each separated by 90°:</p>
-<pre tabindex="0"><code>s_k ∈ { (±1 ± j) / sqrt(2) }
-</code></pre><p>The received baseband signal after passing through the channel is modeled as:</p>
-<pre tabindex="0"><code>r_k = a_k * s_k * exp(j*theta_k) + v_k
-</code></pre><p>where <code>theta_k</code> is the carrier phase offset, <code>a_k</code> is the signal amplitude, and <code>v_k</code> is complex AWGN. The trigonometric dependence of the IQ components on <code>theta_k</code> introduces the nonlinearity that prevents a standard linear Kalman filter from being used directly.</p>
+$$s_k \in \left\{ \frac{\pm 1 \pm j}{\sqrt{2}} \right\}$$<p>The received baseband signal after passing through the channel is modeled as:</p>
+$$
+r_k=a_k s_k e^{j\theta_k}+v_k
+$$<p>where <code>theta_k</code> is the carrier phase offset, <code>a_k</code> is the signal amplitude, and <code>v_k</code> is complex AWGN. The trigonometric dependence of the IQ components on <code>theta_k</code> introduces the nonlinearity that prevents a standard linear Kalman filter from being used directly.</p>
 <h3 id="state-vector" class="relative group">State Vector <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#state-vector" aria-label="Anchor">#</a></span></h3><p>Four internal states are tracked by the estimator:</p>
 <table>
 	<thead>
@@ -488,7 +507,7 @@ P⁻_{k+1}  = Φ * P⁺_k * Φᵀ + Q
                 >
                 <span class="mt-[0.1rem] text-xs text-neutral-500 dark:text-neutral-400">
                   
-                    <time datetime="2025-12-01 00:00:00 &#43;0000 UTC">1 December 2025</time>
+                    <time datetime="2025-12-10 00:00:00 &#43;0000 UTC">10 December 2025</time>
                   
                 </span>
               </span>

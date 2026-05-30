@@ -1,0 +1,18 @@
+{{ if .Params.math }}
+  {{ $katexCSS := resources.Get "lib/katex/katex.min.css" }}
+  <link rel="stylesheet" href="{{ $katexCSS.RelPermalink }}">
+  {{ $katexJS := resources.Get "lib/katex/katex.min.js" }}
+  <script defer src="{{ $katexJS.RelPermalink }}"></script>
+  {{ $katexRenderJS := resources.Get "lib/katex/auto-render.min.js" }}
+  <script defer src="{{ $katexRenderJS.RelPermalink }}"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: "$$", right: "$$", display: true},
+          {left: "$", right: "$", display: false}
+        ]
+      });
+    });
+  </script>
+{{ end }}

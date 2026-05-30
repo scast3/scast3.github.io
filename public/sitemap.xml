@@ -4,6 +4,13 @@
   
     
       <url>
+            <loc>http://localhost:1313/projects/pcb-musicbox/</loc>
+            <lastmod>2026-05-20T00:00:00+00:00</lastmod>
+          </url>
+    
+  
+    
+      <url>
             <loc>http://localhost:1313/projects/patch-antenna/</loc>
             <lastmod>2026-05-01T00:00:00+00:00</lastmod>
           </url>
@@ -12,14 +19,42 @@
     
       <url>
             <loc>http://localhost:1313/projects/qpsk-ekf/</loc>
-            <lastmod>2026-04-01T00:00:00+00:00</lastmod>
+            <lastmod>2026-04-30T00:00:00+00:00</lastmod>
           </url>
     
   
     
       <url>
             <loc>http://localhost:1313/projects/fpga-oscilloscope/</loc>
-            <lastmod>2025-12-01T00:00:00+00:00</lastmod>
+            <lastmod>2025-12-10T00:00:00+00:00</lastmod>
+          </url>
+    
+  
+    
+      <url>
+            <loc>http://localhost:1313/projects/deauth-esp/</loc>
+            <lastmod>2025-11-30T00:00:00+00:00</lastmod>
+          </url>
+    
+  
+    
+      <url>
+            <loc>http://localhost:1313/projects/8bit/</loc>
+            <lastmod>2025-07-01T00:00:00+00:00</lastmod>
+          </url>
+    
+  
+    
+      <url>
+            <loc>http://localhost:1313/projects/robotic-loc/</loc>
+            <lastmod>2026-05-29T17:54:41-06:00</lastmod>
+          </url>
+    
+  
+    
+      <url>
+            <loc>http://localhost:1313/</loc>
+            <lastmod>2026-05-29T17:54:41-06:00</lastmod>
           </url>
     
   
@@ -31,38 +66,51 @@
     
   
     
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
       <url>
-            <loc>http://localhost:1313/</loc>
-            <lastmod>2026-05-29T16:00:38-06:00</lastmod>
+            <loc>http://localhost:1313/about/</loc>
           </url>
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
-    
-  
     
   
     

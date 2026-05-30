@@ -1,12 +1,13 @@
 ---
 title: "Carrier Offset Tracking and Phase-Locking in a QPSK Digital Receiver"
-date: 2026-04-01
+date: 2026-04-30
 summary: "test"
 tags: ["MATLAB", "Simulink", "Kalman Filter", "DSP", "Communications"]
 github: "https://github.com/scast3/qpsk_receiver"
 tools: ["Matlab", "Simulink"]
 status: "in-progress"          # complete | in-progress
 weight: 1                   # lower = appears first in listings
+math: true
 ---
 
 ## Overview
@@ -23,15 +24,13 @@ This project models a QPSK receiver in MATLAB and Simulink and implements an Ext
 
 In QPSK, each transmitted symbol sits on one of four constellation points on the unit circle, each separated by 90°:
 
-```
-s_k ∈ { (±1 ± j) / sqrt(2) }
-```
+$$s_k \in \left\{ \frac{\pm 1 \pm j}{\sqrt{2}} \right\}$$
 
 The received baseband signal after passing through the channel is modeled as:
 
-```
-r_k = a_k * s_k * exp(j*theta_k) + v_k
-```
+$$
+r_k=a_k s_k e^{j\theta_k}+v_k
+$$
 
 where `theta_k` is the carrier phase offset, `a_k` is the signal amplitude, and `v_k` is complex AWGN. The trigonometric dependence of the IQ components on `theta_k` introduces the nonlinearity that prevents a standard linear Kalman filter from being used directly.
 
