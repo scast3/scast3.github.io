@@ -14,14 +14,14 @@
 		
 			<atom:link href="http://localhost:1313/tags/embedded/index.xml" rel="self" type="application/rss+xml" />
 			<item>
-				<title>AtTiny85 Music Box PCB</title>
+				<title>Music Box PCB and Firmware Design with ATTiny85 Microcontroller</title>
 				<link>http://localhost:1313/projects/pcb-musicbox/</link>
 				<pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/projects/pcb-musicbox/</guid>
 				<description>test</description>
 			</item>
 			<item>
-				<title>ESP32 WiFi Sentry</title>
+				<title>WiFi Deauthentication Attack Detection and Localization using ESP32</title>
 				<link>http://localhost:1313/projects/deauth-esp/</link>
 				<pubDate>Sun, 30 Nov 2025 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/projects/deauth-esp/</guid>

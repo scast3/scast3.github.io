@@ -122,7 +122,7 @@
     "keywords": ["MATLAB","Simulink","Kalman Filter","DSP","Communications"],
     
     "mainEntityOfPage": "true",
-    "wordCount": "1643"
+    "wordCount": "2005"
   }
   </script>
     
@@ -305,7 +305,7 @@
   <div class="flex flex-row flex-wrap items-center">
     
     
-      <time datetime="2026-04-30 00:00:00 &#43;0000 UTC">30 April 2026</time><span class="px-2 text-primary-500">&middot;</span><span title="Reading time">8 mins</span>
+      <time datetime="2026-04-30 00:00:00 &#43;0000 UTC">30 April 2026</time><span class="px-2 text-primary-500">&middot;</span><span title="Reading time">10 mins</span>
     
 
     
@@ -323,7 +323,7 @@
     <section class="prose mt-0 flex max-w-full flex-col dark:prose-invert lg:flex-row">
       
       <div class="min-h-0 min-w-0 max-w-prose grow">
-        <h2 id="project-summarry" class="relative group">Project Summarry <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#project-summarry" aria-label="Anchor">#</a></span></h2><p>This project simulates the effects of receiving a wireless signal that has been altered by carrier offsets and channel noise. I modeled the channel effects as a nonlinear state space system and then implemented an Extended Kalman Filter (EKF) to estimate these offsets and correct them. I decided to apply this to a quadrature shift phase keying (QPSK) modulation scheme since it is widely used in satellite communications which regularly have to correct doppler shifts. The simulation and algorithms were developed with Matlab and Simulink.</p>
+        <h2 id="project-summary" class="relative group">Project Summary <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#project-summary" aria-label="Anchor">#</a></span></h2><p>This project simulates the effects of receiving a wireless signal that has been altered by carrier offsets and channel noise. I modeled the channel effects as a nonlinear state space system and then implemented an Extended Kalman Filter (EKF) to estimate these offsets and correct them. I decided to apply this to a quadrature shift phase keying (QPSK) modulation scheme since it is widely used in satellite communications which regularly have to correct doppler shifts. The simulation and algorithms were developed with Matlab and Simulink.</p>
 <h2 id="background" class="relative group">Background <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#background" aria-label="Anchor">#</a></span></h2><p>In a digital communication system, accurate demodulation requires the receiver to maintain synchronization with the incoming RF carrier. In practice, several physical effects distort the received signal and make this challenging.</p>
 <p>One of the most prominent effects is carrier frequency offset (CFO) which occurs when the receiver&rsquo;s local oscillator is not perfectly synchronized with the transmitter&rsquo;s. This can occur due to oscillator inaccuracies or Doppler shifts. These frequency offsets accumulate over time and result in a rotating phase in the received baseband signal.</p>
 <p>Additional distortions include signal amplitude variations due to channel fading and additive noise from receiver electronics.</p>
@@ -341,7 +341,7 @@ $$
 \Re(r_k) &= a_k \big( \Re(s_k)\cos\theta_k - \Im(s_k)\sin\theta_k \big) + \Re(v_k), \\
 \Im(r_k) &= a_k \big( \Re(s_k)\sin\theta_k + \Im(s_k)\cos\theta_k \big) + \Im(v_k).
 \end{aligned}
-$$<h3 id="state-vector" class="relative group">State Vector <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#state-vector" aria-label="Anchor">#</a></span></h3><p>Four internal states are tracked by the estimator:</p>
+$$<h3 id="state-vector" class="relative group">State Vector <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#state-vector" aria-label="Anchor">#</a></span></h3><p>I chose states based on real world phenomena. A fast-moving satellite will introduce a varying frequency shift due to the doppler effect. In addition, the amplitude will be affected by channel noise. The following four internal states were tracked by the estimator:</p>
 <table>
 	<thead>
 			<tr>
@@ -423,8 +423,8 @@ y_k = h(x_k, s_k) + v_k
 $$$$
 h =
 \begin{bmatrix}
-a_k * ( Re(s_k)*cos(θ_k) - Im(s_k)*sin(θ_k) ) \\
-a_k * ( Re(s_k)*sin(θ_k) + Im(s_k)*cos(θ_k) )
+a_k\big(\Re(s_k)\cos\theta_k - \Im(s_k)\sin\theta_k\big) \\
+a_k\big(\Re(s_k)\sin\theta_k + \Im(s_k)\cos\theta_k\big)
 \end{bmatrix}
 $$<p>The transmitted symbol $s_k$ is assumed known at the receiver from pilot symbols. The process model is linear; the measurement equation is nonlinear, which justifies the use of the EKF rather over the standard Kalman filter.</p>
 <hr>
@@ -471,7 +471,70 @@ $$<p>The transmitted symbol $s_k$ is assumed known at the receiver from pilot sy
 	</tbody>
 </table>
 <hr>
-<h2 id="channel-distortion-simulations" class="relative group">Channel Distortion Simulations <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#channel-distortion-simulations" aria-label="Anchor">#</a></span></h2><p>Before applying the EKF, two open-loop scenarios were simulated in Simulink to understand the effect of the carrier offsets.</p>
+<h2 id="channel-distortion-simulations" class="relative group">Channel Distortion Simulations <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#channel-distortion-simulations" aria-label="Anchor">#</a></span></h2><p>Before applying the EKF, two open-loop scenarios were simulated in Simulink to understand the effect of the carrier offsets. The plant model can be seen below:</p>
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="http://localhost:1313/projects/qpsk-ekf/images/open_loop_hu_7044565fa04c0a4d.webp 330w,http://localhost:1313/projects/qpsk-ekf/images/open_loop_hu_121bff1a2e5b6fb.webp 660w
+            
+              ,http://localhost:1313/projects/qpsk-ekf/images/open_loop_hu_7fdf0a85b42c9627.webp 1024w
+            
+            
+              ,http://localhost:1313/projects/qpsk-ekf/images/open_loop_hu_a10e8d92e7bcb45e.webp 1320w
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="1622"
+        height="885"
+        class="mx-auto my-0 rounded-md"
+        alt="openloop"
+        loading="lazy" decoding="async"
+        
+          src="http://localhost:1313/projects/qpsk-ekf/images/open_loop_hu_2efcee72b7fcdb5a.png" srcset="http://localhost:1313/projects/qpsk-ekf/images/open_loop_hu_f2265074b548c015.png 330w,http://localhost:1313/projects/qpsk-ekf/images/open_loop_hu_2efcee72b7fcdb5a.png 660w
+          
+            ,http://localhost:1313/projects/qpsk-ekf/images/open_loop_hu_d43cd64962ab3fc.png 1024w
+          
+          
+            ,http://localhost:1313/projects/qpsk-ekf/images/open_loop_hu_5146139b6123e016.png 1320w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
 <h3 id="no-synchronization-" class="relative group">No Synchronization ($u_k = 0$) <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#no-synchronization-" aria-label="Anchor">#</a></span></h3><p>To establish a baseline, the system was first simulated with no synchronization applied, meaning $u_k=0$ for all $k$. In this scenario, no correction is applied to the receiver oscillator. This allows the carrier phase and frequency offset evolve freely according to the model.</p>
 <p>
 
@@ -479,66 +542,327 @@ $$<p>The transmitted symbol $s_k$ is assumed known at the receiver from pilot sy
 
 
 
+<figure>
+    
+    
+
+
+
+
+
+
+
 
   
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="http://localhost:1313/projects/qpsk-ekf/images/0_constellation_hu_35b86c57f4610f2c.webp 330w,http://localhost:1313/projects/qpsk-ekf/images/0_constellation_hu_51af22d0a7e4ba6b.webp 660w
+            
+              
+                ,http://localhost:1313/projects/qpsk-ekf/images/0_constellation_hu_a0348de967d4025b.webp 688w
+              
+            
+            
+              
+                ,http://localhost:1313/projects/qpsk-ekf/images/0_constellation_hu_a0348de967d4025b.webp 688w
+              
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="688"
+        height="520"
+        class="mx-auto my-0 rounded-md"
+        alt="QPSK no sync"
+        loading="lazy" decoding="async"
+        
+          src="http://localhost:1313/projects/qpsk-ekf/images/0_constellation_hu_9fdd83cac7dcb765.png" srcset="http://localhost:1313/projects/qpsk-ekf/images/0_constellation_hu_e20b7b9ee9772f39.png 330w,http://localhost:1313/projects/qpsk-ekf/images/0_constellation_hu_9fdd83cac7dcb765.png 660w
+          
+            ,http://localhost:1313/projects/qpsk-ekf/images/0_constellation.png 688w
+          
+          
+            ,http://localhost:1313/projects/qpsk-ekf/images/0_constellation.png 688w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
   
-<figure><img src="s11_single.png" alt="QPSK no sync" class="mx-auto my-0 rounded-md" />
+
+
 </figure>
 </p>
-<p>The received constellation shown in the figure depicts a ring of samples rather than clustering. This shape occurs because the CFO causes the constellation to rotate continuously, essentially &ldquo;smearing&rdquo; the samples uniformly around the unit circle. This behavior is expected when there is no synchronization since the receiver has no way of accounting for the phase rotation. Furthermore, the radial thickness of the ring reflects the amplitude variation in $a_k$ over the simulation.</p>
-<h3 id="ideal-impulse-correction" class="relative group">Ideal Impulse Correction <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#ideal-impulse-correction" aria-label="Anchor">#</a></span></h3><p>A unit impulse equal to the true frequency offset ω₀ was applied at k=0 — an unrealizable but instructive scenario. The frequency offset drops to near zero immediately, stopping the linear phase accumulation. The constellation now shows four distinct clusters, but they are rotated by the initial phase offset θ₀ = π/3 from the correct QPSK positions. This demonstrates a key limitation: frequency-only correction is insufficient. The initial phase offset has no mechanism to be removed by the control input <code>u_k</code> alone, motivating the need for full state estimation.</p>
+<p>The received constellation shown in the figure above depicts a ring of samples rather than clustering. This shape occurs because the CFO causes the constellation to rotate continuously, essentially &ldquo;smearing&rdquo; the samples uniformly around the unit circle. This behavior is expected when there is no synchronization since the receiver has no way of accounting for the phase rotation. Furthermore, the radial thickness of the ring reflects the amplitude variation in $a_k$ over the simulation.</p>
+<h3 id="ideal-impulse-correction-" class="relative group">Ideal Impulse Correction ($u_k = \omega_0 \cdot \delta[k]$) <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#ideal-impulse-correction-" aria-label="Anchor">#</a></span></h3><p>To show the effect of a perfect frequency correction, a unit-impulse input was applied at $k=0$ with magnitude equal to the true frequency offset $\omega_0$. It is important to note that this scenario is not physically realizable in practice, since it assumes perfect knowledge of the frequency offset at $k=0$. However, it is useful to isolate the effect of the control input.</p>
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="http://localhost:1313/projects/qpsk-ekf/images/dirac_constellation_hu_5c6edad50731bfd3.webp 330w,http://localhost:1313/projects/qpsk-ekf/images/dirac_constellation_hu_ee13e8efa480d59e.webp 660w
+            
+              
+                ,http://localhost:1313/projects/qpsk-ekf/images/dirac_constellation_hu_942b31964ec9eecb.webp 692w
+              
+            
+            
+              
+                ,http://localhost:1313/projects/qpsk-ekf/images/dirac_constellation_hu_942b31964ec9eecb.webp 692w
+              
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="692"
+        height="516"
+        class="mx-auto my-0 rounded-md"
+        alt="QPSK impulse"
+        loading="lazy" decoding="async"
+        
+          src="http://localhost:1313/projects/qpsk-ekf/images/dirac_constellation_hu_6db4d63bbf025581.png" srcset="http://localhost:1313/projects/qpsk-ekf/images/dirac_constellation_hu_ee0376acb860641e.png 330w,http://localhost:1313/projects/qpsk-ekf/images/dirac_constellation_hu_6db4d63bbf025581.png 660w
+          
+            ,http://localhost:1313/projects/qpsk-ekf/images/dirac_constellation.png 692w
+          
+          
+            ,http://localhost:1313/projects/qpsk-ekf/images/dirac_constellation.png 692w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
+<p>The CFO correction can be seen in the above figure. Instead of the constellation ring as when $u_k=0$, the received samples now cluster around four distinct regions, essentially eliminating the smearing. However, the clusters are still phase shifted from the ideal QPSK constellation points by $\theta_0 = \pi/3$. This is a result of the uncompensated initial phase offset which demonstrates the limitation of frequency-only correction. Complete synchronization must estimate and compensate all 4 internal states, not just oscillator frequency. This once again justifies the use of the EKF for state estimation.</p>
 <hr>
-<h2 id="extended-kalman-filter" class="relative group">Extended Kalman Filter <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#extended-kalman-filter" aria-label="Anchor">#</a></span></h2><h3 id="why-ekf" class="relative group">Why EKF <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#why-ekf" aria-label="Anchor">#</a></span></h3><p>The measurement function <code>h</code> is nonlinear in <code>θ_k</code> — the received IQ samples depend on <code>cos(θ_k)</code> and <code>sin(θ_k)</code>. The EKF handles this by linearizing <code>h</code> around the current state estimate at each time step using a Jacobian matrix, then applying standard Kalman filter equations to the linearized model. The process model is already linear, so no linearization is needed in the prediction step.</p>
-<h3 id="measurement-jacobian" class="relative group">Measurement Jacobian <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#measurement-jacobian" aria-label="Anchor">#</a></span></h3><p>Defining shorthand terms evaluated at the predicted state estimate:</p>
+<h2 id="state-estimation-with-extended-kalman-filter" class="relative group">State Estimation with Extended Kalman Filter <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#state-estimation-with-extended-kalman-filter" aria-label="Anchor">#</a></span></h2><p>As mentioned before, the measurement function $h$ is nonlinear due to the trigonometric dependence of the received IQ samples on the carrier phase $\theta_k$. The EKF was chosen because it linearizes $h$ about the current state estimate at each time step and applies the standard Kalman filter equations to the linearized model.</p>
+<h3 id="measurement-jacobian" class="relative group">Measurement Jacobian <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#measurement-jacobian" aria-label="Anchor">#</a></span></h3><p>Looking back at the state space system, we can see that only the measurement equation requires linearization. The EKF linearizes $h$ by computing the Jacobian matrix $H_k$, defined as the matrix of partial derivatives of $h$ with respect to each state, evaluated at the current predicted state estimate $\hat{x}_{k}^{(-)}$:</p>
 $$
-A_k = Re(s_k)*cos(θ̂_k) - Im(s_k)*sin(θ̂_k)
+H_k = \frac{\partial h}{\partial x}\Bigg|_{\hat{x}_{k}^{(-)}}
+$$<p>The Jacobian can be expressed compactly by defining:
+</p>
+$$
+A_k = \Re(s_k)\cos\hat{\theta}_k - \Im(s_k)\sin\hat{\theta}_k
 $$<p>
 </p>
 $$
-B_k = Re(s_k)*sin(θ̂_k) + Im(s_k)*cos(θ̂_k)
-$$<p>The Jacobian of the measurement function with respect to the state vector is:</p>
+B_k = \Re(s_k)\sin\hat{\theta}_k + \Im(s_k)\cos\hat{\theta}_k
+$$<p>giving the linearized measurement matrix:</p>
 $$
-H_k = \begin{bmatrix}
+H_k = \frac{\partial h}{\partial x}\Bigg|_{\hat{x}_{k}^{(-)}}=\begin{bmatrix}
 -a_k*B_k & 0 & 0 &  A_k \\\\
  a_k*A_k & 0 & 0 & B_k
 \end{bmatrix}
-$$<p>The zero columns for $\omega_k$ and $\alpha_k$ reflect that these states do not appear in the measurement equation directly — they are only observable indirectly through the accumulation of phase over time via the integrator chain in the process model.</p>
-<h3 id="ekf-algorithm" class="relative group">EKF Algorithm <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#ekf-algorithm" aria-label="Anchor">#</a></span></h3><p>The filter runs recursively at each symbol period, alternating between a measurement update and a time propagation step.</p>
+$$<p>Note: because $\omega_k$ and $\alpha_k$ are not present in the measurement equation, their corresponding columns are zero. They are observable only indirectly through the accumulation of phase over time.</p>
+<h3 id="ekf-algorithm" class="relative group">EKF Algorithm <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#ekf-algorithm" aria-label="Anchor">#</a></span></h3><p>The EKF operates recursively at each symbol period $k$, alternating between a measurement update step and a time propagation step.</p>
 <p><strong>Initialization</strong> — The filter starts cold with no prior knowledge of phase or frequency:</p>
+<p>At $k=0$, the state estimate and error covariance are initialized as:</p>
 $$
-\hat{x}_0 = [0, 0, 0, a_{nom}]
+\hat{x}_{0} =
+\begin{bmatrix}
+0 \\ 0 \\ 0 \\ a_\text{nom}
+\end{bmatrix},
 $$<p>
 </p>
 $$
-P_0 = diag([(\pi/2)^2, (2 \pi * 500)^2, (2 \pi  * 5)^2, 0.25])
+P_{0} =
+\begin{bmatrix}
+(\pi/2)^2 & 0 & 0 & 0 \\
+0 & (2\pi \times 500)^2 & 0 & 0 \\
+0 & 0 & (2\pi \times 5)^2 & 0 \\
+0 & 0 & 0 & 0.25
+\end{bmatrix}
 $$<p><strong>Step 1 — Measurement Update:</strong></p>
+<p>Given the predicted state estimate $\hat{x}_{k}^{(-)}$ and predicted covariance $P_{k}^{(-)}$ from the previous propagation step, the EKF update equations are:</p>
 $$
-K_k   = P⁻_k * H_kᵀ * (H_k * P⁻_k * H_kᵀ + R)⁻¹
+\bar{K_k} = P^{(-)}_{k} H_k^T (H_k P^{(-)}_{k} H_k^T + R)^{-1} $$<p>
+</p>
+$$
+\hat{x}_{k}^{(+)} = \hat{x}_{k}^{(-)} + \bar{K_k} (y_k - h(\hat{x}_{k}^{(-)}, s_k))
 $$<p>
 </p>
 $$
-x̂⁺_k = x̂⁻_k + K_k * (y_k - h(x̂⁻_k, s_k))
-$$<p>
-</p>
-$$
-P⁺_k  = (I - K_k * H_k) * P⁻_k
+P_{k}^{(+)} = (I - \bar{K_k} H_k) P_{k}^{(-)} (I - \bar{K_k} H_k)^T + \bar{K_k} R \bar{K_k}^T
 $$<p><strong>Step 2 — Time Propagation:</strong></p>
-<pre tabindex="0"><code>x̂⁻_{k+1} = Φ * x̂⁺_k + Γ * u_k
-P⁻_{k+1}  = Φ * P⁺_k * Φᵀ + Q
-</code></pre><p>Because the process model is linear, no Jacobian is required in the prediction step. All linearization error in the EKF is confined to the measurement update.</p>
-<h3 id="convergence" class="relative group">Convergence <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#convergence" aria-label="Anchor">#</a></span></h3><p>The EKF estimates of phase and amplitude converge quickly to the true states after a short transient at startup. The frequency offset ω_k and drift α_k take longer to converge since they are not directly observed — the filter must infer them from the accumulated effect on phase over multiple symbol periods. Once converged, the estimation errors remain small relative to the noise floor.</p>
+<p>After the measurement update, the state estimate and covariance are propagated forward one symbol period using the linear process model:</p>
+$$
+\hat{x}_{k+1}^{(-)} = \Phi\, \hat{x}_{k}^{(+)} + \Gamma u_k 
+$$<p>
+</p>
+$$
+P_{k+1}^{(-)} = \Phi\, P_{k}^{(+)}\, \Phi^T + Q
+$$<p>Because the process model is linear, no Jacobian is required in the prediction step. All linearization error in the EKF is confined to the measurement update.</p>
+<h3 id="matlab-ekf-implementation" class="relative group">Matlab EKF Implementation <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#matlab-ekf-implementation" aria-label="Anchor">#</a></span></h3><p>The recursive algorithm was implemented in matlab using the system results from the simulink open-loop model. The following snippet shows the EKF loop at each timestep $k$:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#66d9ef">for</span> k = <span style="color:#ae81ff">1</span>:n_samples
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">%% Step 1: Measurement Update</span>
+</span></span><span style="display:flex;"><span>    sk = s(k);    <span style="color:#75715e">% known pilot symbol</span>
+</span></span><span style="display:flex;"><span>    s_re = real(sk);
+</span></span><span style="display:flex;"><span>    s_im = imag(sk);
+</span></span><span style="display:flex;"><span>    theta = x_hat(<span style="color:#ae81ff">1</span>);
+</span></span><span style="display:flex;"><span>    a = x_hat(<span style="color:#ae81ff">4</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">% Predicted measurement h</span>
+</span></span><span style="display:flex;"><span>    h = [a<span style="color:#f92672">*</span>(s_re<span style="color:#f92672">*</span>cos(theta) <span style="color:#f92672">-</span> s_im<span style="color:#f92672">*</span>sin(theta));
+</span></span><span style="display:flex;"><span>         a<span style="color:#f92672">*</span>(s_re<span style="color:#f92672">*</span>sin(theta) <span style="color:#f92672">+</span> s_im<span style="color:#f92672">*</span>cos(theta))];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">% Calculating Jacobian</span>
+</span></span><span style="display:flex;"><span>    dh_dtheta_I = <span style="color:#f92672">-</span>a<span style="color:#f92672">*</span>(s_re<span style="color:#f92672">*</span>sin(theta) <span style="color:#f92672">+</span> s_im<span style="color:#f92672">*</span>cos(theta));
+</span></span><span style="display:flex;"><span>    dh_dtheta_Q = a<span style="color:#f92672">*</span>(s_re<span style="color:#f92672">*</span>cos(theta) <span style="color:#f92672">-</span> s_im<span style="color:#f92672">*</span>sin(theta));
+</span></span><span style="display:flex;"><span>    dh_da_I = s_re<span style="color:#f92672">*</span>cos(theta) <span style="color:#f92672">-</span> s_im<span style="color:#f92672">*</span>sin(theta);
+</span></span><span style="display:flex;"><span>    dh_da_Q = s_re<span style="color:#f92672">*</span>sin(theta) <span style="color:#f92672">+</span> s_im<span style="color:#f92672">*</span>cos(theta);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    H = [dh_dtheta_I, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, dh_da_I;
+</span></span><span style="display:flex;"><span>         dh_dtheta_Q, <span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">0</span>, dh_da_Q];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">% Kalman gain</span>
+</span></span><span style="display:flex;"><span>    K = P <span style="color:#f92672">*</span> H<span style="color:#f92672">&#39;</span> <span style="color:#f92672">/</span> (H <span style="color:#f92672">*</span> P <span style="color:#f92672">*</span> H<span style="color:#f92672">&#39;</span> <span style="color:#f92672">+</span> R);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">% State update</span>
+</span></span><span style="display:flex;"><span>    y_k = y_meas_sim(k,:)<span style="color:#f92672">&#39;</span>;
+</span></span><span style="display:flex;"><span>    x_hat = x_hat <span style="color:#f92672">+</span> K <span style="color:#f92672">*</span> (y_k <span style="color:#f92672">-</span> h);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">% Covariance update</span>
+</span></span><span style="display:flex;"><span>    IKH = eye(<span style="color:#ae81ff">4</span>) <span style="color:#f92672">-</span> K<span style="color:#f92672">*</span>H;
+</span></span><span style="display:flex;"><span>    P = IKH <span style="color:#f92672">*</span> P <span style="color:#f92672">*</span> IKH<span style="color:#f92672">&#39;</span> <span style="color:#f92672">+</span> K <span style="color:#f92672">*</span> R <span style="color:#f92672">*</span> K<span style="color:#f92672">&#39;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">% Store results</span>
+</span></span><span style="display:flex;"><span>    x_est(k,:) = x_hat<span style="color:#f92672">&#39;</span>;
+</span></span><span style="display:flex;"><span>    P_diag(k,:) = diag(P)<span style="color:#f92672">&#39;</span>;
+</span></span><span style="display:flex;"><span>    K_log(k,:) = K(:,<span style="color:#ae81ff">1</span>)<span style="color:#f92672">&#39;</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">%% Step 2: Time Propagation</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> k <span style="color:#f92672">&lt;</span> n_samples
+</span></span><span style="display:flex;"><span>        x_hat = Phi <span style="color:#f92672">*</span> x_hat <span style="color:#f92672">+</span> Gamma <span style="color:#f92672">*</span> u_vec(k);
+</span></span><span style="display:flex;"><span>        P = Phi <span style="color:#f92672">*</span> P <span style="color:#f92672">*</span> Phi<span style="color:#f92672">&#39;</span> <span style="color:#f92672">+</span> Q;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">end</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span>
+</span></span></code></pre></div><hr>
+<h2 id="signal-correction-and-symbol-recovery" class="relative group">Signal Correction and Symbol Recovery <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#signal-correction-and-symbol-recovery" aria-label="Anchor">#</a></span></h2><p>To isolate the transmitted symbol $s_k$, the received sample is rotated by the negative of the estimated phase offset and normalized by the estimated amplitude:</p>
+$$
+\tilde{r}_k = \frac{r_k \cdot e^{-j\hat{\theta}_k}}{\hat{a}_k}
+$$<p>
+Substituting the signal model:
+</p>
+$$
+\tilde{r}_k = \frac{a_k s_k e^{j\theta_k} e^{-j\hat{\theta}_k} + v_k e^{-j\hat{\theta}_k}}{\hat{a}_k} \approx s_k + \tilde{v}_k
+$$<p>
+As the EKF converges and $\hat{\theta}_k \to \theta_k$ and $\hat{a}_k \to a_k$, the corrected sample approaches the ideal transmitted symbol plus residual noise only ($$\tilde{v}_k$). A nearest-neighbor decision rule then maps each corrected sample to the closest QPSK constellation point:</p>
+$$
+\hat{s}_k = \underset{s \in \mathcal{S}}{\arg\min}\ |\tilde{r}_k - s|
+$$<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-matlab" data-lang="matlab"><span style="display:flex;"><span><span style="color:#75715e">% Rotate received samples back by estimated phase</span>
+</span></span><span style="display:flex;"><span>r_received  = y_meas_sim(:,<span style="color:#ae81ff">1</span>) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>j<span style="color:#f92672">*</span>y_meas_sim(:,<span style="color:#ae81ff">2</span>);
+</span></span><span style="display:flex;"><span>r_corrected = r_received <span style="color:#f92672">.*</span> exp(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>j<span style="color:#f92672">*</span>x_est(:,<span style="color:#ae81ff">1</span>)) <span style="color:#f92672">/</span> mean(x_est(:,<span style="color:#ae81ff">4</span>));
+</span></span></code></pre></div><p>The decided symbol $\hat{s}_k$ is taken as the estimate of the transmitted symbol. The effect of the EKF offset estimation and correction can be seen in the figure below by the clustering of symbols around the 4 QPSK constellation points:</p>
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="http://localhost:1313/projects/qpsk-ekf/images/ekf_symbols_hu_baf87c533ec4d992.webp 330w,http://localhost:1313/projects/qpsk-ekf/images/ekf_symbols_hu_50724a762952c203.webp 660w
+            
+              
+                ,http://localhost:1313/projects/qpsk-ekf/images/ekf_symbols_hu_47199dc34a9465d4.webp 727w
+              
+            
+            
+              
+                ,http://localhost:1313/projects/qpsk-ekf/images/ekf_symbols_hu_47199dc34a9465d4.webp 727w
+              
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="727"
+        height="700"
+        class="mx-auto my-0 rounded-md"
+        alt="ekf symbl"
+        loading="lazy" decoding="async"
+        
+          src="http://localhost:1313/projects/qpsk-ekf/images/ekf_symbols_hu_2b3d350f0664b703.png" srcset="http://localhost:1313/projects/qpsk-ekf/images/ekf_symbols_hu_d83c502156b66dd1.png 330w,http://localhost:1313/projects/qpsk-ekf/images/ekf_symbols_hu_2b3d350f0664b703.png 660w
+          
+            ,http://localhost:1313/projects/qpsk-ekf/images/ekf_symbols.png 727w
+          
+          
+            ,http://localhost:1313/projects/qpsk-ekf/images/ekf_symbols.png 727w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
 <hr>
-<h2 id="signal-correction-and-symbol-recovery" class="relative group">Signal Correction and Symbol Recovery <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#signal-correction-and-symbol-recovery" aria-label="Anchor">#</a></span></h2><p>The EKF state estimate is used to undo the phase and amplitude distortions on each received sample:</p>
-<pre tabindex="0"><code>r̃_k = (r_k * exp(-j*θ̂_k)) / â_k
-</code></pre><p>As the EKF converges and <code>θ̂_k → θ_k</code> and <code>â_k → a_k</code>, the corrected sample approaches the ideal transmitted symbol plus residual noise only. A nearest-neighbor decision rule then maps each corrected sample to the closest QPSK constellation point:</p>
-<pre tabindex="0"><code>ŝ_k = argmin over s in S of |r̃_k - s|
-</code></pre><p>The corrected IQ constellation shows tight clustering around all four QPSK points, confirming successful synchronization.</p>
-<hr>
-<h2 id="observability" class="relative group">Observability <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#observability" aria-label="Anchor">#</a></span></h2><p>A necessary condition for EKF convergence is that all states are observable from the measurements. Only θ_k and a_k appear directly in <code>H_k</code>. The states ω_k and α_k are not directly observed but become observable over time through the integrator structure: ω_k drives the accumulation of θ_k, and α_k drives the drift of ω_k. The filter builds sufficient observability for these states after several symbol periods, which explains the longer initial transient in their estimates.</p>
-<hr>
-<h2 id="closed-loop-extension-future-work" class="relative group">Closed-Loop Extension (Future Work) <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#closed-loop-extension-future-work" aria-label="Anchor">#</a></span></h2><p>In the current implementation, the oscillator correction input <code>u_k</code> is held at zero throughout the simulation and correction is applied as a post-processing step. In a fully closed-loop receiver, the EKF frequency estimate would be fed back to drive the oscillator in real time:</p>
-<pre tabindex="0"><code>u_k = ω̂⁺_k
-</code></pre><p>This would actively reduce the frequency offset at each step, shrinking the residual the filter needs to track and improving both convergence speed and steady-state accuracy.</p>
+<h2 id="active-controller-design-incomplete" class="relative group">Active Controller Design (Incomplete) <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#active-controller-design-incomplete" aria-label="Anchor">#</a></span></h2><p>In the current implementation, the oscillator correction input $u_k$ is held at zero throughout the simulation and correction is applied as a post-processing step. In a fully closed-loop receiver, the EKF frequency estimate would be fed back to drive the oscillator in real time:</p>
+$$u_k = \hat{\omega}^{(+)}_k$$<p>This would actively reduce the frequency offset at each step, shrinking the residual the filter needs to track and improving both convergence speed and steady-state accuracy. This would essentially be the implementation of a phase locked loop (PLL) which is the next step that I will work on.</p>
 <hr>
 <h2 id="tools-used" class="relative group">Tools Used <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#tools-used" aria-label="Anchor">#</a></span></h2><ul>
 <li><strong>MATLAB</strong> — EKF implementation, signal correction, constellation plots</li>
