@@ -1,5 +1,5 @@
 ---
-title: "Oscilloscope FPGA Design in VHDL"
+title: "Oscilloscope Software/Hardware Co-design on Zynq-7010 SoC"
 date: 2025-12-10
 summary: "Designed an oscilloscope on an fpga in vhdl"
 tags: ["FPGA", "VHDL", "Verification", "Xilinx"]

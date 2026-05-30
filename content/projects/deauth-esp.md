@@ -1,5 +1,5 @@
 ---
-title: "ESP32 WiFi Sentry"
+title: "WiFi Deauthentication Attack Detection and Localization using ESP32"
 date: 2025-11-30
 summary: "test"
 tags: ["ESP32", "Embedded", "Triangulation"]

@@ -1,5 +1,5 @@
 ---
-title: "Carrier Offset Tracking and Phase-Locking in a QPSK Digital Receiver"
+title: "Carrier Offset Tracking and Phase-Locking in a QPSK Digital Receiver using Extended Kalman Filter"
 date: 2026-04-30
 summary: "test"
 tags: ["MATLAB", "Simulink", "Kalman Filter", "DSP", "Communications"]
@@ -10,11 +10,19 @@ weight: 1                   # lower = appears first in listings
 math: true
 ---
 
-## Overview
+## Project Summarry
 
-Accurate demodulation in a digital communication system requires the receiver to stay synchronized with the incoming RF carrier. In practice, several physical effects make this difficult: carrier frequency offset (CFO) from oscillator inaccuracies or Doppler shifts causes a continuously rotating phase in the received baseband signal, channel fading varies the signal amplitude, and additive noise corrupts every measurement.
+This project simulates the effects of receiving a wireless signal that has been altered by carrier offsets and channel noise. I modeled the channel effects as a nonlinear state space system and then implemented an Extended Kalman Filter (EKF) to estimate these offsets and correct them. I decided to apply this to a quadrature shift phase keying (QPSK) modulation scheme since it is widely used in satellite communications which regularly have to correct doppler shifts. The simulation and algorithms were developed with Matlab and Simulink.
 
-This project models a QPSK receiver in MATLAB and Simulink and implements an Extended Kalman Filter (EKF) to jointly estimate all four distortion states in real time, enabling correction of the received IQ samples and accurate symbol recovery.
+
+## Background
+In a digital communication system, accurate demodulation requires the receiver to maintain synchronization with the incoming RF carrier. In practice, several physical effects distort the received signal and make this challenging. 
+
+One of the most prominent effects is carrier frequency offset (CFO) which occurs when the receiver's local oscillator is not perfectly synchronized with the transmitter's. This can occur due to oscillator inaccuracies or Doppler shifts. These frequency offsets accumulate over time and result in a rotating phase in the received baseband signal.
+
+Additional distortions include signal amplitude variations due to channel fading and additive noise from receiver electronics.
+
+Together, these distortions make accurate symbol detection difficult, and the receiver must estimate these carrier offsets in order to recover the transmitted symbol.
 
 ---
 
@@ -32,7 +40,15 @@ $$
 r_k=a_k s_k e^{j\theta_k}+v_k
 $$
 
-where `theta_k` is the carrier phase offset, `a_k` is the signal amplitude, and `v_k` is complex AWGN. The trigonometric dependence of the IQ components on `theta_k` introduces the nonlinearity that prevents a standard linear Kalman filter from being used directly.
+where the distortions are $\theta_k$, the carrier phase offset, $a_k$, the signal amplitude, and $v_k \sim \mathcal{CN}(0,\sigma^2)$, complex additive white Gaussian noise (AWGN).
+
+Separating into real and imaginary components gives the in-phase (I) and quadrature (Q) components of the received symbol:
+$$
+\begin{aligned}
+\Re(r_k) &= a_k \big( \Re(s_k)\cos\theta_k - \Im(s_k)\sin\theta_k \big) + \Re(v_k), \\
+\Im(r_k) &= a_k \big( \Re(s_k)\sin\theta_k + \Im(s_k)\cos\theta_k \big) + \Im(v_k).
+\end{aligned}
+$$
 
 ### State Vector
 
@@ -40,40 +56,88 @@ Four internal states are tracked by the estimator:
 
 | State | Symbol | Description |
 |---|---|---|
-| Carrier phase | θₖ | Instantaneous phase offset |
-| Frequency offset | ωₖ | CFO from oscillator mismatch |
-| Frequency drift | αₖ | Rate of change of frequency offset |
-| Signal amplitude | aₖ | Channel fading amplitude |
+| Carrier phase | $\theta_k$ | Instantaneous phase offset |
+| Frequency offset | $\omega_k$ | CFO from oscillator mismatch |
+| Frequency drift | $\alpha_k$ | Rate of change of frequency offset |
+| Signal amplitude | $a_k$ | Channel fading amplitude |
+
+This gives a state vector $x_k$:
+$$
+x_k =
+\begin{bmatrix}
+\theta_k \\
+\omega_k \\
+\alpha_k \\
+a_k
+\end{bmatrix}.
+$$
 
 ### State Equations
 
-Phase, frequency, and drift are coupled through integrator relationships. The amplitude is modeled as a random walk. The full discrete-time state equation in matrix form is:
+The state equations were derived from the integrator relationships between $\theta_k$ and $\omega_k$. For this project, the integration is expanded to include frequency drift $\alpha_k$ which is the discrete-time change in $\omega_k$.
 
-```
-x_{k+1} = Φ * x_k + Γ * u_k + n_k
-```
+The input $u_k$ is applied to the receiver oscillator which allows adjustment of the frequency offset. This input influences both phase and frequency due to their integrator relationship. In this model, $u_k$ appears in both the phase and frequency equations with a gain of $T$ in the phase equation reflecting the integration of frequency over one symbol period, and a gain of $1$ in the frequency equation as a direct offset correction.
+    
+Furthermore, for model simplicity, the amplitude $a_k$ is modeled as a random walk driven by process noise. 
 
-where `u_k` is the oscillator correction input and `n_k` is zero-mean Gaussian process noise with covariance Q. The state transition and input matrices are:
+Lastly, for each state, a random noise variable in the vector $n_k \sim \mathcal{N}(0,Q)$ is added to finalize the state equation for this system:
 
-```
-Φ = | 1   T   T²/2   0 |       Γ = | -T |
-    | 0   1   T      0 |           | -1 |
-    | 0   0   1      0 |           |  0 |
-    | 0   0   0      1 |           |  0 |
-```
+$$
+\begin{aligned}
+\theta_{k+1} &= \theta_k + T\omega_k + \frac{T^2}{2}\alpha_k- T u_k + n_{\theta,k} \\
+\omega_{k+1} &= \omega_k + T\alpha_k - u_k + n_{\omega,k} \\
+\alpha_{k+1} &= \alpha_k + n_{\alpha,k} \\
+a_{k+1} &= a_k + n_{a,k}
+\end{aligned}
+$$
+
+The full discrete-time state equation in matrix form is:
+
+
+$$
+x_{k+1} =
+\underbrace{
+\begin{bmatrix}
+1 & T & \frac{T^2}{2} & 0 \\
+0 & 1 & T & 0 \\
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 1
+\end{bmatrix}
+}_{\Phi}
+x_k
++
+\underbrace{
+\begin{bmatrix}
+-T \\
+-1 \\
+0 \\
+0
+\end{bmatrix}
+}_{\Gamma}
+u_k + n_k
+$$
+
+or simply:
+
+$$x_{k+1}=\Phi x_k + \Gamma u_k + n_k$$
 
 ### Measurement Equation
 
-The measurement is the received IQ sample, split into in-phase and quadrature components:
+The measurement is the received IQ sample, split into in-phase and quadrature components with added measurement noise $v_k \sim \mathcal{N}(0,R)$:
 
-```
+$$
 y_k = h(x_k, s_k) + v_k
+$$
 
-h = | a_k * ( Re(s_k)*cos(θ_k) - Im(s_k)*sin(θ_k) ) |
-    | a_k * ( Re(s_k)*sin(θ_k) + Im(s_k)*cos(θ_k) ) |
-```
+$$
+h =
+\begin{bmatrix}
+a_k * ( Re(s_k)*cos(θ_k) - Im(s_k)*sin(θ_k) ) \\
+a_k * ( Re(s_k)*sin(θ_k) + Im(s_k)*cos(θ_k) )
+\end{bmatrix}
+$$
 
-The transmitted symbol `s_k` is assumed known at the receiver via pilot symbols. The process model is linear; the measurement equation is nonlinear — specifically requiring an EKF rather than a standard Kalman filter.
+The transmitted symbol $s_k$ is assumed known at the receiver from pilot symbols. The process model is linear; the measurement equation is nonlinear, which justifies the use of the EKF rather over the standard Kalman filter.
 
 ---
 
@@ -84,21 +148,25 @@ The transmitted symbol `s_k` is assumed known at the receiver via pilot symbols.
 | Number of symbols N | 500 |
 | Symbol period T | 1×10⁻⁴ s |
 | Symbol rate | 10,000 symbols/s |
-| Initial phase offset θ₀ | π/3 rad |
-| Initial frequency offset ω₀ | 2π×200 rad/s |
-| Initial frequency drift α₀ | 2π×0.5 rad/s² |
-| Initial amplitude a₀ | 1.0 |
+| Initial phase offset $\theta_0$ | π/3 rad |
+| Initial frequency offset $\omega_0$ | 2π×200 rad/s |
+| Initial frequency drift $\alpha_0$ | 2π×0.5 rad/s² |
+| Initial amplitude $a_0$ | 1.0 |
 | SNR | 10 dB |
 
 ---
 
-## Open-Loop Characterization
+## Channel Distortion Simulations
 
 Before applying the EKF, two open-loop scenarios were simulated in Simulink to understand the effect of the carrier offsets.
 
-### No Synchronization (u_k = 0)
+### No Synchronization ($u_k = 0$)
 
-With no correction applied, the carrier phase accumulates linearly over time due to the constant frequency offset of ω₀ = 200 Hz. Over 500 symbols the phase accumulates roughly 20π radians — approximately 10 full rotations of the constellation. The received IQ plot shows a ring of samples rather than four clusters, because the rotating phase smears all four constellation points uniformly around the unit circle.
+To establish a baseline, the system was first simulated with no synchronization applied, meaning $u_k=0$ for all $k$. In this scenario, no correction is applied to the receiver oscillator. This allows the carrier phase and frequency offset evolve freely according to the model.
+
+![QPSK no sync](s11_single.png)
+
+The received constellation shown in the figure depicts a ring of samples rather than clustering. This shape occurs because the CFO causes the constellation to rotate continuously, essentially "smearing" the samples uniformly around the unit circle. This behavior is expected when there is no synchronization since the receiver has no way of accounting for the phase rotation. Furthermore, the radial thickness of the ring reflects the amplitude variation in $a_k$ over the simulation.
 
 ### Ideal Impulse Correction
 
@@ -116,19 +184,23 @@ The measurement function `h` is nonlinear in `θ_k` — the received IQ samples 
 
 Defining shorthand terms evaluated at the predicted state estimate:
 
-```
+$$
 A_k = Re(s_k)*cos(θ̂_k) - Im(s_k)*sin(θ̂_k)
+$$
+$$
 B_k = Re(s_k)*sin(θ̂_k) + Im(s_k)*cos(θ̂_k)
-```
+$$
 
 The Jacobian of the measurement function with respect to the state vector is:
 
-```
-H_k = | -a_k*B_k   0   0   A_k |
-      |  a_k*A_k   0   0   B_k |
-```
+$$
+H_k = \begin{bmatrix}
+-a_k*B_k & 0 & 0 &  A_k \\\\
+ a_k*A_k & 0 & 0 & B_k
+\end{bmatrix}
+$$
 
-The zero columns for ω_k and α_k reflect that these states do not appear in the measurement equation directly — they are only observable indirectly through the accumulation of phase over time via the integrator chain in the process model.
+The zero columns for $\omega_k$ and $\alpha_k$ reflect that these states do not appear in the measurement equation directly — they are only observable indirectly through the accumulation of phase over time via the integrator chain in the process model.
 
 ### EKF Algorithm
 
@@ -136,19 +208,24 @@ The filter runs recursively at each symbol period, alternating between a measure
 
 **Initialization** — The filter starts cold with no prior knowledge of phase or frequency:
 
-```
-x̂_0 = [0, 0, 0, a_nom]
-
-P_0 = diag([(π/2)², (2π×500)², (2π×5)², 0.25])
-```
+$$
+\hat{x}_0 = [0, 0, 0, a_{nom}]
+$$
+$$
+P_0 = diag([(\pi/2)^2, (2 \pi * 500)^2, (2 \pi  * 5)^2, 0.25])
+$$
 
 **Step 1 — Measurement Update:**
 
-```
+$$
 K_k   = P⁻_k * H_kᵀ * (H_k * P⁻_k * H_kᵀ + R)⁻¹
+$$
+$$
 x̂⁺_k = x̂⁻_k + K_k * (y_k - h(x̂⁻_k, s_k))
+$$
+$$
 P⁺_k  = (I - K_k * H_k) * P⁻_k
-```
+$$
 
 **Step 2 — Time Propagation:**
 

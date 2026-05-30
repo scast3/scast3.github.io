@@ -1,5 +1,5 @@
 ---
-title: "AtTiny85 Music Box PCB"
+title: "Music Box PCB and Firmware Design with ATTiny85 Microcontroller"
 date: 2026-05-20
 summary: "test"
 tags: ["KiCad", "Embedded", "Arduino"]
