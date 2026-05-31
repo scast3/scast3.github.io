@@ -1,5 +1,5 @@
 baseURL = "http://localhost:1313/"
-title = "Santiago | Project Portfolio"
+title = "Santiago's Engineering Portfolio"
 theme = "congo"
 defaultContentLanguage = "en"
 enableRobotsTXT = true

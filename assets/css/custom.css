@@ -1,0 +1,7 @@
+.prose > div {
+    max-width: 100% !important;
+}
+
+.min-w-0.max-w-prose {
+    max-width: 100% !important;
+}

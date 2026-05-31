@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
-		<title>Testing on Santiago | Project Portfolio</title>
+		<title>Testing on Santiago&#39;s Engineering Portfolio</title>
 		<link>http://localhost:1313/</link>
-		<description>Recent content in Testing on Santiago | Project Portfolio</description>
+		<description>Recent content in Testing on Santiago&#39;s Engineering Portfolio</description>
 		<generator>Hugo</generator>
 		<language>en-us</language>
 		
@@ -28,7 +28,7 @@
 				<description>test</description>
 			</item>
 			<item>
-				<title>Carrier Offset Tracking and Phase-Locking in a QPSK Digital Receiver using Extended Kalman Filter</title>
+				<title>Carrier Offset Estimation and Phase-Locking in a QPSK Digital Receiver using Extended Kalman Filter</title>
 				<link>http://localhost:1313/projects/qpsk-ekf/</link>
 				<pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/projects/qpsk-ekf/</guid>

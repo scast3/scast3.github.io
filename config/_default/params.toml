@@ -5,3 +5,6 @@ math = true
   layout = "profile"
   showRecent = true
   showRecentItems = 5
+
+[custom]
+  css = ["css/custom.css"]

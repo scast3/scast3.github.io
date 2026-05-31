@@ -1,5 +1,5 @@
 ---
-title: "Carrier Offset Tracking and Phase-Locking in a QPSK Digital Receiver using Extended Kalman Filter"
+title: "Carrier Offset Estimation and Phase-Locking in a QPSK Digital Receiver using Extended Kalman Filter"
 date: 2026-04-30
 summary: "test"
 tags: ["MATLAB", "Simulink", "Kalman Filter", "DSP", "Communications"]
@@ -12,7 +12,7 @@ math: true
 
 ## Project Summary
 
-This project simulates the effects of receiving a wireless signal that has been altered by carrier offsets and channel noise. I modeled the channel effects as a nonlinear state space system and then implemented an Extended Kalman Filter (EKF) to estimate these offsets and correct them. I decided to apply this to a quadrature shift phase keying (QPSK) modulation scheme since it is widely used in satellite communications which regularly have to correct doppler shifts. The simulation and algorithms were developed with Matlab and Simulink.
+This project simulates the effects of receiving a wireless signal that has been altered by carrier offsets and channel noise. I modeled the channel effects as a nonlinear state space system and then implemented an Extended Kalman Filter (EKF) to estimate these offsets and correct them. I decided to apply this to a quadrature shift phase keying (QPSK) modulation scheme since it is widely used in satellite communications which regularly have to correct doppler shifts. I am stil working on the real-time offset correction to turn this into a phase-locked loop (PLL) and potentially implement on a microcontroller. The simulation and algorithms were developed with Matlab and Simulink.
 
 
 ## Background
@@ -326,7 +326,7 @@ Substituting the signal model:
 $$
 \tilde{r}_k = \frac{a_k s_k e^{j\theta_k} e^{-j\hat{\theta}_k} + v_k e^{-j\hat{\theta}_k}}{\hat{a}_k} \approx s_k + \tilde{v}_k
 $$
-As the EKF converges and $\hat{\theta}_k \to \theta_k$ and $\hat{a}_k \to a_k$, the corrected sample approaches the ideal transmitted symbol plus residual noise only ($$\tilde{v}_k$). A nearest-neighbor decision rule then maps each corrected sample to the closest QPSK constellation point:
+As the EKF converges and $\hat{\theta}_k \to \theta_k$ and $\hat{a}_k \to a_k$, the corrected sample approaches the ideal transmitted symbol plus residual noise only ($\tilde{v}_k$). A nearest-neighbor decision rule then maps each corrected sample to the closest QPSK constellation point:
 
 $$
 \hat{s}_k = \underset{s \in \mathcal{S}}{\arg\min}\ |\tilde{r}_k - s|
