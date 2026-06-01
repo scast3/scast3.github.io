@@ -123,7 +123,7 @@
     "keywords": ["FPGA","VHDL","Verification","Xilinx"],
     
     "mainEntityOfPage": "true",
-    "wordCount": "1886"
+    "wordCount": "1854"
   }
   </script>
     
@@ -316,10 +316,63 @@
 
 
 
+<figure>
+    
+    
+
+
+
+
+
+
+
 
   
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="http://localhost:1313/projects/fpga-oscilloscope/images/final_diagram_hu_699eda54f6f0fc8d.webp 330w,http://localhost:1313/projects/fpga-oscilloscope/images/final_diagram_hu_b67489f859c4fa08.webp 660w
+            
+              ,http://localhost:1313/projects/fpga-oscilloscope/images/final_diagram_hu_b9a83255d168ab3b.webp 1024w
+            
+            
+              
+                ,http://localhost:1313/projects/fpga-oscilloscope/images/final_diagram_hu_7e98dca86e94a16a.webp 1152w
+              
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="1152"
+        height="720"
+        class="mx-auto my-0 rounded-md"
+        alt="AXI bus signals diagram"
+        loading="lazy" decoding="async"
+        
+          src="http://localhost:1313/projects/fpga-oscilloscope/images/final_diagram_hu_ff80d620ad26c941.png" srcset="http://localhost:1313/projects/fpga-oscilloscope/images/final_diagram_hu_41e09fa96386bd35.png 330w,http://localhost:1313/projects/fpga-oscilloscope/images/final_diagram_hu_ff80d620ad26c941.png 660w
+          
+            ,http://localhost:1313/projects/fpga-oscilloscope/images/final_diagram_hu_d1c1144eff166e9d.png 1024w
+          
+          
+            ,http://localhost:1313/projects/fpga-oscilloscope/images/final_diagram.png 1152w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
   
-<figure><img src="board.jpg" alt="fpga" class="mx-auto my-0 rounded-md" />
+
+
 </figure>
 </p>
 <h2 id="system-architecture" class="relative group">System Architecture <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#system-architecture" aria-label="Anchor">#</a></span></h2><pre tabindex="0"><code>  +---------------------+        AXI4-Lite Bus        +----------------------+
@@ -336,10 +389,75 @@
                                         AD7606 ADC --&gt;|  16-bit parallel bus |
                                         HDMI output &lt;-|  TMDS serializer     |
                                                       +----------------------+
-</code></pre><p>The top-level VHDL entity <code>acquireToHDMI</code> instantiates two sub-modules: a datapath (<code>acquireToHDMI_datapath</code>) handling the ADC interface, waveform buffering, and video rendering, and a Moore FSM (<code>acquireToHDMI_fsm</code>) generating the control word that sequences all operations. The AXI wrapper instantiates this top-level and exposes its ports as memory-mapped registers to the PS.</p>
+</code></pre><p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_898eb5ec72a2d9c2.webp 330w,http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_bff08ab340020db0.webp 660w
+            
+              ,http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_d73c0cd788b0f3d2.webp 1024w
+            
+            
+              
+                ,http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_d5b0562f251e45ed.webp 1062w
+              
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="1062"
+        height="435"
+        class="mx-auto my-0 rounded-md"
+        alt="vivado block diagram"
+        loading="lazy" decoding="async"
+        
+          src="http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_34c045d7578db70b.png" srcset="http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_5025ef2ea7e7b4.png 330w,http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_34c045d7578db70b.png 660w
+          
+            ,http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_d6d0e3ec9ca5d078.png 1024w
+          
+          
+            ,http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block.png 1062w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
+<p>The top-level VHDL entity <code>acquireToHDMI.vhdl</code> instantiates two sub-modules: a datapath (<code>acquireToHDMI_datapath</code>) handling the ADC interface, waveform buffering, and video rendering, and a Moore FSM (<code>acquireToHDMI_fsm</code>) generating the control word that sequences all operations. The AXI wrapper (<code>final_oscope_slave_lite_v1_0_S00_AXI.vhdl</code>) instantiates this top-level and exposes its ports as memory-mapped registers to the PS. The signals fed from the wrapper were accessed in the file <code>helloworld.c</code>.</p>
 <hr>
-<h2 id="programmable-logic--vhdl-design" class="relative group">Programmable Logic — VHDL Design <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#programmable-logic--vhdl-design" aria-label="Anchor">#</a></span></h2><p>The PL design follows a classic <strong>datapath / FSM separation</strong>. The datapath (<code>acquireToHDMI_datapath</code>) contains all registers, counters, BRAMs, comparators, and pixel converters as structural VHDL instantiations. The FSM (<code>acquireToHDMI_fsm</code>) is a pure Moore machine that observes a status word (<code>sw</code>) from the datapath and drives a control word (<code>cw</code>) back to it — the two modules communicate only through these two buses, with no direct logic between them.</p>
-<h3 id="control-word--status-word-interface" class="relative group">Control Word / Status Word Interface <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#control-word--status-word-interface" aria-label="Anchor">#</a></span></h3><p>The FSM has no knowledge of signal values — it only sees a vector of condition bits (the status word) and outputs a vector of control bits (the control word). Every datapath resource — counters, registers, BRAM write enables — is gated by a dedicated bit in <code>cw</code>. This makes the state outputs in the FSM completely readable as a lookup table: each state drives a fixed <code>cw</code> pattern with named bit positions defined in the shared package.</p>
+<h2 id="programmable-logic--vhdl-design" class="relative group">Programmable Logic — VHDL Design <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#programmable-logic--vhdl-design" aria-label="Anchor">#</a></span></h2><p>The PL follows a standard datapath and control design. The datapath (<code>acquireToHDMI_datapath.vhdl</code>) contains all registers, counters, BRAMs, comparators, and pixel converters as structural VHDL instantiations. The control module (<code>acquireToHDMI_fsm.vhdl</code>) is a finite state machine that observes the status word (<code>sw</code>) from the datapath and drives a control word (<code>cw</code>) back to it — the two modules communicate only through these two buses, with no direct logic between them.</p>
+<h3 id="cw-and-sw-signals" class="relative group">CW and SW Signals <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#cw-and-sw-signals" aria-label="Anchor">#</a></span></h3><p>The FSM has no knowledge of signal values — it only sees a vector of condition bits (the status word) and outputs a vector of control bits (the control word). Every datapath resource — counters, registers, BRAM write enables — is gated by a dedicated bit in <code>cw</code>. This makes the state outputs in the FSM completely readable as a lookup table: each state drives a fixed <code>cw</code> pattern with named bit positions defined in the shared package.</p>
 <p><strong>Key status word (sw) bits observed by the FSM:</strong></p>
 <table>
 	<thead>
@@ -367,7 +485,7 @@
 			</tr>
 			<tr>
 					<td><code>FULL_SW</code></td>
-					<td>Write address == screen width</td>
+					<td>BRAM write address == screen width</td>
 					<td><code>cmp_BRAM_full</code></td>
 			</tr>
 			<tr>
@@ -393,7 +511,7 @@
 			<tr>
 					<td><code>SINGLE_SW</code> / <code>FORCED_SW</code></td>
 					<td>Mode from PS control reg</td>
-					<td>AXI slv_reg3</td>
+					<td>user input (AXI slv_reg3)</td>
 			</tr>
 	</tbody>
 </table>
@@ -452,27 +570,20 @@
 			</tr>
 	</tbody>
 </table>
-<h3 id="fsm-state-machine" class="relative group">FSM State Machine <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#fsm-state-machine" aria-label="Anchor">#</a></span></h3><p>The FSM has 22 states sequencing the full acquisition pipeline. The major flow is:</p>
-<pre tabindex="0"><code>RESET_STATE -&gt; LONG_DELAY -&gt; ADC_RST
-    |
-    +-- (forced mode) --&gt; WAIT_FORCED --&gt; (single pulse) --&gt; SET_STORE_FLAG
-    |
-    +-- (trigger mode) --&gt; CLEAR_STORE_FLAG
-    |
-    v
-BEGIN_CONVST -&gt; ASSERT_CONVST -&gt; BUSY_0 -&gt; BUSY_1
-    |
-    v
-READ_CH1_LOW -&gt; WRITE_CH1_TRIG or WRITE_CH1_BRAM -&gt; READ_CH1_HIGH
-    |
-    v
-RST_SHORT -&gt; READ_CH2_LOW -&gt; WRITE_CH2_TRIG or WRITE_CH2_BRAM -&gt; READ_CH2_HIGH
-    |
-    v
-WAIT_END_SAMP_INT -&gt; (FULL?) -&gt; BRAM_FULL -&gt; loop
-                  -&gt; (trigger hit, not full) -&gt; SET_STORE_FLAG
-                  -&gt; (no trigger) -&gt; BEGIN_CONVST
-</code></pre><p>At each ADC read state, the FSM branches based on <code>STORE_SW</code>: if the SR latch is set (BRAM fill is active), it routes the sample to BRAM (<code>WRITE_CH1_BRAM</code>); otherwise it routes it only to the trigger comparator registers (<code>WRITE_CH1_TRIG</code>). This ensures samples are compared against the threshold continuously but only written to BRAM once a trigger has been detected.</p>
+<h3 id="finite-state-machine-implementation" class="relative group">Finite State Machine Implementation <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#finite-state-machine-implementation" aria-label="Anchor">#</a></span></h3><p>The FSM has 22 states sequencing the full acquisition pipeline. The major flow is:</p>
+<p>
+
+
+
+
+
+
+  
+  
+<figure><img src="images/fsm.png" alt="fsm" class="mx-auto my-0 rounded-md" />
+</figure>
+</p>
+<p>At each ADC read state, the FSM branches based on <code>STORE_SW</code>: if the SR latch is set (BRAM fill is active), it routes the sample to BRAM (<code>WRITE_CH1_BRAM</code>); otherwise it routes it only to the trigger comparator registers (<code>WRITE_CH1_TRIG</code>). This ensures samples are compared against the threshold continuously but only written to BRAM once a trigger has been detected.</p>
 <h3 id="adc-interface-ad7606" class="relative group">ADC Interface (AD7606) <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#adc-interface-ad7606" aria-label="Anchor">#</a></span></h3><p>The AD7606 is an 8-channel, 16-bit SAR ADC with a parallel readout interface. The FSM drives <code>CONVST</code>, <code>CS</code>, <code>RD</code>, and <code>RESET</code> in the correct sequence — asserting conversion start, waiting for the <code>BUSY</code> flag to deassert (states <code>BUSY_0</code> → <code>BUSY_1</code>), then clocking out the 16-bit result. Two short-delay counters in the datapath provide the required ADC setup and hold timing. Sampling rate is controlled by a 4-to-1 mux (<code>sampleMux</code>) that selects between four preset counter targets based on the 2-bit <code>sampleRate_select</code> from the PS.</p>
 <h3 id="trigger-logic" class="relative group">Trigger Logic <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#trigger-logic" aria-label="Anchor">#</a></span></h3><p>Trigger detection uses a two-sample edge detector implemented structurally in the datapath. For each channel, two chained <code>genericRegister</code> instances capture consecutive ADC samples, and two <code>genericCompare_Signed</code> instances compare each against the signed threshold voltage:</p>
 <ul>
@@ -494,6 +605,18 @@ WAIT_END_SAMP_INT -&gt; (FULL?) -&gt; BRAM_FULL -&gt; loop
   
   
 <figure><img src="hdmi.jpg" alt="hdmi" class="mx-auto my-0 rounded-md" />
+</figure>
+</p>
+<p>
+
+
+
+
+
+
+  
+  
+<figure><img src="board.jpg" alt="fpga picture" class="mx-auto my-0 rounded-md" />
 </figure>
 </p>
 <h3 id="axi4-lite-slave-wrapper" class="relative group">AXI4-Lite Slave Wrapper <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#axi4-lite-slave-wrapper" aria-label="Anchor">#</a></span></h3><p>The AXI wrapper (<code>final_oscope_slave_lite_v1_0_S00_AXI</code>) implements a custom AXI4-Lite slave with 10 32-bit registers and two independent read/write state machines. The register map exposes the oscilloscope IP to the ARM:</p>
@@ -609,12 +732,8 @@ WAIT_END_SAMP_INT -&gt; (FULL?) -&gt; BRAM_FULL -&gt; loop
 	</tbody>
 </table>
 <hr>
-<h2 id="embedded-software--arm-cortex-a9-c" class="relative group">Embedded Software — ARM Cortex-A9 (C) <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#embedded-software--arm-cortex-a9-c" aria-label="Anchor">#</a></span></h2><p>The firmware runs on the PS under Xilinx Vitis (bare-metal, no OS) and provides a UART command-line interface for real-time oscilloscope control.</p>
-<h3 id="ttc0-timer-isr--function-generator" class="relative group">TTC0 Timer ISR — Function Generator <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#ttc0-timer-isr--function-generator" aria-label="Anchor">#</a></span></h3><p>A Triple Timer Counter (TTC0) is configured to fire at 10 kHz. On each interrupt, the ISR steps a 16-bit phase accumulator by a configurable <code>phaseIncrement</code> and indexes a 64-entry LUT to produce the next DAC output value via an enhanced PWM peripheral. Two waveforms are available:</p>
-<ul>
-<li><strong>Sine wave</strong> — 64-point quantized sine LUT</li>
-<li><strong>Sinc wave</strong> — 64-point sinc function LUT</li>
-</ul>
+<h2 id="embedded-software--arm-cortex-a9-c" class="relative group">Embedded Software — ARM Cortex-A9 (C) <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#embedded-software--arm-cortex-a9-c" aria-label="Anchor">#</a></span></h2><p>The firmware runs on the PS under Xilinx Vitis (bare-metal, no OS) and provides a UART command-line interface for real-time oscilloscope control. The C code accesses the read and write registers passed through by the AXI wrapper.</p>
+<h3 id="function-generator-with-ttc0-timer-isr-and-direct-digital-synthesis" class="relative group">Function Generator with TTC0 Timer ISR and Direct Digital Synthesis <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#function-generator-with-ttc0-timer-isr-and-direct-digital-synthesis" aria-label="Anchor">#</a></span></h3><p>A Triple Timer Counter (TTC0) is configured to fire at 10 kHz. On each interrupt, the ISR steps a 16-bit phase accumulator by a configurable <code>phaseIncrement</code> and indexes a 64-entry LUT to produce the next DAC output value via an enhanced PWM peripheral. The user is able to choose the generation of either a sine or sinc function. Each is represented by a 64-point quantized sine LUT.</p>
 <p>Output frequency is set by entering a value in Hz over UART; the firmware computes the correct phase increment using a pre-characterized linear regression (<code>phaseIncrement = 6.5516 * frequency + 0.0062</code>).</p>
 <h3 id="uart-command-interface" class="relative group">UART Command Interface <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#uart-command-interface" aria-label="Anchor">#</a></span></h3><p>The main loop blocks on <code>XUartPs_RecvByte()</code> and dispatches on a single character:</p>
 <table>

@@ -18,8 +18,9 @@ The two domains communicate through a custom AXI4-Lite slave peripheral, giving 
 
 ---
 
-![fpga](board.jpg)
 
+
+![AXI bus signals diagram](images/final_diagram.png)
 ## System Architecture
 
 ```
@@ -39,15 +40,17 @@ The two domains communicate through a custom AXI4-Lite slave peripheral, giving 
                                                       +----------------------+
 ```
 
-The top-level VHDL entity `acquireToHDMI` instantiates two sub-modules: a datapath (`acquireToHDMI_datapath`) handling the ADC interface, waveform buffering, and video rendering, and a Moore FSM (`acquireToHDMI_fsm`) generating the control word that sequences all operations. The AXI wrapper instantiates this top-level and exposes its ports as memory-mapped registers to the PS.
+![vivado block diagram](images/vivado_block.png)
+
+The top-level VHDL entity `acquireToHDMI.vhdl` instantiates two sub-modules: a datapath (`acquireToHDMI_datapath`) handling the ADC interface, waveform buffering, and video rendering, and a Moore FSM (`acquireToHDMI_fsm`) generating the control word that sequences all operations. The AXI wrapper (`final_oscope_slave_lite_v1_0_S00_AXI.vhdl`) instantiates this top-level and exposes its ports as memory-mapped registers to the PS. The signals fed from the wrapper were accessed in the file `helloworld.c`.
 
 ---
 
 ## Programmable Logic — VHDL Design
 
-The PL design follows a classic **datapath / FSM separation**. The datapath (`acquireToHDMI_datapath`) contains all registers, counters, BRAMs, comparators, and pixel converters as structural VHDL instantiations. The FSM (`acquireToHDMI_fsm`) is a pure Moore machine that observes a status word (`sw`) from the datapath and drives a control word (`cw`) back to it — the two modules communicate only through these two buses, with no direct logic between them.
+The PL follows a standard datapath and control design. The datapath (`acquireToHDMI_datapath.vhdl`) contains all registers, counters, BRAMs, comparators, and pixel converters as structural VHDL instantiations. The control module (`acquireToHDMI_fsm.vhdl`) is a finite state machine that observes the status word (`sw`) from the datapath and drives a control word (`cw`) back to it — the two modules communicate only through these two buses, with no direct logic between them.
 
-### Control Word / Status Word Interface
+### CW and SW Signals
 
 The FSM has no knowledge of signal values — it only sees a vector of condition bits (the status word) and outputs a vector of control bits (the control word). Every datapath resource — counters, registers, BRAM write enables — is gated by a dedicated bit in `cw`. This makes the state outputs in the FSM completely readable as a lookup table: each state drives a fixed `cw` pattern with named bit positions defined in the shared package.
 
@@ -58,12 +61,12 @@ The FSM has no knowledge of signal values — it only sees a vector of condition
 | `BUSY_SW` | AD7606 busy pin | External ADC pin |
 | `SHORT_DELAY_DONE_SW` | Short counter == target | `shortCompare` |
 | `LONG_DELAY_DONE_SW` | Long counter == target | `longCompare` |
-| `FULL_SW` | Write address == screen width | `cmp_BRAM_full` |
+| `FULL_SW` | BRAM write address == screen width | `cmp_BRAM_full` |
 | `SAMPLE_SW` | Sample counter == rate target | `sampleCompare` |
 | `TRIG_CH1_SW` | CH1 rising edge detected | Trigger comparators |
 | `TRIG_CH2_SW` | CH2 rising edge detected | Trigger comparators |
 | `STORE_SW` | SR latch — BRAM fill active | SR latch process |
-| `SINGLE_SW` / `FORCED_SW` | Mode from PS control reg | AXI slv_reg3 |
+| `SINGLE_SW` / `FORCED_SW` | Mode from PS control reg | user input (AXI slv_reg3) |
 
 **Key control word (cw) bits driven by the FSM:**
 
@@ -81,31 +84,11 @@ The FSM has no knowledge of signal values — it only sees a vector of condition
 | `SHORT_DELAY_COUNTER_CW` / `LONG_DELAY_COUNTER_CW` | Count/hold/reset delay timers |
 | `SAMPLING_COUNTER_CW` | Count/hold/reset sample interval timer |
 
-### FSM State Machine
+### Finite State Machine Implementation
 
 The FSM has 22 states sequencing the full acquisition pipeline. The major flow is:
 
-```
-RESET_STATE -> LONG_DELAY -> ADC_RST
-    |
-    +-- (forced mode) --> WAIT_FORCED --> (single pulse) --> SET_STORE_FLAG
-    |
-    +-- (trigger mode) --> CLEAR_STORE_FLAG
-    |
-    v
-BEGIN_CONVST -> ASSERT_CONVST -> BUSY_0 -> BUSY_1
-    |
-    v
-READ_CH1_LOW -> WRITE_CH1_TRIG or WRITE_CH1_BRAM -> READ_CH1_HIGH
-    |
-    v
-RST_SHORT -> READ_CH2_LOW -> WRITE_CH2_TRIG or WRITE_CH2_BRAM -> READ_CH2_HIGH
-    |
-    v
-WAIT_END_SAMP_INT -> (FULL?) -> BRAM_FULL -> loop
-                  -> (trigger hit, not full) -> SET_STORE_FLAG
-                  -> (no trigger) -> BEGIN_CONVST
-```
+![fsm](images/fsm.png)
 
 At each ADC read state, the FSM branches based on `STORE_SW`: if the SR latch is set (BRAM fill is active), it routes the sample to BRAM (`WRITE_CH1_BRAM`); otherwise it routes it only to the trigger comparator registers (`WRITE_CH1_TRIG`). This ensures samples are compared against the threshold continuously but only written to BRAM once a trigger has been detected.
 
@@ -133,6 +116,8 @@ The datapath instantiates a `clk_wiz_0` PLL to derive the pixel clock (`videoClk
 Each channel's BRAM is dual-port: port A is clocked on the system clock and written by the FSM during acquisition; port B is clocked on the pixel clock and read during display. The read address is `pixelHorz - L_EDGE`, mapping each horizontal pixel directly to a stored sample. A `toPixelValue` converter scales the 16-bit signed ADC value to a vertical pixel coordinate, and a `genericCompare` checks whether the current `pixelVert` matches — driving the `ch1` / `ch2` signals into the `scopeFace` renderer which composites the waveform, grid, and trigger markers into RGB pixel values for the `hdmi_tx_0` serializer.
 
 ![hdmi](hdmi.jpg)
+
+![fpga picture](board.jpg)
 
 ### AXI4-Lite Slave Wrapper
 
@@ -173,14 +158,11 @@ The AXI wrapper (`final_oscope_slave_lite_v1_0_S00_AXI`) implements a custom AXI
 
 ## Embedded Software — ARM Cortex-A9 (C)
 
-The firmware runs on the PS under Xilinx Vitis (bare-metal, no OS) and provides a UART command-line interface for real-time oscilloscope control.
+The firmware runs on the PS under Xilinx Vitis (bare-metal, no OS) and provides a UART command-line interface for real-time oscilloscope control. The C code accesses the read and write registers passed through by the AXI wrapper.
 
-### TTC0 Timer ISR — Function Generator
+### Function Generator with TTC0 Timer ISR and Direct Digital Synthesis
 
-A Triple Timer Counter (TTC0) is configured to fire at 10 kHz. On each interrupt, the ISR steps a 16-bit phase accumulator by a configurable `phaseIncrement` and indexes a 64-entry LUT to produce the next DAC output value via an enhanced PWM peripheral. Two waveforms are available:
-
-- **Sine wave** — 64-point quantized sine LUT
-- **Sinc wave** — 64-point sinc function LUT
+A Triple Timer Counter (TTC0) is configured to fire at 10 kHz. On each interrupt, the ISR steps a 16-bit phase accumulator by a configurable `phaseIncrement` and indexes a 64-entry LUT to produce the next DAC output value via an enhanced PWM peripheral. The user is able to choose the generation of either a sine or sinc function. Each is represented by a 64-point quantized sine LUT.
 
 Output frequency is set by entering a value in Hz over UART; the firmware computes the correct phase increment using a pre-characterized linear regression (`phaseIncrement = 6.5516 * frequency + 0.0062`).
 

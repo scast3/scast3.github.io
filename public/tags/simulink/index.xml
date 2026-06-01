@@ -14,7 +14,7 @@
 		
 			<atom:link href="http://localhost:1313/tags/simulink/index.xml" rel="self" type="application/rss+xml" />
 			<item>
-				<title>Carrier Offset Tracking and Phase-Locking in a QPSK Digital Receiver using Extended Kalman Filter</title>
+				<title>Carrier Offset Estimation and Phase-Locking in a QPSK Digital Receiver using Extended Kalman Filter</title>
 				<link>http://localhost:1313/projects/qpsk-ekf/</link>
 				<pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/projects/qpsk-ekf/</guid>
