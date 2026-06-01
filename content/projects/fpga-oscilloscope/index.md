@@ -18,10 +18,9 @@ The two domains communicate through a custom AXI4-Lite slave peripheral, giving 
 
 ---
 
-
-
-![AXI bus signals diagram](images/final_diagram.png)
 ## System Architecture
+
+The top-level VHDL entity `acquireToHDMI.vhdl` instantiates two sub-modules: a datapath (`acquireToHDMI_datapath`) handling the ADC interface, waveform buffering, and video rendering, and a Moore FSM (`acquireToHDMI_fsm`) generating the control word that sequences all operations. The AXI wrapper (`final_oscope_slave_lite_v1_0_S00_AXI.vhdl`) instantiates this top-level and exposes its ports as memory-mapped registers to the PS. The signals fed from the wrapper were accessed in the file `helloworld.c`. For function generation, the module `enhancedPWM.vhdl` is called which takes in a duty cycle and outputs the pwm signal.
 
 ```
   +---------------------+        AXI4-Lite Bus        +----------------------+
@@ -42,11 +41,37 @@ The two domains communicate through a custom AXI4-Lite slave peripheral, giving 
 
 ![vivado block diagram](images/vivado_block.png)
 
-The top-level VHDL entity `acquireToHDMI.vhdl` instantiates two sub-modules: a datapath (`acquireToHDMI_datapath`) handling the ADC interface, waveform buffering, and video rendering, and a Moore FSM (`acquireToHDMI_fsm`) generating the control word that sequences all operations. The AXI wrapper (`final_oscope_slave_lite_v1_0_S00_AXI.vhdl`) instantiates this top-level and exposes its ports as memory-mapped registers to the PS. The signals fed from the wrapper were accessed in the file `helloworld.c`.
-
 ---
 
 ## Programmable Logic — VHDL Design
+
+### PWM Function Generation
+
+The module `enhancedPwm.vhdl` contains the PL functionality for generating a pwm signal. The module takes a 9-bit iduty cycle input and outputs a pwm signal. The entity declaration can be seen below:
+
+```vhdl
+entity enhancedPwm is
+    Port ( clk : in STD_LOGIC;
+        resetn : in STD_LOGIC;
+        dutyCycle : in STD_LOGIC_VECTOR (8 downto 0);
+        enb : in STD_LOGIC;
+        pwmSignal : out STD_LOGIC;
+        pwmCount : out STD_LOGIC_VECTOR (7 downto 0);
+        rollOver : out STD_LOGIC);
+end enhancedPwm;
+```
+
+### HDMI Display
+<div style="width: 600px; margin: 0 auto; text-align: center;">
+
+![hdmi](/images/hdmi.jpg)
+
+</div>
+
+An hdmi video controller was implemented to convert VGA to HDMI format. The controlloer was responsible for displaying the grid, two trigger markers, and the two channel waveforms. The top level module `scopeToHdmi.vhdl` which facilitates the interaction
+
+
+### Datapath and Control
 
 The PL follows a standard datapath and control design. The datapath (`acquireToHDMI_datapath.vhdl`) contains all registers, counters, BRAMs, comparators, and pixel converters as structural VHDL instantiations. The control module (`acquireToHDMI_fsm.vhdl`) is a finite state machine that observes the status word (`sw`) from the datapath and drives a control word (`cw`) back to it — the two modules communicate only through these two buses, with no direct logic between them.
 
@@ -221,6 +246,8 @@ FINAL_OSCOPE_mWriteReg(BASEADDR, REG4_OFFSET,
 **Phase accumulator for waveform generation.** Instead of computing sine values in the ISR (too slow for bare-metal at 10 kHz), the ISR uses a 16-bit phase accumulator and a pre-computed 64-entry LUT. The upper 6 bits of the accumulator index into the table, giving smooth frequency control by just changing the increment value.
 
 ---
+
+![AXI bus signals diagram](images/final_diagram.png)
 
 ## Tools Used
 
