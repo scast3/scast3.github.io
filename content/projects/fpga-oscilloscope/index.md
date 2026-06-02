@@ -55,6 +55,31 @@ The top-level VHDL entity `acquireToHDMI.vhdl` is packaged in an IP named `final
 
 The PL follows a standard datapath and control design. The datapath (`acquireToHDMI_datapath.vhdl`) contains all registers, counters, BRAMs, comparators, and pixel converters as structural VHDL instantiations. The control module (`acquireToHDMI_fsm.vhdl`) is a finite state machine that observes the status word (`sw`) from the datapath and drives a control word (`cw`) back to it — the two modules communicate only through these two buses, with no direct logic between them.
 
+```vhdl
+entity acquireToHDMI_datapath is
+    PORT ( clk : in  STD_LOGIC;
+        resetn : in  STD_LOGIC;
+        cw : in STD_LOGIC_VECTOR(CW_WIDTH -1 downto 0);
+        sw : out STD_LOGIC_VECTOR(DATAPATH_SW_WIDTH - 1 downto 0);
+        an7606data: in STD_LOGIC_VECTOR(15 downto 0);
+
+        triggerVolt16bitSigned: in SIGNED(15 downto 0);
+        triggerTimePixel: in STD_LOGIC_VECTOR(VIDEO_WIDTH_IN_BITS-1 downto 0);
+        ch1Data16bitSLV, ch2Data16bitSLV: out STD_LOGIC_VECTOR(15 downto 0);
+        
+        ch1enb, ch2enb : in std_logic;
+        
+        tmdsDataP : out  STD_LOGIC_VECTOR (2 downto 0);
+        tmdsDataN : out  STD_LOGIC_VECTOR (2 downto 0);
+        tmdsClkP : out STD_LOGIC;
+        tmdsClkN : out STD_LOGIC;
+        hdmiOen:    out STD_LOGIC;
+        
+        sampleRate_ctrl : in STD_LOGIC_VECTOR(1 downto 0)
+    );
+end acquireToHDMI_datapath;
+```
+
 ### CW and SW Signals
 
 The FSM has no knowledge of signal values — it only sees a vector of condition bits (the status word) and outputs a vector of control bits (the control word). Every datapath resource — counters, registers, BRAM write enables — is gated by a dedicated bit in `cw`. This makes the state outputs in the FSM completely readable as a lookup table: each state drives a fixed `cw` pattern with named bit positions defined in the shared package.
@@ -93,13 +118,15 @@ The FSM has no knowledge of signal values — it only sees a vector of condition
 
 The FSM has 22 states sequencing the full acquisition pipeline. The major flow is:
 
-![fsm](images/fsm.png)
+![fsm filler - TODO CHANGE LATER](images/fsm.png)
 
 At each ADC read state, the FSM branches based on `STORE_SW`: if the SR latch is set (BRAM fill is active), it routes the sample to BRAM (`WRITE_CH1_BRAM`); otherwise it routes it only to the trigger comparator registers (`WRITE_CH1_TRIG`). This ensures samples are compared against the threshold continuously but only written to BRAM once a trigger has been detected.
 
 ### ADC Interface (AD7606)
 
-The AD7606 is an 8-channel, 16-bit SAR ADC with a parallel readout interface. The FSM drives `CONVST`, `CS`, `RD`, and `RESET` in the correct sequence — asserting conversion start, waiting for the `BUSY` flag to deassert (states `BUSY_0` → `BUSY_1`), then clocking out the 16-bit result. Two short-delay counters in the datapath provide the required ADC setup and hold timing. Sampling rate is controlled by a 4-to-1 mux (`sampleMux`) that selects between four preset counter targets based on the 2-bit `sampleRate_select` from the PS.
+The ALINX daughter board AN706, contains an Analog Devices AD7606 8-channel 16-bit ADC which was used to digitize the analog input. The AD7606 uses a successive approximation register (SAR) approach. The converter accepts analog input voltages in the range of -5 V to +5 V and produces a signed 16-bit two's-complement output value; it also supports sampling rates up to 200 kS/s and presents the conversion result through a parallel digital interface. 
+
+The FSM drives the external ADC signals `CONVST`, `CS`, `RD`, and `RESET` in the correct sequence, asserting conversion start, waiting for the `BUSY` flag to deassert (states `BUSY_0` -> `BUSY_1`), then clocking out the 16-bit result. Two short-delay counters in the datapath provide the required ADC setup and hold timing. Sampling rate is controlled by a 4-to-1 mux (`sampleMux`) that selects between four preset counter targets based on the 2-bit `sampleRate_select` from the PS.
 
 ### Trigger Logic
 
@@ -194,7 +221,7 @@ The final result is an IP that displays channel data from the ADC to a standard 
 
 </div>
 
-However, to complete the design, a seperate IP had to be created for custom on chip function generation.
+However, to complete the design, a seperate IP had to be created for custom function generation.
 
 ### PWM Function Generation IP
 
@@ -214,11 +241,9 @@ end enhancedPwm;
 
 The module contains an 8-bit free-running counter `pwmCount` that repeatedly counts from 0 to 255. A comparator continuously compares the current counter value to the 9-bit `duty_cycle` input. The PWM output goes high when the duty cycle value is greater than the counter value, producing a pulse train whose duty cycle is proportional to the input sample value.
 
-To prevent output glitches, the duty-cycle input is registered and only updated when the PWM counter completes a full cycle and reaches 255. This ensures that duty-cycle transitions occur only at PWM period boundaries.
+The `enhancedPwm` IP is integrated with the `final_oscope` IP by using the waveform samples stored in BRAM as the duty cycle input. The waveform samples are read sequentially from memory and supplied to the PWM module. Each stored sample determines the duty cycle for one PWM period, generating a wave with sharp jumps between samples. Because of this, a low pass filter is applied and the PWM signal is reconstructed into a continuous analog voltage waveform.
 
-The enhancedPwm IP is integrated with the acquisition IP by using waveform samples stored in BRAM as the duty-cycle source. During playback, waveform samples are read sequentially from memory and supplied to the PWM module. Each stored sample therefore determines the duty cycle for one PWM period. After low-pass filtering, the PWM signal is reconstructed into a continuous analog voltage waveform.
-
-This architecture allows captured ADC data to be stored in memory, displayed on the HDMI oscilloscope interface, and replayed through the PWM output using the same sample buffer. As a result, the programmable logic implements both waveform acquisition and waveform generation using a common BRAM-based data path.
+This allows the captured ADC data to be stored in memory, displayed on the HDMI oscilloscope interface, and sent through the PWM output using the same sample buffer. The PL implements both waveform acquisition and waveform generation using a common BRAM-based data path.
 
 
 ### AXI4-Lite Slave Wrapper

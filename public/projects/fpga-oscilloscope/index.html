@@ -123,7 +123,7 @@
     "keywords": ["FPGA","VHDL","Verification","Xilinx"],
     
     "mainEntityOfPage": "true",
-    "wordCount": "3037"
+    "wordCount": "3162"
   }
   </script>
     
@@ -341,7 +341,29 @@
                                                       +----------------------+
 </code></pre><hr>
 <h2 id="programmable-logic--vhdl-design" class="relative group">Programmable Logic — VHDL Design <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#programmable-logic--vhdl-design" aria-label="Anchor">#</a></span></h2><h3 id="datapath-and-control" class="relative group">Datapath and Control <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#datapath-and-control" aria-label="Anchor">#</a></span></h3><p>The PL follows a standard datapath and control design. The datapath (<code>acquireToHDMI_datapath.vhdl</code>) contains all registers, counters, BRAMs, comparators, and pixel converters as structural VHDL instantiations. The control module (<code>acquireToHDMI_fsm.vhdl</code>) is a finite state machine that observes the status word (<code>sw</code>) from the datapath and drives a control word (<code>cw</code>) back to it — the two modules communicate only through these two buses, with no direct logic between them.</p>
-<h3 id="cw-and-sw-signals" class="relative group">CW and SW Signals <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#cw-and-sw-signals" aria-label="Anchor">#</a></span></h3><p>The FSM has no knowledge of signal values — it only sees a vector of condition bits (the status word) and outputs a vector of control bits (the control word). Every datapath resource — counters, registers, BRAM write enables — is gated by a dedicated bit in <code>cw</code>. This makes the state outputs in the FSM completely readable as a lookup table: each state drives a fixed <code>cw</code> pattern with named bit positions defined in the shared package.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-vhdl" data-lang="vhdl"><span style="display:flex;"><span><span style="color:#66d9ef">entity</span> <span style="color:#a6e22e">acquireToHDMI_datapath</span> <span style="color:#66d9ef">is</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">PORT</span> ( clk <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span>  <span style="color:#66d9ef">STD_LOGIC</span>;
+</span></span><span style="display:flex;"><span>        resetn <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span>  <span style="color:#66d9ef">STD_LOGIC</span>;
+</span></span><span style="display:flex;"><span>        cw <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">STD_LOGIC_VECTOR</span>(CW_WIDTH <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>        sw <span style="color:#f92672">:</span> <span style="color:#66d9ef">out</span> <span style="color:#66d9ef">STD_LOGIC_VECTOR</span>(DATAPATH_SW_WIDTH <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>        an7606data<span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">STD_LOGIC_VECTOR</span>(<span style="color:#ae81ff">15</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        triggerVolt16bitSigned<span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">SIGNED</span>(<span style="color:#ae81ff">15</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>        triggerTimePixel<span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">STD_LOGIC_VECTOR</span>(VIDEO_WIDTH_IN_BITS<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>        ch1Data16bitSLV, ch2Data16bitSLV<span style="color:#f92672">:</span> <span style="color:#66d9ef">out</span> <span style="color:#66d9ef">STD_LOGIC_VECTOR</span>(<span style="color:#ae81ff">15</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        ch1enb, ch2enb <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">std_logic</span>;
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        tmdsDataP <span style="color:#f92672">:</span> <span style="color:#66d9ef">out</span>  <span style="color:#66d9ef">STD_LOGIC_VECTOR</span> (<span style="color:#ae81ff">2</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>        tmdsDataN <span style="color:#f92672">:</span> <span style="color:#66d9ef">out</span>  <span style="color:#66d9ef">STD_LOGIC_VECTOR</span> (<span style="color:#ae81ff">2</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>        tmdsClkP <span style="color:#f92672">:</span> <span style="color:#66d9ef">out</span> <span style="color:#66d9ef">STD_LOGIC</span>;
+</span></span><span style="display:flex;"><span>        tmdsClkN <span style="color:#f92672">:</span> <span style="color:#66d9ef">out</span> <span style="color:#66d9ef">STD_LOGIC</span>;
+</span></span><span style="display:flex;"><span>        hdmiOen<span style="color:#f92672">:</span>    <span style="color:#66d9ef">out</span> <span style="color:#66d9ef">STD_LOGIC</span>;
+</span></span><span style="display:flex;"><span>        
+</span></span><span style="display:flex;"><span>        sampleRate_ctrl <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">STD_LOGIC_VECTOR</span>(<span style="color:#ae81ff">1</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>    );
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span> <span style="color:#a6e22e">acquireToHDMI_datapath</span>;
+</span></span></code></pre></div><h3 id="cw-and-sw-signals" class="relative group">CW and SW Signals <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#cw-and-sw-signals" aria-label="Anchor">#</a></span></h3><p>The FSM has no knowledge of signal values — it only sees a vector of condition bits (the status word) and outputs a vector of control bits (the control word). Every datapath resource — counters, registers, BRAM write enables — is gated by a dedicated bit in <code>cw</code>. This makes the state outputs in the FSM completely readable as a lookup table: each state drives a fixed <code>cw</code> pattern with named bit positions defined in the shared package.</p>
 <p><strong>Key status word (sw) bits observed by the FSM:</strong></p>
 <table>
 	<thead>
@@ -461,14 +483,68 @@
 
 
 
+<figure>
+    
+    
+
+
+
+
+
+
+
 
   
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="http://localhost:1313/projects/fpga-oscilloscope/images/fsm_hu_2120eb9f4d9aaf.webp 330w,http://localhost:1313/projects/fpga-oscilloscope/images/fsm_hu_53cf8fbfe48791ac.webp 660w
+            
+              ,http://localhost:1313/projects/fpga-oscilloscope/images/fsm_hu_771fa7a66be9ae69.webp 1024w
+            
+            
+              
+                ,http://localhost:1313/projects/fpga-oscilloscope/images/fsm_hu_4a24565857bac9f5.webp 1210w
+              
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="1210"
+        height="976"
+        class="mx-auto my-0 rounded-md"
+        alt="fsm filler - TODO CHANGE LATER"
+        loading="lazy" decoding="async"
+        
+          src="http://localhost:1313/projects/fpga-oscilloscope/images/fsm_hu_3334ba5be6a602d1.png" srcset="http://localhost:1313/projects/fpga-oscilloscope/images/fsm_hu_7d974e073ab86b62.png 330w,http://localhost:1313/projects/fpga-oscilloscope/images/fsm_hu_3334ba5be6a602d1.png 660w
+          
+            ,http://localhost:1313/projects/fpga-oscilloscope/images/fsm_hu_c52c40143537be8a.png 1024w
+          
+          
+            ,http://localhost:1313/projects/fpga-oscilloscope/images/fsm.png 1210w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
   
-<figure><img src="images/fsm.png" alt="fsm" class="mx-auto my-0 rounded-md" />
+
+
 </figure>
 </p>
 <p>At each ADC read state, the FSM branches based on <code>STORE_SW</code>: if the SR latch is set (BRAM fill is active), it routes the sample to BRAM (<code>WRITE_CH1_BRAM</code>); otherwise it routes it only to the trigger comparator registers (<code>WRITE_CH1_TRIG</code>). This ensures samples are compared against the threshold continuously but only written to BRAM once a trigger has been detected.</p>
-<h3 id="adc-interface-ad7606" class="relative group">ADC Interface (AD7606) <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#adc-interface-ad7606" aria-label="Anchor">#</a></span></h3><p>The AD7606 is an 8-channel, 16-bit SAR ADC with a parallel readout interface. The FSM drives <code>CONVST</code>, <code>CS</code>, <code>RD</code>, and <code>RESET</code> in the correct sequence — asserting conversion start, waiting for the <code>BUSY</code> flag to deassert (states <code>BUSY_0</code> → <code>BUSY_1</code>), then clocking out the 16-bit result. Two short-delay counters in the datapath provide the required ADC setup and hold timing. Sampling rate is controlled by a 4-to-1 mux (<code>sampleMux</code>) that selects between four preset counter targets based on the 2-bit <code>sampleRate_select</code> from the PS.</p>
+<h3 id="adc-interface-ad7606" class="relative group">ADC Interface (AD7606) <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#adc-interface-ad7606" aria-label="Anchor">#</a></span></h3><p>The ALINX daughter board AN706, contains an Analog Devices AD7606 8-channel 16-bit ADC which was used to digitize the analog input. The AD7606 uses a successive approximation register (SAR) approach. The converter accepts analog input voltages in the range of -5 V to +5 V and produces a signed 16-bit two&rsquo;s-complement output value; it also supports sampling rates up to 200 kS/s and presents the conversion result through a parallel digital interface.</p>
+<p>The FSM drives the external ADC signals <code>CONVST</code>, <code>CS</code>, <code>RD</code>, and <code>RESET</code> in the correct sequence, asserting conversion start, waiting for the <code>BUSY</code> flag to deassert (states <code>BUSY_0</code> -&gt; <code>BUSY_1</code>), then clocking out the 16-bit result. Two short-delay counters in the datapath provide the required ADC setup and hold timing. Sampling rate is controlled by a 4-to-1 mux (<code>sampleMux</code>) that selects between four preset counter targets based on the 2-bit <code>sampleRate_select</code> from the PS.</p>
 <h3 id="trigger-logic" class="relative group">Trigger Logic <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#trigger-logic" aria-label="Anchor">#</a></span></h3><p>Trigger detection uses a two-sample edge detector implemented structurally in the datapath. For each channel, two chained <code>genericRegister</code> instances capture consecutive ADC samples, and two <code>genericCompare_Signed</code> instances compare each against the signed threshold voltage:</p>
 <ul>
 <li><strong>Sample 1 comparator:</strong> checks <code>sample1 &gt; threshold</code> (rising condition)</li>
@@ -661,7 +737,7 @@
 </figure>
 </p>
 </div>
-<p>However, to complete the design, a seperate IP had to be created for custom on chip function generation.</p>
+<p>However, to complete the design, a seperate IP had to be created for custom function generation.</p>
 <h3 id="pwm-function-generation-ip" class="relative group">PWM Function Generation IP <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#pwm-function-generation-ip" aria-label="Anchor">#</a></span></h3><p>A seperate enhancedPwm IP was created to add waveform generation functionality using pulse width modulation (PWM). The module <code>enhancedPwm.vhdl</code> contains the PL functionality for generating a pwm signal for function generation.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-vhdl" data-lang="vhdl"><span style="display:flex;"><span><span style="color:#66d9ef">entity</span> <span style="color:#a6e22e">enhancedPwm</span> <span style="color:#66d9ef">is</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">Port</span> ( clk <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">STD_LOGIC</span>;
@@ -673,9 +749,8 @@
 </span></span><span style="display:flex;"><span>        rollOver <span style="color:#f92672">:</span> <span style="color:#66d9ef">out</span> <span style="color:#66d9ef">STD_LOGIC</span>);
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span> <span style="color:#a6e22e">enhancedPwm</span>;
 </span></span></code></pre></div><p>The module contains an 8-bit free-running counter <code>pwmCount</code> that repeatedly counts from 0 to 255. A comparator continuously compares the current counter value to the 9-bit <code>duty_cycle</code> input. The PWM output goes high when the duty cycle value is greater than the counter value, producing a pulse train whose duty cycle is proportional to the input sample value.</p>
-<p>To prevent output glitches, the duty-cycle input is registered and only updated when the PWM counter completes a full cycle and reaches 255. This ensures that duty-cycle transitions occur only at PWM period boundaries.</p>
-<p>The enhancedPwm IP is integrated with the acquisition IP by using waveform samples stored in BRAM as the duty-cycle source. During playback, waveform samples are read sequentially from memory and supplied to the PWM module. Each stored sample therefore determines the duty cycle for one PWM period. After low-pass filtering, the PWM signal is reconstructed into a continuous analog voltage waveform.</p>
-<p>This architecture allows captured ADC data to be stored in memory, displayed on the HDMI oscilloscope interface, and replayed through the PWM output using the same sample buffer. As a result, the programmable logic implements both waveform acquisition and waveform generation using a common BRAM-based data path.</p>
+<p>The <code>enhancedPwm</code> IP is integrated with the <code>final_oscope</code> IP by using the waveform samples stored in BRAM as the duty cycle input. The waveform samples are read sequentially from memory and supplied to the PWM module. Each stored sample determines the duty cycle for one PWM period, generating a wave with sharp jumps between samples. Because of this, a low pass filter is applied and the PWM signal is reconstructed into a continuous analog voltage waveform.</p>
+<p>This allows the captured ADC data to be stored in memory, displayed on the HDMI oscilloscope interface, and sent through the PWM output using the same sample buffer. The PL implements both waveform acquisition and waveform generation using a common BRAM-based data path.</p>
 <h3 id="axi4-lite-slave-wrapper" class="relative group">AXI4-Lite Slave Wrapper <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#axi4-lite-slave-wrapper" aria-label="Anchor">#</a></span></h3><p>The AXI wrapper (<code>final_oscope_slave_lite_v1_0_S00_AXI</code>) implements a custom AXI4-Lite slave with 10 32-bit registers and two independent read/write state machines. The register map exposes the oscilloscope IP to the ARM:</p>
 <table>
 	<thead>
