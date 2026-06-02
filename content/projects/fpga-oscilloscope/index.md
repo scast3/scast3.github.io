@@ -12,7 +12,7 @@ weight: 1                   # lower = appears first in listings
 
 ## Overview
 
-For this project, I designed a fully functional two-channel oscilloscope built on a Xilinx Zynq-7010 SoC. The system captures analog signals using the AD7606 ADC and renders waveforms in real time over HDMI. Rather than using a dedicated oscilloscope MCU, the design splits responsibility across two domains on the same chip: programmable logic (PL) which is implemented in VHDL, handles the acquisition and video pipeline which is very timing-dependent, while the ARM Cortex-A9 processing system (PS) runs embedded C firmware for user control through a command line interface.
+For this project, I designed a two-channel oscilloscope on a Xilinx Zynq-7010 SoC. The design captures analog signals from the AD7606 ADC and displays the waveforms in real time over HDMI. The design splits responsibility across two domains on the same chip: programmable logic (PL) which is implemented in VHDL, handles the acquisition and video pipeline which is very timing-dependent, while the ARM Cortex-A9 processing system (PS) runs embedded C firmware for user control through a command line interface.
 
 The two domains communicate through a custom AXI4-Lite slave peripheral, giving the ARM processor memory-mapped access to control registers, status flags, and live sample data in the FPGA fabric.
 
@@ -46,7 +46,6 @@ The top-level VHDL entity `acquireToHDMI.vhdl` is packaged in an IP named `final
                                                       +----------------------+
 ```
 
-![vivado block diagram](images/vivado_block.png)
 
 ---
 
@@ -178,6 +177,97 @@ The AXI wrapper (`final_oscope_slave_lite_v1_0_S00_AXI`) implements a custom AXI
 | slv_reg4 | Write | Trigger voltage (signed 16-bit) |
 | slv_reg5 | Write | Trigger time (pixel position) |
 
+```vhdl
+S_AXI_RDATA <= ch1_data_int when (axi_araddr(ADDR_LSB+OPT_MEM_ADDR_BITS downto ADDR_LSB) = "000" ) else
+ch2_data_int when (axi_araddr(ADDR_LSB+OPT_MEM_ADDR_BITS downto ADDR_LSB) = "0001" ) else
+status_reg_int when (axi_araddr(ADDR_LSB+OPT_MEM_ADDR_BITS downto ADDR_LSB) = "0010" ) else
+slv_reg3 when (axi_araddr(ADDR_LSB+OPT_MEM_ADDR_BITS downto ADDR_LSB) = "0011" ) else -- control register
+slv_reg4 when (axi_araddr(ADDR_LSB+OPT_MEM_ADDR_BITS downto ADDR_LSB) = "0100" ) else -- trigger voltage
+slv_reg5 when (axi_araddr(ADDR_LSB+OPT_MEM_ADDR_BITS downto ADDR_LSB) = "0101" ) else -- trigger time
+slv_reg6 when (axi_araddr(ADDR_LSB+OPT_MEM_ADDR_BITS downto ADDR_LSB) = "0110" ) else
+slv_reg7 when (axi_araddr(ADDR_LSB+OPT_MEM_ADDR_BITS downto ADDR_LSB) = "0111" ) else
+slv_reg8 when (axi_araddr(ADDR_LSB+OPT_MEM_ADDR_BITS downto ADDR_LSB) = "1000" ) else
+slv_reg9 when (axi_araddr(ADDR_LSB+OPT_MEM_ADDR_BITS downto ADDR_LSB) = "1001" ) else
+(others => '0');
+```
+
+```vhdl
+component acquireToHdmi is
+PORT ( clk : in  STD_LOGIC;
+    resetn : in  STD_LOGIC;
+
+    flag_clear : in STD_LOGIC; -- control reg 3
+    flag_q : out STD_LOGIC; -- status reg 2
+
+    single_mode : in  STD_LOGIC; -- control reg 3
+    forced_mode : in  STD_LOGIC; -- control reg 3
+    ch1enb, ch2enb : in STD_LOGIC; -- control reg 3
+    sampleRate_select : in STD_LOGIC_VECTOR(1 downto 0); -- control reg 3
+
+    triggerCh1, triggerCh2: out STD_LOGIC; -- status reg 2
+    conversionPlusReadoutTime: out STD_LOGIC; -- status reg 2
+    sampleTimerRollover: out STD_LOGIC; -- status reg 2
+
+    an7606data: in STD_LOGIC_VECTOR(15 downto 0);
+    an7606convst, an7606cs, an7606rd, an7606reset: out STD_LOGIC;
+    an7606od: out STD_LOGIC_VECTOR(2 downto 0);
+    an7606busy : in STD_LOGIC;
+
+    tmdsDataP : out  STD_LOGIC_VECTOR (2 downto 0);
+    tmdsDataN : out  STD_LOGIC_VECTOR (2 downto 0);
+    tmdsClkP : out STD_LOGIC;
+    tmdsClkN : out STD_LOGIC;
+    hdmiOen:    out STD_LOGIC;
+
+    triggerVolt16bitSigned: in SIGNED(15 downto 0); -- reg4
+    triggerTime: in STD_LOGIC_VECTOR(VIDEO_WIDTH_IN_BITS-1 downto 0); -- reg5
+    ch1Data16bitSLV, ch2Data16bitSLV: out STD_LOGIC_VECTOR(15 downto 0)
+  );
+end component;
+signal ch1_data_int : std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0); -- read reg 0
+signal ch2_data_int : std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0); -- read reg 1
+signal status_reg_int : std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0); -- read reg 2
+```
+
+```vhdl
+oscope_inst : acquireToHdmi
+PORT MAP(
+    clk => S_AXI_ACLK,
+    resetn => S_AXI_ARESETN,
+    flag_clear => slv_reg3(7),
+    flag_q => status_reg_int(4),
+    single_mode => slv_reg3(0),
+    forced_mode => slv_reg3(1),
+    ch1enb => slv_reg3(2),
+    ch2enb => slv_reg3(3),
+    sampleRate_select => slv_reg3(5 downto 4),
+    
+    triggerCh1 => status_reg_int(0),
+    triggerCh2 => status_reg_int(1),
+    conversionPlusReadoutTime => status_reg_int(2),
+    sampleTimerRollover => status_reg_int(3),
+    
+    an7606data => an7606data_ext,
+    an7606convst => an7606convst_ext,
+    an7606cs => an7606cs_ext,
+    an7606rd => an7606rd_ext,
+    an7606reset => an7606reset_ext,
+    an7606od => an7606od_ext,
+    an7606busy => an7606busy_ext,
+    
+    tmdsDataP => tmdsDataP_ext,
+    tmdsDataN => tmdsDataN_ext,
+    tmdsClkP => tmdsClkP_ext,
+    tmdsClkN => tmdsClkN_ext,
+    hdmiOen => hdmiOen_ext,
+    
+    triggerVolt16bitSigned => signed(slv_reg4(15 downto 0)),
+    triggerTime => slv_reg5(VIDEO_WIDTH_IN_BITS-1 downto 0),
+    ch1Data16bitSLV => ch1_data_int(15 downto 0),
+    ch2Data16bitSLV => ch2_data_int(15 downto 0)
+);  
+```
+
 **Control register (slv_reg3) bit map:**
 
 | Bit | Function |
@@ -187,7 +277,7 @@ The AXI wrapper (`final_oscope_slave_lite_v1_0_S00_AXI`) implements a custom AXI
 | 2 | `ch1enb` — enable channel 1 |
 | 3 | `ch2enb` — enable channel 2 |
 | 5:4 | `sampleRate_select` — 2-bit sample rate |
-| 6 | Reset pulse |
+| 6 | Reset pulse (not used) |
 | 7 | Flag clear — acknowledge sample-ready flag |
 
 **Status register (slv_reg2) bit map:**
@@ -202,9 +292,13 @@ The AXI wrapper (`final_oscope_slave_lite_v1_0_S00_AXI`) implements a custom AXI
 
 ---
 
+The wrapper `final_oscope_slave_lite_v1_0_S00_AXI` was used to create the `final_oscope_0` IP with the appropriate signal inputs and outputs. This was combined with the `enhancedPwm_AXI` IP and the processing unit, to create the final vivado design block diagram seen below:
+
+![vivado block diagram](images/vivado_block.png)
+
 ## Embedded Software — ARM Cortex-A9 (C)
 
-The firmware runs on the PS under Xilinx Vitis (bare-metal, no OS) and provides a UART command-line interface for real-time oscilloscope control. The C code accesses the read and write registers passed through by the AXI wrapper.
+Once the memory mapping of the signals was decided, vitis accesses these registers in C. The firmware runs on the PS under Xilinx Vitis (bare-metal, no OS) and provides a UART command-line interface for real-time oscilloscope control. The C code accesses the read and write registers passed through by the AXI wrapper.
 
 ### Function Generator with TTC0 Timer ISR and Direct Digital Synthesis
 

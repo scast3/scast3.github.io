@@ -123,7 +123,7 @@
     "keywords": ["FPGA","VHDL","Verification","Xilinx"],
     
     "mainEntityOfPage": "true",
-    "wordCount": "2074"
+    "wordCount": "2511"
   }
   </script>
     
@@ -289,7 +289,7 @@
   <div class="flex flex-row flex-wrap items-center">
     
     
-      <time datetime="2025-12-10 00:00:00 &#43;0000 UTC">10 December 2025</time><span class="px-2 text-primary-500">&middot;</span><span title="Reading time">10 mins</span>
+      <time datetime="2025-12-10 00:00:00 &#43;0000 UTC">10 December 2025</time><span class="px-2 text-primary-500">&middot;</span><span title="Reading time">12 mins</span>
     
 
     
@@ -307,7 +307,7 @@
     <section class="prose mt-0 flex max-w-full flex-col dark:prose-invert lg:flex-row">
       
       <div class="min-h-0 min-w-0 max-w-prose grow">
-        <h2 id="overview" class="relative group">Overview <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#overview" aria-label="Anchor">#</a></span></h2><p>For this project, I designed a fully functional two-channel oscilloscope built on a Xilinx Zynq-7010 SoC. The system captures analog signals using the AD7606 ADC and renders waveforms in real time over HDMI. Rather than using a dedicated oscilloscope MCU, the design splits responsibility across two domains on the same chip: programmable logic (PL) which is implemented in VHDL, handles the acquisition and video pipeline which is very timing-dependent, while the ARM Cortex-A9 processing system (PS) runs embedded C firmware for user control through a command line interface.</p>
+        <h2 id="overview" class="relative group">Overview <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#overview" aria-label="Anchor">#</a></span></h2><p>For this project, I designed a two-channel oscilloscope on a Xilinx Zynq-7010 SoC. The design captures analog signals from the AD7606 ADC and displays the waveforms in real time over HDMI. The design splits responsibility across two domains on the same chip: programmable logic (PL) which is implemented in VHDL, handles the acquisition and video pipeline which is very timing-dependent, while the ARM Cortex-A9 processing system (PS) runs embedded C firmware for user control through a command line interface.</p>
 <p>The two domains communicate through a custom AXI4-Lite slave peripheral, giving the ARM processor memory-mapped access to control registers, status flags, and live sample data in the FPGA fabric.</p>
 <div style="width: 500px; margin: 0 auto; text-align: center;">
 <p>
@@ -339,72 +339,7 @@
                                         AD7606 ADC --&gt;|  16-bit parallel bus |
                                         HDMI output &lt;-|  TMDS serializer     |
                                                       +----------------------+
-</code></pre><p>
-
-
-
-
-
-<figure>
-    
-    
-
-
-
-
-
-
-
-
-  
-    <picture
-      class="mx-auto my-0 rounded-md"
-      
-    >
-      
-      
-      
-      
-        <source
-          
-            srcset="http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_898eb5ec72a2d9c2.webp 330w,http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_bff08ab340020db0.webp 660w
-            
-              ,http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_d73c0cd788b0f3d2.webp 1024w
-            
-            
-              
-                ,http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_d5b0562f251e45ed.webp 1062w
-              
-            "
-          
-          sizes="100vw"
-          type="image/webp"
-        />
-      
-      <img
-        width="1062"
-        height="435"
-        class="mx-auto my-0 rounded-md"
-        alt="vivado block diagram"
-        loading="lazy" decoding="async"
-        
-          src="http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_34c045d7578db70b.png" srcset="http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_5025ef2ea7e7b4.png 330w,http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_34c045d7578db70b.png 660w
-          
-            ,http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_d6d0e3ec9ca5d078.png 1024w
-          
-          
-            ,http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block.png 1062w
-          "
-          sizes="100vw"
-        
-      />
-    </picture>
-  
-
-
-</figure>
-</p>
-<hr>
+</code></pre><hr>
 <h2 id="programmable-logic--vhdl-design" class="relative group">Programmable Logic — VHDL Design <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#programmable-logic--vhdl-design" aria-label="Anchor">#</a></span></h2><h3 id="pwm-function-generation" class="relative group">PWM Function Generation <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#pwm-function-generation" aria-label="Anchor">#</a></span></h3><p>The module <code>enhancedPwm.vhdl</code> contains the PL functionality for generating a pwm signal. The module takes a 9-bit duty cycle input and outputs a pwm signal. The entity declaration can be seen below:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-vhdl" data-lang="vhdl"><span style="display:flex;"><span><span style="color:#66d9ef">entity</span> <span style="color:#a6e22e">enhancedPwm</span> <span style="color:#66d9ef">is</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">Port</span> ( clk <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">STD_LOGIC</span>;
@@ -736,7 +671,89 @@
 			</tr>
 	</tbody>
 </table>
-<p><strong>Control register (slv_reg3) bit map:</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-vhdl" data-lang="vhdl"><span style="display:flex;"><span>S_AXI_RDATA <span style="color:#f92672">&lt;=</span> ch1_data_int <span style="color:#66d9ef">when</span> (axi_araddr(ADDR_LSB<span style="color:#f92672">+</span>OPT_MEM_ADDR_BITS <span style="color:#66d9ef">downto</span> ADDR_LSB) <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;000&#34;</span> ) <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>ch2_data_int <span style="color:#66d9ef">when</span> (axi_araddr(ADDR_LSB<span style="color:#f92672">+</span>OPT_MEM_ADDR_BITS <span style="color:#66d9ef">downto</span> ADDR_LSB) <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;0001&#34;</span> ) <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>status_reg_int <span style="color:#66d9ef">when</span> (axi_araddr(ADDR_LSB<span style="color:#f92672">+</span>OPT_MEM_ADDR_BITS <span style="color:#66d9ef">downto</span> ADDR_LSB) <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;0010&#34;</span> ) <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>slv_reg3 <span style="color:#66d9ef">when</span> (axi_araddr(ADDR_LSB<span style="color:#f92672">+</span>OPT_MEM_ADDR_BITS <span style="color:#66d9ef">downto</span> ADDR_LSB) <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;0011&#34;</span> ) <span style="color:#66d9ef">else</span> <span style="color:#75715e">-- control register</span>
+</span></span><span style="display:flex;"><span>slv_reg4 <span style="color:#66d9ef">when</span> (axi_araddr(ADDR_LSB<span style="color:#f92672">+</span>OPT_MEM_ADDR_BITS <span style="color:#66d9ef">downto</span> ADDR_LSB) <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;0100&#34;</span> ) <span style="color:#66d9ef">else</span> <span style="color:#75715e">-- trigger voltage</span>
+</span></span><span style="display:flex;"><span>slv_reg5 <span style="color:#66d9ef">when</span> (axi_araddr(ADDR_LSB<span style="color:#f92672">+</span>OPT_MEM_ADDR_BITS <span style="color:#66d9ef">downto</span> ADDR_LSB) <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;0101&#34;</span> ) <span style="color:#66d9ef">else</span> <span style="color:#75715e">-- trigger time</span>
+</span></span><span style="display:flex;"><span>slv_reg6 <span style="color:#66d9ef">when</span> (axi_araddr(ADDR_LSB<span style="color:#f92672">+</span>OPT_MEM_ADDR_BITS <span style="color:#66d9ef">downto</span> ADDR_LSB) <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;0110&#34;</span> ) <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>slv_reg7 <span style="color:#66d9ef">when</span> (axi_araddr(ADDR_LSB<span style="color:#f92672">+</span>OPT_MEM_ADDR_BITS <span style="color:#66d9ef">downto</span> ADDR_LSB) <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;0111&#34;</span> ) <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>slv_reg8 <span style="color:#66d9ef">when</span> (axi_araddr(ADDR_LSB<span style="color:#f92672">+</span>OPT_MEM_ADDR_BITS <span style="color:#66d9ef">downto</span> ADDR_LSB) <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;1000&#34;</span> ) <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>slv_reg9 <span style="color:#66d9ef">when</span> (axi_araddr(ADDR_LSB<span style="color:#f92672">+</span>OPT_MEM_ADDR_BITS <span style="color:#66d9ef">downto</span> ADDR_LSB) <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;1001&#34;</span> ) <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>(<span style="color:#66d9ef">others</span> <span style="color:#f92672">=&gt;</span> <span style="color:#e6db74">&#39;0&#39;</span>);
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-vhdl" data-lang="vhdl"><span style="display:flex;"><span><span style="color:#66d9ef">component</span> <span style="color:#a6e22e">acquireToHdmi</span> <span style="color:#66d9ef">is</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">PORT</span> ( clk <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span>  <span style="color:#66d9ef">STD_LOGIC</span>;
+</span></span><span style="display:flex;"><span>    resetn <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span>  <span style="color:#66d9ef">STD_LOGIC</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    flag_clear <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">STD_LOGIC</span>; <span style="color:#75715e">-- control reg 3</span>
+</span></span><span style="display:flex;"><span>    flag_q <span style="color:#f92672">:</span> <span style="color:#66d9ef">out</span> <span style="color:#66d9ef">STD_LOGIC</span>; <span style="color:#75715e">-- status reg 2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    single_mode <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span>  <span style="color:#66d9ef">STD_LOGIC</span>; <span style="color:#75715e">-- control reg 3</span>
+</span></span><span style="display:flex;"><span>    forced_mode <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span>  <span style="color:#66d9ef">STD_LOGIC</span>; <span style="color:#75715e">-- control reg 3</span>
+</span></span><span style="display:flex;"><span>    ch1enb, ch2enb <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">STD_LOGIC</span>; <span style="color:#75715e">-- control reg 3</span>
+</span></span><span style="display:flex;"><span>    sampleRate_select <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">STD_LOGIC_VECTOR</span>(<span style="color:#ae81ff">1</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>); <span style="color:#75715e">-- control reg 3</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    triggerCh1, triggerCh2<span style="color:#f92672">:</span> <span style="color:#66d9ef">out</span> <span style="color:#66d9ef">STD_LOGIC</span>; <span style="color:#75715e">-- status reg 2</span>
+</span></span><span style="display:flex;"><span>    conversionPlusReadoutTime<span style="color:#f92672">:</span> <span style="color:#66d9ef">out</span> <span style="color:#66d9ef">STD_LOGIC</span>; <span style="color:#75715e">-- status reg 2</span>
+</span></span><span style="display:flex;"><span>    sampleTimerRollover<span style="color:#f92672">:</span> <span style="color:#66d9ef">out</span> <span style="color:#66d9ef">STD_LOGIC</span>; <span style="color:#75715e">-- status reg 2</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    an7606data<span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">STD_LOGIC_VECTOR</span>(<span style="color:#ae81ff">15</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    an7606convst, an7606cs, an7606rd, an7606reset<span style="color:#f92672">:</span> <span style="color:#66d9ef">out</span> <span style="color:#66d9ef">STD_LOGIC</span>;
+</span></span><span style="display:flex;"><span>    an7606od<span style="color:#f92672">:</span> <span style="color:#66d9ef">out</span> <span style="color:#66d9ef">STD_LOGIC_VECTOR</span>(<span style="color:#ae81ff">2</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    an7606busy <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">STD_LOGIC</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    tmdsDataP <span style="color:#f92672">:</span> <span style="color:#66d9ef">out</span>  <span style="color:#66d9ef">STD_LOGIC_VECTOR</span> (<span style="color:#ae81ff">2</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    tmdsDataN <span style="color:#f92672">:</span> <span style="color:#66d9ef">out</span>  <span style="color:#66d9ef">STD_LOGIC_VECTOR</span> (<span style="color:#ae81ff">2</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    tmdsClkP <span style="color:#f92672">:</span> <span style="color:#66d9ef">out</span> <span style="color:#66d9ef">STD_LOGIC</span>;
+</span></span><span style="display:flex;"><span>    tmdsClkN <span style="color:#f92672">:</span> <span style="color:#66d9ef">out</span> <span style="color:#66d9ef">STD_LOGIC</span>;
+</span></span><span style="display:flex;"><span>    hdmiOen<span style="color:#f92672">:</span>    <span style="color:#66d9ef">out</span> <span style="color:#66d9ef">STD_LOGIC</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    triggerVolt16bitSigned<span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">SIGNED</span>(<span style="color:#ae81ff">15</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>); <span style="color:#75715e">-- reg4</span>
+</span></span><span style="display:flex;"><span>    triggerTime<span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">STD_LOGIC_VECTOR</span>(VIDEO_WIDTH_IN_BITS<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>); <span style="color:#75715e">-- reg5</span>
+</span></span><span style="display:flex;"><span>    ch1Data16bitSLV, ch2Data16bitSLV<span style="color:#f92672">:</span> <span style="color:#66d9ef">out</span> <span style="color:#66d9ef">STD_LOGIC_VECTOR</span>(<span style="color:#ae81ff">15</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>  );
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span> <span style="color:#66d9ef">component</span>;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">signal</span> ch1_data_int <span style="color:#f92672">:</span> <span style="color:#66d9ef">std_logic_vector</span>(C_S_AXI_DATA_WIDTH<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>); <span style="color:#75715e">-- read reg 0</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">signal</span> ch2_data_int <span style="color:#f92672">:</span> <span style="color:#66d9ef">std_logic_vector</span>(C_S_AXI_DATA_WIDTH<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>); <span style="color:#75715e">-- read reg 1</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">signal</span> status_reg_int <span style="color:#f92672">:</span> <span style="color:#66d9ef">std_logic_vector</span>(C_S_AXI_DATA_WIDTH<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>); <span style="color:#75715e">-- read reg 2</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-vhdl" data-lang="vhdl"><span style="display:flex;"><span>oscope_inst <span style="color:#f92672">:</span> acquireToHdmi
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">PORT</span> <span style="color:#66d9ef">MAP</span>(
+</span></span><span style="display:flex;"><span>    clk <span style="color:#f92672">=&gt;</span> S_AXI_ACLK,
+</span></span><span style="display:flex;"><span>    resetn <span style="color:#f92672">=&gt;</span> S_AXI_ARESETN,
+</span></span><span style="display:flex;"><span>    flag_clear <span style="color:#f92672">=&gt;</span> slv_reg3(<span style="color:#ae81ff">7</span>),
+</span></span><span style="display:flex;"><span>    flag_q <span style="color:#f92672">=&gt;</span> status_reg_int(<span style="color:#ae81ff">4</span>),
+</span></span><span style="display:flex;"><span>    single_mode <span style="color:#f92672">=&gt;</span> slv_reg3(<span style="color:#ae81ff">0</span>),
+</span></span><span style="display:flex;"><span>    forced_mode <span style="color:#f92672">=&gt;</span> slv_reg3(<span style="color:#ae81ff">1</span>),
+</span></span><span style="display:flex;"><span>    ch1enb <span style="color:#f92672">=&gt;</span> slv_reg3(<span style="color:#ae81ff">2</span>),
+</span></span><span style="display:flex;"><span>    ch2enb <span style="color:#f92672">=&gt;</span> slv_reg3(<span style="color:#ae81ff">3</span>),
+</span></span><span style="display:flex;"><span>    sampleRate_select <span style="color:#f92672">=&gt;</span> slv_reg3(<span style="color:#ae81ff">5</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">4</span>),
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    triggerCh1 <span style="color:#f92672">=&gt;</span> status_reg_int(<span style="color:#ae81ff">0</span>),
+</span></span><span style="display:flex;"><span>    triggerCh2 <span style="color:#f92672">=&gt;</span> status_reg_int(<span style="color:#ae81ff">1</span>),
+</span></span><span style="display:flex;"><span>    conversionPlusReadoutTime <span style="color:#f92672">=&gt;</span> status_reg_int(<span style="color:#ae81ff">2</span>),
+</span></span><span style="display:flex;"><span>    sampleTimerRollover <span style="color:#f92672">=&gt;</span> status_reg_int(<span style="color:#ae81ff">3</span>),
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    an7606data <span style="color:#f92672">=&gt;</span> an7606data_ext,
+</span></span><span style="display:flex;"><span>    an7606convst <span style="color:#f92672">=&gt;</span> an7606convst_ext,
+</span></span><span style="display:flex;"><span>    an7606cs <span style="color:#f92672">=&gt;</span> an7606cs_ext,
+</span></span><span style="display:flex;"><span>    an7606rd <span style="color:#f92672">=&gt;</span> an7606rd_ext,
+</span></span><span style="display:flex;"><span>    an7606reset <span style="color:#f92672">=&gt;</span> an7606reset_ext,
+</span></span><span style="display:flex;"><span>    an7606od <span style="color:#f92672">=&gt;</span> an7606od_ext,
+</span></span><span style="display:flex;"><span>    an7606busy <span style="color:#f92672">=&gt;</span> an7606busy_ext,
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    tmdsDataP <span style="color:#f92672">=&gt;</span> tmdsDataP_ext,
+</span></span><span style="display:flex;"><span>    tmdsDataN <span style="color:#f92672">=&gt;</span> tmdsDataN_ext,
+</span></span><span style="display:flex;"><span>    tmdsClkP <span style="color:#f92672">=&gt;</span> tmdsClkP_ext,
+</span></span><span style="display:flex;"><span>    tmdsClkN <span style="color:#f92672">=&gt;</span> tmdsClkN_ext,
+</span></span><span style="display:flex;"><span>    hdmiOen <span style="color:#f92672">=&gt;</span> hdmiOen_ext,
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    triggerVolt16bitSigned <span style="color:#f92672">=&gt;</span> <span style="color:#66d9ef">signed</span>(slv_reg4(<span style="color:#ae81ff">15</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>)),
+</span></span><span style="display:flex;"><span>    triggerTime <span style="color:#f92672">=&gt;</span> slv_reg5(VIDEO_WIDTH_IN_BITS<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>),
+</span></span><span style="display:flex;"><span>    ch1Data16bitSLV <span style="color:#f92672">=&gt;</span> ch1_data_int(<span style="color:#ae81ff">15</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>),
+</span></span><span style="display:flex;"><span>    ch2Data16bitSLV <span style="color:#f92672">=&gt;</span> ch2_data_int(<span style="color:#ae81ff">15</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>);  
+</span></span></code></pre></div><p><strong>Control register (slv_reg3) bit map:</strong></p>
 <table>
 	<thead>
 			<tr>
@@ -767,7 +784,7 @@
 			</tr>
 			<tr>
 					<td>6</td>
-					<td>Reset pulse</td>
+					<td>Reset pulse (not used)</td>
 			</tr>
 			<tr>
 					<td>7</td>
@@ -807,7 +824,73 @@
 	</tbody>
 </table>
 <hr>
-<h2 id="embedded-software--arm-cortex-a9-c" class="relative group">Embedded Software — ARM Cortex-A9 (C) <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#embedded-software--arm-cortex-a9-c" aria-label="Anchor">#</a></span></h2><p>The firmware runs on the PS under Xilinx Vitis (bare-metal, no OS) and provides a UART command-line interface for real-time oscilloscope control. The C code accesses the read and write registers passed through by the AXI wrapper.</p>
+<p>The wrapper <code>final_oscope_slave_lite_v1_0_S00_AXI</code> was used to create the <code>final_oscope_0</code> IP with the appropriate signal inputs and outputs. This was combined with the <code>enhancedPwm_AXI</code> IP and the processing unit, to create the final vivado design block diagram seen below:</p>
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_898eb5ec72a2d9c2.webp 330w,http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_bff08ab340020db0.webp 660w
+            
+              ,http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_d73c0cd788b0f3d2.webp 1024w
+            
+            
+              
+                ,http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_d5b0562f251e45ed.webp 1062w
+              
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="1062"
+        height="435"
+        class="mx-auto my-0 rounded-md"
+        alt="vivado block diagram"
+        loading="lazy" decoding="async"
+        
+          src="http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_34c045d7578db70b.png" srcset="http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_5025ef2ea7e7b4.png 330w,http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_34c045d7578db70b.png 660w
+          
+            ,http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_d6d0e3ec9ca5d078.png 1024w
+          
+          
+            ,http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block.png 1062w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
+<h2 id="embedded-software--arm-cortex-a9-c" class="relative group">Embedded Software — ARM Cortex-A9 (C) <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#embedded-software--arm-cortex-a9-c" aria-label="Anchor">#</a></span></h2><p>Once the memory mapping of the signals was decided, vitis accesses these registers in C. The firmware runs on the PS under Xilinx Vitis (bare-metal, no OS) and provides a UART command-line interface for real-time oscilloscope control. The C code accesses the read and write registers passed through by the AXI wrapper.</p>
 <h3 id="function-generator-with-ttc0-timer-isr-and-direct-digital-synthesis" class="relative group">Function Generator with TTC0 Timer ISR and Direct Digital Synthesis <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#function-generator-with-ttc0-timer-isr-and-direct-digital-synthesis" aria-label="Anchor">#</a></span></h3><p>A Triple Timer Counter (TTC0) is configured to fire at 10 kHz. On each interrupt, the ISR steps a 16-bit phase accumulator by a configurable <code>phaseIncrement</code> and indexes a 64-entry LUT to produce the next DAC output value via an enhanced PWM peripheral. The user is able to choose the generation of either a sine or sinc function. Each is represented by a 64-point quantized sine LUT.</p>
 <p>Output frequency is set by entering a value in Hz over UART; the firmware computes the correct phase increment using a pre-characterized linear regression (<code>phaseIncrement = 6.5516 * frequency + 0.0062</code>).</p>
 <h3 id="uart-command-interface" class="relative group">UART Command Interface <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#uart-command-interface" aria-label="Anchor">#</a></span></h3><p>The main loop blocks on <code>XUartPs_RecvByte()</code> and dispatches on a single character:</p>
