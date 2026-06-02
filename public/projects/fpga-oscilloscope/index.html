@@ -123,7 +123,7 @@
     "keywords": ["FPGA","VHDL","Verification","Xilinx"],
     
     "mainEntityOfPage": "true",
-    "wordCount": "2511"
+    "wordCount": "2541"
   }
   </script>
     
@@ -324,7 +324,7 @@
 </p>
 </div>
 <hr>
-<h2 id="system-architecture" class="relative group">System Architecture <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#system-architecture" aria-label="Anchor">#</a></span></h2><p>The top-level VHDL entity <code>acquireToHDMI.vhdl</code> is packaged in an IP named <code>final_oscope</code> and instantiates two sub-modules: a datapath (<code>acquireToHDMI_datapath</code>) handling the ADC interface, waveform buffering, and video rendering, and a Moore FSM (<code>acquireToHDMI_fsm</code>) generating the control word that sequences all operations. The AXI wrapper (<code>final_oscope_slave_lite_v1_0_S00_AXI.vhdl</code>) instantiates this top-level and exposes its ports as memory-mapped registers to the PS. The signals fed from the wrapper were accessed in the file <code>helloworld.c</code>. For function generation, the enhancedPwm IP is used which takes in a duty cycle and outputs the pwm signal.</p>
+<h2 id="system-architecture" class="relative group">System Architecture <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#system-architecture" aria-label="Anchor">#</a></span></h2><p>The top-level VHDL entity <code>acquireToHDMI.vhdl</code> is packaged in an IP named <code>final_oscope</code> and instantiates a datapath (<code>acquireToHDMI_datapath.vhdl</code>) handling the ADC interface, waveform buffering, and video rendering. The datapath uses the submodules <code>videoSignalGenerator.vhdl</code> to generate the HDMI signals and <code>scopeFace</code> to assign the correct RBG values to each coordiate to display the oscilloscope interface. Furthermore, a Moore FSM (<code>acquireToHDMI_fsm.vhdl</code>) generating the control word that sequences all operations. In addition, the module <code>scopeToHdmi.vhdl</code> The AXI wrapper (<code>final_oscope_slave_lite_v1_0_S00_AXI.vhdl</code>) instantiates this top-level and exposes its ports as memory-mapped registers to the PS. The signals fed from the wrapper were accessed in the file <code>helloworld.c</code>. For function generation, the enhancedPwm IP is used which takes in a duty cycle and outputs the pwm signal.</p>
 <pre tabindex="0"><code>  +---------------------+        AXI4-Lite Bus        +----------------------+
   |  ARM Cortex-A9 (PS) | &lt;-------------------------&gt; |   PL (VHDL Fabric)   |
   |                     |                             |                      |

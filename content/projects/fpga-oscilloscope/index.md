@@ -27,7 +27,7 @@ The two domains communicate through a custom AXI4-Lite slave peripheral, giving 
 
 ## System Architecture
 
-The top-level VHDL entity `acquireToHDMI.vhdl` is packaged in an IP named `final_oscope` and instantiates two sub-modules: a datapath (`acquireToHDMI_datapath`) handling the ADC interface, waveform buffering, and video rendering, and a Moore FSM (`acquireToHDMI_fsm`) generating the control word that sequences all operations. The AXI wrapper (`final_oscope_slave_lite_v1_0_S00_AXI.vhdl`) instantiates this top-level and exposes its ports as memory-mapped registers to the PS. The signals fed from the wrapper were accessed in the file `helloworld.c`. For function generation, the enhancedPwm IP is used which takes in a duty cycle and outputs the pwm signal.
+The top-level VHDL entity `acquireToHDMI.vhdl` is packaged in an IP named `final_oscope` and instantiates a datapath (`acquireToHDMI_datapath.vhdl`) handling the ADC interface, waveform buffering, and video rendering. The datapath uses the submodules `videoSignalGenerator.vhdl` to generate the HDMI signals and `scopeFace` to assign the correct RBG values to each coordiate to display the oscilloscope interface. Furthermore, a Moore FSM (`acquireToHDMI_fsm.vhdl`) generating the control word that sequences all operations. In addition, the module `scopeToHdmi.vhdl` The AXI wrapper (`final_oscope_slave_lite_v1_0_S00_AXI.vhdl`) instantiates this top-level and exposes its ports as memory-mapped registers to the PS. The signals fed from the wrapper were accessed in the file `helloworld.c`. For function generation, the enhancedPwm IP is used which takes in a duty cycle and outputs the pwm signal.
 
 ```
   +---------------------+        AXI4-Lite Bus        +----------------------+
