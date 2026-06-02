@@ -51,47 +51,6 @@ The top-level VHDL entity `acquireToHDMI.vhdl` is packaged in an IP named `final
 
 ## Programmable Logic — VHDL Design
 
-### PWM Function Generation
-
-The module `enhancedPwm.vhdl` contains the PL functionality for generating a pwm signal. The module takes a 9-bit duty cycle input and outputs a pwm signal. The entity declaration can be seen below:
-
-```vhdl
-entity enhancedPwm is
-    Port ( clk : in STD_LOGIC;
-        resetn : in STD_LOGIC;
-        dutyCycle : in STD_LOGIC_VECTOR (8 downto 0);
-        enb : in STD_LOGIC;
-        pwmSignal : out STD_LOGIC;
-        pwmCount : out STD_LOGIC_VECTOR (7 downto 0);
-        rollOver : out STD_LOGIC);
-end enhancedPwm;
-```
-
-### HDMI Display
-
-An hdmi video controller was implemented to convert VGA to HDMI format. The controlloer was responsible for displaying the grid, two trigger markers, and the two channel waveforms. The top level module `scopeToHdmi.vhdl` which facilitates the interaction between the `scopeFace.vhdl` module that determines the color at each pixel and `videoSignalGenerator.vhdl` which determines the HDMI coordinates of each pixel.
-
-```vhdl
-entity scopeToHdmi is
-    PORT ( sysClk : in  STD_LOGIC;
-         resetn : in  STD_LOGIC;
-         btn: in	STD_LOGIC_VECTOR(2 downto 0);
-         tmdsDataP : out  STD_LOGIC_VECTOR (2 downto 0);
-         tmdsDataN : out  STD_LOGIC_VECTOR (2 downto 0);
-         tmdsClkP : out STD_LOGIC;
-         tmdsClkN : out STD_LOGIC;
-         hdmiOen:    out STD_LOGIC);
-end scopeToHdmi;
-```
-
-The final output of the HDMI display is shown below:
-
-<div style="width: 600px; margin: 0 auto; text-align: center;">
-
-![hdmi](/images/hdmi.jpg)
-
-</div>
-
 ### Datapath and Control
 
 The PL follows a standard datapath and control design. The datapath (`acquireToHDMI_datapath.vhdl`) contains all registers, counters, BRAMs, comparators, and pixel converters as structural VHDL instantiations. The control module (`acquireToHDMI_fsm.vhdl`) is a finite state machine that observes the status word (`sw`) from the datapath and drives a control word (`cw`) back to it — the two modules communicate only through these two buses, with no direct logic between them.
@@ -138,8 +97,6 @@ The FSM has 22 states sequencing the full acquisition pipeline. The major flow i
 
 At each ADC read state, the FSM branches based on `STORE_SW`: if the SR latch is set (BRAM fill is active), it routes the sample to BRAM (`WRITE_CH1_BRAM`); otherwise it routes it only to the trigger comparator registers (`WRITE_CH1_TRIG`). This ensures samples are compared against the threshold continuously but only written to BRAM once a trigger has been detected.
 
-![datapath](images/datapath.png)
-
 ### ADC Interface (AD7606)
 
 The AD7606 is an 8-channel, 16-bit SAR ADC with a parallel readout interface. The FSM drives `CONVST`, `CS`, `RD`, and `RESET` in the correct sequence — asserting conversion start, waiting for the `BUSY` flag to deassert (states `BUSY_0` → `BUSY_1`), then clocking out the 16-bit result. Two short-delay counters in the datapath provide the required ADC setup and hold timing. Sampling rate is controlled by a 4-to-1 mux (`sampleMux`) that selects between four preset counter targets based on the 2-bit `sampleRate_select` from the PS.
@@ -159,9 +116,109 @@ The trigger fires when both conditions are true simultaneously — sample 2 was 
 
 ### HDMI Video Output and Waveform Rendering
 
-The datapath instantiates a `clk_wiz_0` PLL to derive the pixel clock (`videoClk`) and a 5x clock (`videoClk5x`) for TMDS serialization from the system clock. The `videoSignalGenerator` produces standard `HS`, `VS`, and `DE` timing signals along with pixel coordinates (`pixelHorz`, `pixelVert`).
+The datapath instantiates a `clk_wiz_0` PLL to derive the pixel clock (`videoClk`) and a 5x clock (`videoClk5x`) for TMDS serialization from the system clock. In addition, video control was implemented to convert VGA to HDMI format. The control logic was responsible for displaying the grid, two trigger markers, and the two channel waveforms. The submodule `videoSignalGenerator.vhdl` produces standard `HS`, `VS`, and `DE` timing signals along with pixel coordinates (`pixelHorz`, `pixelVert`).
+:
+
+```vhdl
+entity videoSignalGenerator is
+    PORT(	
+        clk: in  STD_LOGIC;
+        resetn : in  STD_LOGIC;
+        hs: out STD_LOGIC;
+        vs: out STD_LOGIC;
+        de: out STD_LOGIC;
+        pixelHorz: out STD_LOGIC_VECTOR(VIDEO_WIDTH_IN_BITS - 1 downto 0);
+        pixelVert: out STD_LOGIC_VECTOR(VIDEO_WIDTH_IN_BITS - 1 downto 0));
+end videoSignalGenerator;
+```
+
+The submodule `scopeFace.vhdl` determines the appropriate RGB values at each pixel location. These RGB values are dependent on the type of item being drawn.
+
+```vhdl
+entity scopeFace is
+    PORT ( 	clk: in  STD_LOGIC;
+        resetn : in  STD_LOGIC;
+        pixelHorz : in  STD_LOGIC_VECTOR(VIDEO_WIDTH_IN_BITS - 1 downto 0);
+        pixelVert : in  STD_LOGIC_VECTOR(VIDEO_WIDTH_IN_BITS -1 downto 0);
+        triggerVolt: in STD_LOGIC_VECTOR (VIDEO_WIDTH_IN_BITS - 1 downto 0);
+        triggerTime: in STD_LOGIC_VECTOR (VIDEO_WIDTH_IN_BITS - 1 downto 0);
+        red : out  STD_LOGIC_VECTOR(7 downto 0);
+        green : out  STD_LOGIC_VECTOR(7 downto 0);
+        blue : out  STD_LOGIC_VECTOR(7 downto 0);
+        ch1: in STD_LOGIC;
+        ch1Enb: in STD_LOGIC;
+        ch2: in STD_LOGIC;
+        ch2Enb: in STD_LOGIC);
+end scopeFace;
+```
+In the `scopeToHdmi_package.vhdl`, the RGB values for each region of the display are declared as constants:
+
+```vhdl
+	-- Display border - white
+    constant BORDER_R : STD_LOGIC_VECTOR(7 downto 0) := X"FF";
+    constant BORDER_G : STD_LOGIC_VECTOR(7 downto 0) := X"FF";
+    constant BORDER_B : STD_LOGIC_VECTOR(7 downto 0) := X"FF";
+
+    -- Grid, tickmarks, and major axes - gray
+    constant GRID_R : STD_LOGIC_VECTOR(7 downto 0) := X"40";
+    constant GRID_G : STD_LOGIC_VECTOR(7 downto 0) := X"40";
+    constant GRID_B : STD_LOGIC_VECTOR(7 downto 0) := X"40";
+
+    -- Channel 1 - yellow
+    constant CH1_R : STD_LOGIC_VECTOR(7 downto 0) := X"FD";
+    constant CH1_G : STD_LOGIC_VECTOR(7 downto 0) := X"FF";
+    constant CH1_B : STD_LOGIC_VECTOR(7 downto 0) := X"00";
+
+    -- Channel 2 - green
+    constant CH2_R : STD_LOGIC_VECTOR(7 downto 0) := X"00";
+    constant CH2_G : STD_LOGIC_VECTOR(7 downto 0) := X"FF";
+    constant CH2_B : STD_LOGIC_VECTOR(7 downto 0) := X"1C";
+
+    -- Trigger Arrows - cyan
+    constant TRIGGER_R : STD_LOGIC_VECTOR(7 downto 0) := X"00";
+    constant TRIGGER_G : STD_LOGIC_VECTOR(7 downto 0) := X"FF";
+    constant TRIGGER_B : STD_LOGIC_VECTOR(7 downto 0) := X"FF";
+```
 
 Each channel's BRAM is dual-port: port A is clocked on the system clock and written by the FSM during acquisition; port B is clocked on the pixel clock and read during display. The read address is `pixelHorz - L_EDGE`, mapping each horizontal pixel directly to a stored sample. A `toPixelValue` converter scales the 16-bit signed ADC value to a vertical pixel coordinate, and a `genericCompare` checks whether the current `pixelVert` matches — driving the `ch1` / `ch2` signals into the `scopeFace` renderer which composites the waveform, grid, and trigger markers into RGB pixel values for the `hdmi_tx_0` serializer.
+
+The logic of the datapath which includes the hdmi display with BRAM waveform rendering can be seen in the block diagram below:
+
+![datapath](images/datapath.png)
+
+The final result is an IP that displays channel data from the ADC to a standard oscilloscope HDMI display using datapath and control design logic. The following image shows the display when both channels are connected to an external function generator:
+
+<div style="width: 600px; margin: 0 auto; text-align: center;">
+
+![hdmi](/images/hdmi.jpg)
+
+</div>
+
+However, to complete the design, a seperate IP had to be created for custom on chip function generation.
+
+### PWM Function Generation IP
+
+A seperate enhancedPwm IP was created to add waveform generation functionality using pulse width modulation (PWM). The module `enhancedPwm.vhdl` contains the PL functionality for generating a pwm signal for function generation. 
+
+```vhdl
+entity enhancedPwm is
+    Port ( clk : in STD_LOGIC;
+        resetn : in STD_LOGIC;
+        dutyCycle : in STD_LOGIC_VECTOR (8 downto 0);
+        enb : in STD_LOGIC;
+        pwmSignal : out STD_LOGIC;
+        pwmCount : out STD_LOGIC_VECTOR (7 downto 0);
+        rollOver : out STD_LOGIC);
+end enhancedPwm;
+```
+
+The module contains an 8-bit free-running counter `pwmCount` that repeatedly counts from 0 to 255. A comparator continuously compares the current counter value to the 9-bit `duty_cycle` input. The PWM output goes high when the duty cycle value is greater than the counter value, producing a pulse train whose duty cycle is proportional to the input sample value.
+
+To prevent output glitches, the duty-cycle input is registered and only updated when the PWM counter completes a full cycle and reaches 255. This ensures that duty-cycle transitions occur only at PWM period boundaries.
+
+The enhancedPwm IP is integrated with the acquisition IP by using waveform samples stored in BRAM as the duty-cycle source. During playback, waveform samples are read sequentially from memory and supplied to the PWM module. Each stored sample therefore determines the duty cycle for one PWM period. After low-pass filtering, the PWM signal is reconstructed into a continuous analog voltage waveform.
+
+This architecture allows captured ADC data to be stored in memory, displayed on the HDMI oscilloscope interface, and replayed through the PWM output using the same sample buffer. As a result, the programmable logic implements both waveform acquisition and waveform generation using a common BRAM-based data path.
 
 
 ### AXI4-Lite Slave Wrapper
