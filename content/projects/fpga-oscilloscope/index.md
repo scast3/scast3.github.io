@@ -16,17 +16,24 @@ For this project, I designed a fully functional two-channel oscilloscope built o
 
 The two domains communicate through a custom AXI4-Lite slave peripheral, giving the ARM processor memory-mapped access to control registers, status flags, and live sample data in the FPGA fabric.
 
+
+<div style="width: 500px; margin: 0 auto; text-align: center;">
+
+![fpga picture](board.jpg)
+
+</div>
+
 ---
 
 ## System Architecture
 
-The top-level VHDL entity `acquireToHDMI.vhdl` instantiates two sub-modules: a datapath (`acquireToHDMI_datapath`) handling the ADC interface, waveform buffering, and video rendering, and a Moore FSM (`acquireToHDMI_fsm`) generating the control word that sequences all operations. The AXI wrapper (`final_oscope_slave_lite_v1_0_S00_AXI.vhdl`) instantiates this top-level and exposes its ports as memory-mapped registers to the PS. The signals fed from the wrapper were accessed in the file `helloworld.c`. For function generation, the module `enhancedPWM.vhdl` is called which takes in a duty cycle and outputs the pwm signal.
+The top-level VHDL entity `acquireToHDMI.vhdl` is packaged in an IP named `final_oscope` and instantiates two sub-modules: a datapath (`acquireToHDMI_datapath`) handling the ADC interface, waveform buffering, and video rendering, and a Moore FSM (`acquireToHDMI_fsm`) generating the control word that sequences all operations. The AXI wrapper (`final_oscope_slave_lite_v1_0_S00_AXI.vhdl`) instantiates this top-level and exposes its ports as memory-mapped registers to the PS. The signals fed from the wrapper were accessed in the file `helloworld.c`. For function generation, the enhancedPwm IP is used which takes in a duty cycle and outputs the pwm signal.
 
 ```
   +---------------------+        AXI4-Lite Bus        +----------------------+
   |  ARM Cortex-A9 (PS) | <-------------------------> |   PL (VHDL Fabric)   |
   |                     |                             |                      |
-  |  Vitis C firmware   |   slv_reg0: CH1 data (R)    |  acquireToHDMI       |
+  |  Vitis C firmware   |   slv_reg0: CH1 data (R)    |  final_oscope        |
   |  - UART CLI         |   slv_reg1: CH2 data (R)    |  +-----------------+ |
   |  - TTC0 ISR         |   slv_reg2: status (R)      |  | ADC FSM         | |
   |  - Trigger control  |   slv_reg3: control (W)     |  | Sample timer    | |
@@ -47,7 +54,7 @@ The top-level VHDL entity `acquireToHDMI.vhdl` instantiates two sub-modules: a d
 
 ### PWM Function Generation
 
-The module `enhancedPwm.vhdl` contains the PL functionality for generating a pwm signal. The module takes a 9-bit iduty cycle input and outputs a pwm signal. The entity declaration can be seen below:
+The module `enhancedPwm.vhdl` contains the PL functionality for generating a pwm signal. The module takes a 9-bit duty cycle input and outputs a pwm signal. The entity declaration can be seen below:
 
 ```vhdl
 entity enhancedPwm is
@@ -62,14 +69,29 @@ end enhancedPwm;
 ```
 
 ### HDMI Display
+
+An hdmi video controller was implemented to convert VGA to HDMI format. The controlloer was responsible for displaying the grid, two trigger markers, and the two channel waveforms. The top level module `scopeToHdmi.vhdl` which facilitates the interaction between the `scopeFace.vhdl` module that determines the color at each pixel and `videoSignalGenerator.vhdl` which determines the HDMI coordinates of each pixel.
+
+```vhdl
+entity scopeToHdmi is
+    PORT ( sysClk : in  STD_LOGIC;
+         resetn : in  STD_LOGIC;
+         btn: in	STD_LOGIC_VECTOR(2 downto 0);
+         tmdsDataP : out  STD_LOGIC_VECTOR (2 downto 0);
+         tmdsDataN : out  STD_LOGIC_VECTOR (2 downto 0);
+         tmdsClkP : out STD_LOGIC;
+         tmdsClkN : out STD_LOGIC;
+         hdmiOen:    out STD_LOGIC);
+end scopeToHdmi;
+```
+
+The final output of the HDMI display is shown below:
+
 <div style="width: 600px; margin: 0 auto; text-align: center;">
 
 ![hdmi](/images/hdmi.jpg)
 
 </div>
-
-An hdmi video controller was implemented to convert VGA to HDMI format. The controlloer was responsible for displaying the grid, two trigger markers, and the two channel waveforms. The top level module `scopeToHdmi.vhdl` which facilitates the interaction
-
 
 ### Datapath and Control
 
@@ -117,6 +139,8 @@ The FSM has 22 states sequencing the full acquisition pipeline. The major flow i
 
 At each ADC read state, the FSM branches based on `STORE_SW`: if the SR latch is set (BRAM fill is active), it routes the sample to BRAM (`WRITE_CH1_BRAM`); otherwise it routes it only to the trigger comparator registers (`WRITE_CH1_TRIG`). This ensures samples are compared against the threshold continuously but only written to BRAM once a trigger has been detected.
 
+![datapath](images/datapath.png)
+
 ### ADC Interface (AD7606)
 
 The AD7606 is an 8-channel, 16-bit SAR ADC with a parallel readout interface. The FSM drives `CONVST`, `CS`, `RD`, and `RESET` in the correct sequence — asserting conversion start, waiting for the `BUSY` flag to deassert (states `BUSY_0` → `BUSY_1`), then clocking out the 16-bit result. Two short-delay counters in the datapath provide the required ADC setup and hold timing. Sampling rate is controlled by a 4-to-1 mux (`sampleMux`) that selects between four preset counter targets based on the 2-bit `sampleRate_select` from the PS.
@@ -140,9 +164,6 @@ The datapath instantiates a `clk_wiz_0` PLL to derive the pixel clock (`videoClk
 
 Each channel's BRAM is dual-port: port A is clocked on the system clock and written by the FSM during acquisition; port B is clocked on the pixel clock and read during display. The read address is `pixelHorz - L_EDGE`, mapping each horizontal pixel directly to a stored sample. A `toPixelValue` converter scales the 16-bit signed ADC value to a vertical pixel coordinate, and a `genericCompare` checks whether the current `pixelVert` matches — driving the `ch1` / `ch2` signals into the `scopeFace` renderer which composites the waveform, grid, and trigger markers into RGB pixel values for the `hdmi_tx_0` serializer.
 
-![hdmi](hdmi.jpg)
-
-![fpga picture](board.jpg)
 
 ### AXI4-Lite Slave Wrapper
 

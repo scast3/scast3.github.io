@@ -123,7 +123,7 @@
     "keywords": ["FPGA","VHDL","Verification","Xilinx"],
     
     "mainEntityOfPage": "true",
-    "wordCount": "1991"
+    "wordCount": "2074"
   }
   </script>
     
@@ -309,12 +309,26 @@
       <div class="min-h-0 min-w-0 max-w-prose grow">
         <h2 id="overview" class="relative group">Overview <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#overview" aria-label="Anchor">#</a></span></h2><p>For this project, I designed a fully functional two-channel oscilloscope built on a Xilinx Zynq-7010 SoC. The system captures analog signals using the AD7606 ADC and renders waveforms in real time over HDMI. Rather than using a dedicated oscilloscope MCU, the design splits responsibility across two domains on the same chip: programmable logic (PL) which is implemented in VHDL, handles the acquisition and video pipeline which is very timing-dependent, while the ARM Cortex-A9 processing system (PS) runs embedded C firmware for user control through a command line interface.</p>
 <p>The two domains communicate through a custom AXI4-Lite slave peripheral, giving the ARM processor memory-mapped access to control registers, status flags, and live sample data in the FPGA fabric.</p>
+<div style="width: 500px; margin: 0 auto; text-align: center;">
+<p>
+
+
+
+
+
+
+  
+  
+<figure><img src="board.jpg" alt="fpga picture" class="mx-auto my-0 rounded-md" />
+</figure>
+</p>
+</div>
 <hr>
-<h2 id="system-architecture" class="relative group">System Architecture <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#system-architecture" aria-label="Anchor">#</a></span></h2><p>The top-level VHDL entity <code>acquireToHDMI.vhdl</code> instantiates two sub-modules: a datapath (<code>acquireToHDMI_datapath</code>) handling the ADC interface, waveform buffering, and video rendering, and a Moore FSM (<code>acquireToHDMI_fsm</code>) generating the control word that sequences all operations. The AXI wrapper (<code>final_oscope_slave_lite_v1_0_S00_AXI.vhdl</code>) instantiates this top-level and exposes its ports as memory-mapped registers to the PS. The signals fed from the wrapper were accessed in the file <code>helloworld.c</code>. For function generation, the module <code>enhancedPWM.vhdl</code> is called which takes in a duty cycle and outputs the pwm signal.</p>
+<h2 id="system-architecture" class="relative group">System Architecture <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#system-architecture" aria-label="Anchor">#</a></span></h2><p>The top-level VHDL entity <code>acquireToHDMI.vhdl</code> is packaged in an IP named <code>final_oscope</code> and instantiates two sub-modules: a datapath (<code>acquireToHDMI_datapath</code>) handling the ADC interface, waveform buffering, and video rendering, and a Moore FSM (<code>acquireToHDMI_fsm</code>) generating the control word that sequences all operations. The AXI wrapper (<code>final_oscope_slave_lite_v1_0_S00_AXI.vhdl</code>) instantiates this top-level and exposes its ports as memory-mapped registers to the PS. The signals fed from the wrapper were accessed in the file <code>helloworld.c</code>. For function generation, the enhancedPwm IP is used which takes in a duty cycle and outputs the pwm signal.</p>
 <pre tabindex="0"><code>  +---------------------+        AXI4-Lite Bus        +----------------------+
   |  ARM Cortex-A9 (PS) | &lt;-------------------------&gt; |   PL (VHDL Fabric)   |
   |                     |                             |                      |
-  |  Vitis C firmware   |   slv_reg0: CH1 data (R)    |  acquireToHDMI       |
+  |  Vitis C firmware   |   slv_reg0: CH1 data (R)    |  final_oscope        |
   |  - UART CLI         |   slv_reg1: CH2 data (R)    |  +-----------------+ |
   |  - TTC0 ISR         |   slv_reg2: status (R)      |  | ADC FSM         | |
   |  - Trigger control  |   slv_reg3: control (W)     |  | Sample timer    | |
@@ -391,7 +405,7 @@
 </figure>
 </p>
 <hr>
-<h2 id="programmable-logic--vhdl-design" class="relative group">Programmable Logic — VHDL Design <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#programmable-logic--vhdl-design" aria-label="Anchor">#</a></span></h2><h3 id="pwm-function-generation" class="relative group">PWM Function Generation <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#pwm-function-generation" aria-label="Anchor">#</a></span></h3><p>The module <code>enhancedPwm.vhdl</code> contains the PL functionality for generating a pwm signal. The module takes a 9-bit iduty cycle input and outputs a pwm signal. The entity declaration can be seen below:</p>
+<h2 id="programmable-logic--vhdl-design" class="relative group">Programmable Logic — VHDL Design <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#programmable-logic--vhdl-design" aria-label="Anchor">#</a></span></h2><h3 id="pwm-function-generation" class="relative group">PWM Function Generation <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#pwm-function-generation" aria-label="Anchor">#</a></span></h3><p>The module <code>enhancedPwm.vhdl</code> contains the PL functionality for generating a pwm signal. The module takes a 9-bit duty cycle input and outputs a pwm signal. The entity declaration can be seen below:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-vhdl" data-lang="vhdl"><span style="display:flex;"><span><span style="color:#66d9ef">entity</span> <span style="color:#a6e22e">enhancedPwm</span> <span style="color:#66d9ef">is</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">Port</span> ( clk <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">STD_LOGIC</span>;
 </span></span><span style="display:flex;"><span>        resetn <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">STD_LOGIC</span>;
@@ -401,7 +415,19 @@
 </span></span><span style="display:flex;"><span>        pwmCount <span style="color:#f92672">:</span> <span style="color:#66d9ef">out</span> <span style="color:#66d9ef">STD_LOGIC_VECTOR</span> (<span style="color:#ae81ff">7</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>);
 </span></span><span style="display:flex;"><span>        rollOver <span style="color:#f92672">:</span> <span style="color:#66d9ef">out</span> <span style="color:#66d9ef">STD_LOGIC</span>);
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span> <span style="color:#a6e22e">enhancedPwm</span>;
-</span></span></code></pre></div><h3 id="hdmi-display" class="relative group">HDMI Display <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#hdmi-display" aria-label="Anchor">#</a></span></h3><div style="width: 600px; text-align: center;">
+</span></span></code></pre></div><h3 id="hdmi-display" class="relative group">HDMI Display <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#hdmi-display" aria-label="Anchor">#</a></span></h3><p>An hdmi video controller was implemented to convert VGA to HDMI format. The controlloer was responsible for displaying the grid, two trigger markers, and the two channel waveforms. The top level module <code>scopeToHdmi.vhdl</code> which facilitates the interaction between the <code>scopeFace.vhdl</code> module that determines the color at each pixel and <code>videoSignalGenerator.vhdl</code> which determines the HDMI coordinates of each pixel.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-vhdl" data-lang="vhdl"><span style="display:flex;"><span><span style="color:#66d9ef">entity</span> <span style="color:#a6e22e">scopeToHdmi</span> <span style="color:#66d9ef">is</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">PORT</span> ( sysClk <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span>  <span style="color:#66d9ef">STD_LOGIC</span>;
+</span></span><span style="display:flex;"><span>         resetn <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span>  <span style="color:#66d9ef">STD_LOGIC</span>;
+</span></span><span style="display:flex;"><span>         btn<span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span>	<span style="color:#66d9ef">STD_LOGIC_VECTOR</span>(<span style="color:#ae81ff">2</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>         tmdsDataP <span style="color:#f92672">:</span> <span style="color:#66d9ef">out</span>  <span style="color:#66d9ef">STD_LOGIC_VECTOR</span> (<span style="color:#ae81ff">2</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>         tmdsDataN <span style="color:#f92672">:</span> <span style="color:#66d9ef">out</span>  <span style="color:#66d9ef">STD_LOGIC_VECTOR</span> (<span style="color:#ae81ff">2</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>         tmdsClkP <span style="color:#f92672">:</span> <span style="color:#66d9ef">out</span> <span style="color:#66d9ef">STD_LOGIC</span>;
+</span></span><span style="display:flex;"><span>         tmdsClkN <span style="color:#f92672">:</span> <span style="color:#66d9ef">out</span> <span style="color:#66d9ef">STD_LOGIC</span>;
+</span></span><span style="display:flex;"><span>         hdmiOen<span style="color:#f92672">:</span>    <span style="color:#66d9ef">out</span> <span style="color:#66d9ef">STD_LOGIC</span>);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span> <span style="color:#a6e22e">scopeToHdmi</span>;
+</span></span></code></pre></div><p>The final output of the HDMI display is shown below:</p>
+<div style="width: 600px; margin: 0 auto; text-align: center;">
 <p>
 
 
@@ -466,7 +492,6 @@
 </figure>
 </p>
 </div>
-<p>An hdmi video controller was implemented to convert VGA to HDMI format. The controlloer was responsible for displaying the grid, two trigger markers, and the two channel waveforms. The top level module <code>scopeToHdmi.vhdl</code> which facilitates the interaction</p>
 <h3 id="datapath-and-control" class="relative group">Datapath and Control <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#datapath-and-control" aria-label="Anchor">#</a></span></h3><p>The PL follows a standard datapath and control design. The datapath (<code>acquireToHDMI_datapath.vhdl</code>) contains all registers, counters, BRAMs, comparators, and pixel converters as structural VHDL instantiations. The control module (<code>acquireToHDMI_fsm.vhdl</code>) is a finite state machine that observes the status word (<code>sw</code>) from the datapath and drives a control word (<code>cw</code>) back to it — the two modules communicate only through these two buses, with no direct logic between them.</p>
 <h3 id="cw-and-sw-signals" class="relative group">CW and SW Signals <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#cw-and-sw-signals" aria-label="Anchor">#</a></span></h3><p>The FSM has no knowledge of signal values — it only sees a vector of condition bits (the status word) and outputs a vector of control bits (the control word). Every datapath resource — counters, registers, BRAM write enables — is gated by a dedicated bit in <code>cw</code>. This makes the state outputs in the FSM completely readable as a lookup table: each state drives a fixed <code>cw</code> pattern with named bit positions defined in the shared package.</p>
 <p><strong>Key status word (sw) bits observed by the FSM:</strong></p>
@@ -595,6 +620,69 @@
 </figure>
 </p>
 <p>At each ADC read state, the FSM branches based on <code>STORE_SW</code>: if the SR latch is set (BRAM fill is active), it routes the sample to BRAM (<code>WRITE_CH1_BRAM</code>); otherwise it routes it only to the trigger comparator registers (<code>WRITE_CH1_TRIG</code>). This ensures samples are compared against the threshold continuously but only written to BRAM once a trigger has been detected.</p>
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="http://localhost:1313/projects/fpga-oscilloscope/images/datapath_hu_eb0b85e96be7e94a.webp 330w,http://localhost:1313/projects/fpga-oscilloscope/images/datapath_hu_5861a4e5e4ac637f.webp 660w
+            
+              ,http://localhost:1313/projects/fpga-oscilloscope/images/datapath_hu_afd971475304f0f.webp 1024w
+            
+            
+              ,http://localhost:1313/projects/fpga-oscilloscope/images/datapath_hu_c570efba08df5b9b.webp 1320w
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="1446"
+        height="666"
+        class="mx-auto my-0 rounded-md"
+        alt="datapath"
+        loading="lazy" decoding="async"
+        
+          src="http://localhost:1313/projects/fpga-oscilloscope/images/datapath_hu_cbec27c0f2000b87.png" srcset="http://localhost:1313/projects/fpga-oscilloscope/images/datapath_hu_2b3351e2c67eb841.png 330w,http://localhost:1313/projects/fpga-oscilloscope/images/datapath_hu_cbec27c0f2000b87.png 660w
+          
+            ,http://localhost:1313/projects/fpga-oscilloscope/images/datapath_hu_fe6927d750217865.png 1024w
+          
+          
+            ,http://localhost:1313/projects/fpga-oscilloscope/images/datapath_hu_e285ede0528e7d7c.png 1320w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
 <h3 id="adc-interface-ad7606" class="relative group">ADC Interface (AD7606) <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#adc-interface-ad7606" aria-label="Anchor">#</a></span></h3><p>The AD7606 is an 8-channel, 16-bit SAR ADC with a parallel readout interface. The FSM drives <code>CONVST</code>, <code>CS</code>, <code>RD</code>, and <code>RESET</code> in the correct sequence — asserting conversion start, waiting for the <code>BUSY</code> flag to deassert (states <code>BUSY_0</code> → <code>BUSY_1</code>), then clocking out the 16-bit result. Two short-delay counters in the datapath provide the required ADC setup and hold timing. Sampling rate is controlled by a 4-to-1 mux (<code>sampleMux</code>) that selects between four preset counter targets based on the 2-bit <code>sampleRate_select</code> from the PS.</p>
 <h3 id="trigger-logic" class="relative group">Trigger Logic <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#trigger-logic" aria-label="Anchor">#</a></span></h3><p>Trigger detection uses a two-sample edge detector implemented structurally in the datapath. For each channel, two chained <code>genericRegister</code> instances capture consecutive ADC samples, and two <code>genericCompare_Signed</code> instances compare each against the signed threshold voltage:</p>
 <ul>
@@ -606,30 +694,6 @@
 <p><strong>Forced mode</strong> (<code>forced_mode = 1</code>) — the FSM parks in <code>WAIT_FORCED</code> and only proceeds on a <code>SINGLE_SW</code> pulse from the PS, immediately setting the store flag and capturing one frame.</p>
 <h3 id="hdmi-video-output-and-waveform-rendering" class="relative group">HDMI Video Output and Waveform Rendering <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#hdmi-video-output-and-waveform-rendering" aria-label="Anchor">#</a></span></h3><p>The datapath instantiates a <code>clk_wiz_0</code> PLL to derive the pixel clock (<code>videoClk</code>) and a 5x clock (<code>videoClk5x</code>) for TMDS serialization from the system clock. The <code>videoSignalGenerator</code> produces standard <code>HS</code>, <code>VS</code>, and <code>DE</code> timing signals along with pixel coordinates (<code>pixelHorz</code>, <code>pixelVert</code>).</p>
 <p>Each channel&rsquo;s BRAM is dual-port: port A is clocked on the system clock and written by the FSM during acquisition; port B is clocked on the pixel clock and read during display. The read address is <code>pixelHorz - L_EDGE</code>, mapping each horizontal pixel directly to a stored sample. A <code>toPixelValue</code> converter scales the 16-bit signed ADC value to a vertical pixel coordinate, and a <code>genericCompare</code> checks whether the current <code>pixelVert</code> matches — driving the <code>ch1</code> / <code>ch2</code> signals into the <code>scopeFace</code> renderer which composites the waveform, grid, and trigger markers into RGB pixel values for the <code>hdmi_tx_0</code> serializer.</p>
-<p>
-
-
-
-
-
-
-  
-  
-<figure><img src="hdmi.jpg" alt="hdmi" class="mx-auto my-0 rounded-md" />
-</figure>
-</p>
-<p>
-
-
-
-
-
-
-  
-  
-<figure><img src="board.jpg" alt="fpga picture" class="mx-auto my-0 rounded-md" />
-</figure>
-</p>
 <h3 id="axi4-lite-slave-wrapper" class="relative group">AXI4-Lite Slave Wrapper <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#axi4-lite-slave-wrapper" aria-label="Anchor">#</a></span></h3><p>The AXI wrapper (<code>final_oscope_slave_lite_v1_0_S00_AXI</code>) implements a custom AXI4-Lite slave with 10 32-bit registers and two independent read/write state machines. The register map exposes the oscilloscope IP to the ARM:</p>
 <table>
 	<thead>
