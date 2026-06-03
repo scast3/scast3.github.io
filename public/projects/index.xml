@@ -10,16 +10,9 @@
 		
 		
 		
-			<lastBuildDate>Wed, 20 May 2026 00:00:00 +0000</lastBuildDate>
+			<lastBuildDate>Fri, 01 May 2026 00:00:00 +0000</lastBuildDate>
 		
 			<atom:link href="http://localhost:1313/projects/index.xml" rel="self" type="application/rss+xml" />
-			<item>
-				<title>Music Box PCB and Firmware Design with ATTiny85 Microcontroller</title>
-				<link>http://localhost:1313/projects/pcb-musicbox/</link>
-				<pubDate>Wed, 20 May 2026 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/projects/pcb-musicbox/</guid>
-				<description>test</description>
-			</item>
 			<item>
 				<title>Circularly Polarized Patch Antenna and Array Design for X-Band Communications</title>
 				<link>http://localhost:1313/projects/patch-antenna/</link>
@@ -40,20 +33,6 @@
 				<pubDate>Wed, 10 Dec 2025 00:00:00 +0000</pubDate>
 				<guid>http://localhost:1313/projects/fpga-oscilloscope/</guid>
 				<description>Designed an oscilloscope on an fpga in vhdl</description>
-			</item>
-			<item>
-				<title>WiFi Deauthentication Attack Detection and Localization using ESP32</title>
-				<link>http://localhost:1313/projects/deauth-esp/</link>
-				<pubDate>Sun, 30 Nov 2025 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/projects/deauth-esp/</guid>
-				<description>test</description>
-			</item>
-			<item>
-				<title>Design of 8-bit CPU in Verilog</title>
-				<link>http://localhost:1313/projects/8bit/</link>
-				<pubDate>Tue, 01 Jul 2025 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/projects/8bit/</guid>
-				<description>test</description>
 			</item>
 	</channel>
 </rss>

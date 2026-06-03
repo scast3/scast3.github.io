@@ -130,7 +130,7 @@ The `FORCED` and `SINGLE` status word bits determine the mode of the oscilloscop
 
 | Condition | Mode | Description |
 |---|---|---|
-| `sw(FORCED_SW)==0` | Triggered Mode | Channel 1 trigger event starts acquisition into BRAM |
+| `sw(FORCED_SW)==0` | Trigger Mode | Channel 1 trigger event starts acquisition into BRAM |
 | `sw(FORCED_SW)==1` | Forced Mode | User command starts acquisition into BRAM |
 | `sw(SINGLE_SW)==0` | N/A | Nothing - User has not yet sent a command | 
 | `sw(SINGLE_SW)==1` | Single Acquisition Mode | User command starts a single "snapshot" acquisition |
@@ -161,6 +161,10 @@ The FSM has 22 states sequencing the full acquisition pipeline. The major flow i
 
 At each ADC read state, the FSM branches based on `STORE_SW`: if the SR latch is set (BRAM fill is active), it routes the sample to BRAM (`WRITE_CH1_BRAM`); otherwise it routes it only to the trigger comparator registers (`WRITE_CH1_TRIG`). This ensures samples are compared against the threshold continuously but only written to BRAM once a trigger has been detected.
 
+**In trigger mode**: the FSM loops through `BEGIN_CONVST` continuously, writing samples only to the trigger registers, until `TRIG_CH1_SW` fires. Then the `SET_STORE_FLAG` enables BRAM writes and the next `VIDEO_WIDTH` samples fill the display buffer.
+
+**In forced mode**: the FSM parks in `WAIT_FORCED` and only proceeds on a `SINGLE_SW` pulse from the PS, immediately setting the store flag and capturing one frame.
+
 ### ADC Interface (AD7606)
 
 The ALINX daughter board AN706, contains an Analog Devices AD7606 8-channel 16-bit ADC which was used to digitize the analog input. The AD7606 uses a successive approximation register (SAR) approach. The converter accepts analog input voltages in the range of -5 V to +5 V and produces a signed 16-bit two's-complement output value; it also supports sampling rates up to 200 kS/s and presents the conversion result through a parallel digital interface. 
@@ -169,54 +173,40 @@ The FSM drives the external ADC signals `CONVST`, `CS`, `RD`, and `RESET` in the
 
 ### Trigger Logic
 
-Trigger detection uses a two-sample edge detector implemented structurally in the datapath. For each channel, two chained `genericRegister` instances capture consecutive ADC samples, and two `genericCompare_Signed` instances compare each against the signed threshold voltage:
+A trigger occurs when the samples cross a certain threshold of `triggerVolt16bitSigned` which is set by the user in the PS (with a default of 0V). To ensure the trigger is on rising edge, the previous and current sample are tracked. For each channel, two chained register instances capture consecutive ADC samples (sample 1 and sample 2), and two signed comparator instances compare each against the `triggerVolt16bitSigned` vector. The `ch1_sample1_compare` comparator checks checks `sample1 > threshold` (rising condition) and the `ch1_sample1_compare` comparator checks `sample2 < threshold` (pre-crossing condition):
 
-- **Sample 1 comparator:** checks `sample1 > threshold` (rising condition)
-- **Sample 2 comparator:** checks `sample2 < threshold` (pre-crossing condition)
+```vhdl
+   -- ch1 trigger logic
+    ch1_trigger_sample1_signed <= signed(ch1_trigger_sample1);
+    ch1_sample1_compare : genericCompare_Signed
+        GENERIC MAP(16)
+        PORT MAP(x => ch1_trigger_sample1_signed, 
+            y => triggerVolt16bitSigned,
+            g => ch1_trigger_sample1_cond, 
+            l => open,
+            e => open
+        );    
+    
+    ch1_trigger_sample2_signed <= signed(ch1_trigger_sample2);
+    ch1_sample2_compare : genericCompare_Signed
+        GENERIC MAP(16)
+        PORT MAP(x => ch1_trigger_sample2_signed, 
+            y => triggerVolt16bitSigned,
+            g => open, 
+            l => ch1_trigger_sample2_cond,
+            e => open
+        );
+    sw(TRIG_CH1_SW_BIT_INDEX) <= ch1_trigger_sample1_cond and ch1_trigger_sample2_cond;   
+```
 
-The trigger fires when both conditions are true simultaneously — sample 2 was below threshold and sample 1 crossed above it. This detects a rising edge crossing rather than just a level threshold, preventing false triggers on a flat signal sitting above the threshold.
-
-**Trigger mode** (`forced_mode = 0`) — the FSM loops through `BEGIN_CONVST` continuously, writing samples only to the trigger registers, until `TRIG_CH1_SW` fires. Then `SET_STORE_FLAG` enables BRAM writes and the next `VIDEO_WIDTH` samples fill the display buffer.
-
-**Forced mode** (`forced_mode = 1`) — the FSM parks in `WAIT_FORCED` and only proceeds on a `SINGLE_SW` pulse from the PS, immediately setting the store flag and capturing one frame.
+The trigger occurs when both comparator conditions are true, meaning the signal crosses the threshold on a rising edge. This logic prevents false triggers on a flat signal sitting above the threshold.
 
 ### HDMI Video Output and Waveform Rendering
 
 The datapath instantiates a `clk_wiz_0` PLL to derive the pixel clock (`videoClk`) and a 5x clock (`videoClk5x`) for TMDS serialization from the system clock. In addition, video control was implemented to convert VGA to HDMI format. The control logic was responsible for displaying the grid, two trigger markers, and the two channel waveforms. The submodule `videoSignalGenerator.vhdl` produces standard `HS`, `VS`, and `DE` timing signals along with pixel coordinates (`pixelHorz`, `pixelVert`).
-:
-
-```vhdl
-entity videoSignalGenerator is
-    PORT(	
-        clk: in  STD_LOGIC;
-        resetn : in  STD_LOGIC;
-        hs: out STD_LOGIC;
-        vs: out STD_LOGIC;
-        de: out STD_LOGIC;
-        pixelHorz: out STD_LOGIC_VECTOR(VIDEO_WIDTH_IN_BITS - 1 downto 0);
-        pixelVert: out STD_LOGIC_VECTOR(VIDEO_WIDTH_IN_BITS - 1 downto 0));
-end videoSignalGenerator;
-```
 
 The submodule `scopeFace.vhdl` determines the appropriate RGB values at each pixel location. These RGB values are dependent on the type of item being drawn.
 
-```vhdl
-entity scopeFace is
-    PORT ( 	clk: in  STD_LOGIC;
-        resetn : in  STD_LOGIC;
-        pixelHorz : in  STD_LOGIC_VECTOR(VIDEO_WIDTH_IN_BITS - 1 downto 0);
-        pixelVert : in  STD_LOGIC_VECTOR(VIDEO_WIDTH_IN_BITS -1 downto 0);
-        triggerVolt: in STD_LOGIC_VECTOR (VIDEO_WIDTH_IN_BITS - 1 downto 0);
-        triggerTime: in STD_LOGIC_VECTOR (VIDEO_WIDTH_IN_BITS - 1 downto 0);
-        red : out  STD_LOGIC_VECTOR(7 downto 0);
-        green : out  STD_LOGIC_VECTOR(7 downto 0);
-        blue : out  STD_LOGIC_VECTOR(7 downto 0);
-        ch1: in STD_LOGIC;
-        ch1Enb: in STD_LOGIC;
-        ch2: in STD_LOGIC;
-        ch2Enb: in STD_LOGIC);
-end scopeFace;
-```
 In the `scopeToHdmi_package.vhdl`, the RGB values for each region of the display are declared as constants:
 
 ```vhdl
@@ -287,7 +277,7 @@ This allows the captured ADC data to be stored in memory, displayed on the HDMI 
 
 ### AXI4-Lite Slave Wrapper
 
-The AXI wrapper (`final_oscope_slave_lite_v1_0_S00_AXI`) implements a custom AXI4-Lite slave with 10 32-bit registers and two independent read/write state machines. The register map exposes the oscilloscope IP to the ARM:
+The AXI wrapper `final_oscope_slave_lite_v1_0_S00_AXI.vhdl` implements a custom AXI4-Lite slave with 10 32-bit registers with designated read/write functionality. In this design, only the first 5 registers are used; trigger time is mapped to `slv_reg5` but never used in the PS. The register map exposes the oscilloscope IP to the ARM:
 
 | Register | Direction | Contents |
 |---|---|---|
@@ -296,61 +286,18 @@ The AXI wrapper (`final_oscope_slave_lite_v1_0_S00_AXI`) implements a custom AXI
 | slv_reg2 | Read | Status flags |
 | slv_reg3 | Write | Control register |
 | slv_reg4 | Write | Trigger voltage (signed 16-bit) |
-| slv_reg5 | Write | Trigger time (pixel position) |
+| slv_reg5 | Write | Trigger time (signed 16-bit) - unused |
+
+The bit mapping for the control register and status flag register is done in the instantiation and signal assignment:
+
 
 ```vhdl
-S_AXI_RDATA <= ch1_data_int when (axi_araddr(ADDR_LSB+OPT_MEM_ADDR_BITS downto ADDR_LSB) = "000" ) else
-ch2_data_int when (axi_araddr(ADDR_LSB+OPT_MEM_ADDR_BITS downto ADDR_LSB) = "0001" ) else
-status_reg_int when (axi_araddr(ADDR_LSB+OPT_MEM_ADDR_BITS downto ADDR_LSB) = "0010" ) else
-slv_reg3 when (axi_araddr(ADDR_LSB+OPT_MEM_ADDR_BITS downto ADDR_LSB) = "0011" ) else -- control register
-slv_reg4 when (axi_araddr(ADDR_LSB+OPT_MEM_ADDR_BITS downto ADDR_LSB) = "0100" ) else -- trigger voltage
-slv_reg5 when (axi_araddr(ADDR_LSB+OPT_MEM_ADDR_BITS downto ADDR_LSB) = "0101" ) else -- trigger time
-slv_reg6 when (axi_araddr(ADDR_LSB+OPT_MEM_ADDR_BITS downto ADDR_LSB) = "0110" ) else
-slv_reg7 when (axi_araddr(ADDR_LSB+OPT_MEM_ADDR_BITS downto ADDR_LSB) = "0111" ) else
-slv_reg8 when (axi_araddr(ADDR_LSB+OPT_MEM_ADDR_BITS downto ADDR_LSB) = "1000" ) else
-slv_reg9 when (axi_araddr(ADDR_LSB+OPT_MEM_ADDR_BITS downto ADDR_LSB) = "1001" ) else
-(others => '0');
-```
-
-```vhdl
-component acquireToHdmi is
-PORT ( clk : in  STD_LOGIC;
-    resetn : in  STD_LOGIC;
-
-    flag_clear : in STD_LOGIC; -- control reg 3
-    flag_q : out STD_LOGIC; -- status reg 2
-
-    single_mode : in  STD_LOGIC; -- control reg 3
-    forced_mode : in  STD_LOGIC; -- control reg 3
-    ch1enb, ch2enb : in STD_LOGIC; -- control reg 3
-    sampleRate_select : in STD_LOGIC_VECTOR(1 downto 0); -- control reg 3
-
-    triggerCh1, triggerCh2: out STD_LOGIC; -- status reg 2
-    conversionPlusReadoutTime: out STD_LOGIC; -- status reg 2
-    sampleTimerRollover: out STD_LOGIC; -- status reg 2
-
-    an7606data: in STD_LOGIC_VECTOR(15 downto 0);
-    an7606convst, an7606cs, an7606rd, an7606reset: out STD_LOGIC;
-    an7606od: out STD_LOGIC_VECTOR(2 downto 0);
-    an7606busy : in STD_LOGIC;
-
-    tmdsDataP : out  STD_LOGIC_VECTOR (2 downto 0);
-    tmdsDataN : out  STD_LOGIC_VECTOR (2 downto 0);
-    tmdsClkP : out STD_LOGIC;
-    tmdsClkN : out STD_LOGIC;
-    hdmiOen:    out STD_LOGIC;
-
-    triggerVolt16bitSigned: in SIGNED(15 downto 0); -- reg4
-    triggerTime: in STD_LOGIC_VECTOR(VIDEO_WIDTH_IN_BITS-1 downto 0); -- reg5
-    ch1Data16bitSLV, ch2Data16bitSLV: out STD_LOGIC_VECTOR(15 downto 0)
-  );
-end component;
 signal ch1_data_int : std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0); -- read reg 0
 signal ch2_data_int : std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0); -- read reg 1
 signal status_reg_int : std_logic_vector(C_S_AXI_DATA_WIDTH-1 downto 0); -- read reg 2
-```
 
-```vhdl
+...
+
 oscope_inst : acquireToHdmi
 PORT MAP(
     clk => S_AXI_ACLK,
@@ -367,25 +314,14 @@ PORT MAP(
     triggerCh2 => status_reg_int(1),
     conversionPlusReadoutTime => status_reg_int(2),
     sampleTimerRollover => status_reg_int(3),
-    
-    an7606data => an7606data_ext,
-    an7606convst => an7606convst_ext,
-    an7606cs => an7606cs_ext,
-    an7606rd => an7606rd_ext,
-    an7606reset => an7606reset_ext,
-    an7606od => an7606od_ext,
-    an7606busy => an7606busy_ext,
-    
-    tmdsDataP => tmdsDataP_ext,
-    tmdsDataN => tmdsDataN_ext,
-    tmdsClkP => tmdsClkP_ext,
-    tmdsClkN => tmdsClkN_ext,
-    hdmiOen => hdmiOen_ext,
-    
+
     triggerVolt16bitSigned => signed(slv_reg4(15 downto 0)),
     triggerTime => slv_reg5(VIDEO_WIDTH_IN_BITS-1 downto 0),
     ch1Data16bitSLV => ch1_data_int(15 downto 0),
-    ch2Data16bitSLV => ch2_data_int(15 downto 0)
+    ch2Data16bitSLV => ch2_data_int(15 downto 0),
+
+    -- ADC and TMDS signal assignments not shown ...    
+    
 );  
 ```
 
@@ -411,15 +347,13 @@ PORT MAP(
 | 3 | `sampleTimerRollover` — sample period elapsed |
 | 4 | `flag_q` — new sample ready flag |
 
----
-
-The wrapper `final_oscope_slave_lite_v1_0_S00_AXI` was used to create the `final_oscope_0` IP with the appropriate signal inputs and outputs. This was combined with the `enhancedPwm_AXI` IP and the processing unit, to create the final vivado design block diagram seen below:
+The wrapper `final_oscope_slave_lite_v1_0_S00_AXI` was used to create the `final_oscope` IP with the appropriate signal inputs and outputs. This was combined with the `enhancedPwm_AXI` IP and the processing unit, to create the final vivado design block diagram seen below:
 
 ![vivado block diagram](images/vivado_block.png)
 
-## Embedded Software — ARM Cortex-A9 (C)
+## Processing System — ARM Cortex-A9 (Embedded C)
 
-Once the memory mapping of the signals was decided, vitis accesses these registers in C. The firmware runs on the PS under Xilinx Vitis (bare-metal, no OS) and provides a UART command-line interface for real-time oscilloscope control. The C code accesses the read and write registers passed through by the AXI wrapper.
+After completing the memory mapping, the firmware was designed under Xilinx Vitis (bare-metal, no OS) which provides a UART command-line interface for real-time oscilloscope control. The C code accesses the read and write registers passed through by the AXI wrapper.
 
 ### Function Generator with TTC0 Timer ISR and Direct Digital Synthesis
 
