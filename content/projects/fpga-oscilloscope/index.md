@@ -1,5 +1,5 @@
 ---
-title: "Oscilloscope Software/Hardware Co-design on Zynq-7010 SoC"
+title: "High-Speed FPGA Signal Acquisition and Processing on Zynq-7010 SoC"
 date: 2025-12-10
 summary: "Designed an oscilloscope on an fpga in vhdl"
 tags: ["FPGA", "VHDL", "Verification", "Xilinx"]
@@ -45,15 +45,47 @@ The top-level VHDL entity `acquireToHDMI.vhdl` is packaged in an IP named `final
                                         HDMI output <-|  TMDS serializer     |
                                                       +----------------------+
 ```
-
-
+```
+  +---------------------+        AXI4-Lite Bus        +----------------------+
+  |  ARM Cortex-A9 (PS) | <-------------------------> |   PL (VHDL Fabric)   |
+  |                     |                             |                      |
+  |  Vitis C firmware   |                             |  final_oscope        |
+  |  - UART CLI         |   slv_reg0: CH1 data (R)    |  +-----------------+ |
+  |  - TTC0 ISR         |   slv_reg1: CH2 data (R)    |  | ADC FSM         | |
+  |  - Trigger control  |   slv_reg2: status (R)      |  | Sample timer    | |
+  |  - Function gen     |   slv_reg3: control (W)     |  | Trigger logic   | |
+  |                     |   slv_reg4: trig volt (W)   |  | HDMI renderer   | |
+  +---------------------+   slv_reg5: trig time (W)   |  +-----------------+ |
+                            slv_reg6+: unused         |          |           |
+                                                      |          |           |
+                                                      |   BRAM waveform      |
+                                                      |          |           |
+                                                      |          v           |
+                                                      |  +----------------+  |
+                                                      |  | enhancedPwm    |  |
+                                                      |  | (AXI wrapper)  |  |
+                                                      |  |                |  |
+                                                      |  | dutyCycle <-   |  |
+                                                      |  |   BRAM sample  |  |
+                                                      |  | pwmCounter     |  |
+                                                      |  | PWM output     |  |
+                                                      |  +----------------+  |
+                                                      |          |           |
+                                                      |          v           |
+                                                      |     PWM waveform     |
+                                                      |   (RC / filter out)  |
+                                                      |                      |
+                                        AD7606 ADC -->|  16-bit parallel bus |
+                                        HDMI output <-|  TMDS serializer     |
+                                                      +----------------------+
+```
 ---
 
 ## Programmable Logic — VHDL Design
 
 ### Datapath and Control
 
-The PL follows a standard datapath and control design. The datapath (`acquireToHDMI_datapath.vhdl`) contains all registers, counters, BRAMs, comparators, and pixel converters as structural VHDL instantiations. The control module (`acquireToHDMI_fsm.vhdl`) is a finite state machine that observes the status word (`sw`) from the datapath and drives a control word (`cw`) back to it — the two modules communicate only through these two buses, with no direct logic between them.
+The PL follows a standard datapath and control design. The datapath (`acquireToHDMI_datapath.vhdl`) contains all registers, counters, BRAMs, comparators, and pixel converters as structural VHDL instantiations. The control module (`acquireToHDMI_fsm.vhdl`) is a finite state machine that observes the status word (`sw`) from the datapath and drives a control word (`cw`) back to it — the two modules communicate only through these two buses, with no direct logic between them. The datapath additionally manages the TMDS signals required for HDMI display.
 
 ```vhdl
 entity acquireToHDMI_datapath is

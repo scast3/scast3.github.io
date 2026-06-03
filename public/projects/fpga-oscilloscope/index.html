@@ -16,8 +16,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#FFFFFF" />
   
-  <title>Oscilloscope Software/Hardware Co-design on Zynq-7010 SoC &middot; Santiago&#39;s Engineering Portfolio</title>
-    <meta name="title" content="Oscilloscope Software/Hardware Co-design on Zynq-7010 SoC &middot; Santiago&#39;s Engineering Portfolio" />
+  <title>High-Speed FPGA Signal Acquisition and Processing on Zynq-7010 SoC &middot; Santiago&#39;s Engineering Portfolio</title>
+    <meta name="title" content="High-Speed FPGA Signal Acquisition and Processing on Zynq-7010 SoC &middot; Santiago&#39;s Engineering Portfolio" />
   
   
   
@@ -81,7 +81,7 @@
   
   <meta property="og:url" content="http://localhost:1313/projects/fpga-oscilloscope/">
 	<meta property="og:site_name" content="Santiago&#39;s Engineering Portfolio">
-	<meta property="og:title" content="Oscilloscope Software/Hardware Co-design on Zynq-7010 SoC">
+	<meta property="og:title" content="High-Speed FPGA Signal Acquisition and Processing on Zynq-7010 SoC">
 	<meta property="og:description" content="Designed an oscilloscope on an fpga in vhdl">
 	<meta property="og:locale" content="en_us">
 	<meta property="og:type" content="article">
@@ -95,7 +95,7 @@
 
   
 	<meta name="twitter:card" content="summary">
-	<meta name="twitter:title" content="Oscilloscope Software/Hardware Co-design on Zynq-7010 SoC">
+	<meta name="twitter:title" content="High-Speed FPGA Signal Acquisition and Processing on Zynq-7010 SoC">
 	<meta name="twitter:description" content="Designed an oscilloscope on an fpga in vhdl">
 
   
@@ -104,8 +104,8 @@
     "@context": "https://schema.org",
     "@type": "Article",
     "articleSection": "Projects",
-    "name": "Oscilloscope Software\/Hardware Co-design on Zynq-7010 SoC",
-    "headline": "Oscilloscope Software\/Hardware Co-design on Zynq-7010 SoC",
+    "name": "High-Speed FPGA Signal Acquisition and Processing on Zynq-7010 SoC",
+    "headline": "High-Speed FPGA Signal Acquisition and Processing on Zynq-7010 SoC",
     
     "abstract": "Designed an oscilloscope on an fpga in vhdl",
     "inLanguage": "en-us",
@@ -123,7 +123,7 @@
     "keywords": ["FPGA","VHDL","Verification","Xilinx"],
     
     "mainEntityOfPage": "true",
-    "wordCount": "3162"
+    "wordCount": "3369"
   }
   </script>
     
@@ -146,7 +146,7 @@
      },
      {
        "@type": "ListItem",
-       "name": "Oscilloscope Software Hardware Co Design on Zynq 7010 So C",
+       "name": "High Speed Fpga Signal Acquisition and Processing on Zynq 7010 So C",
        "position": 3
      }
    ]
@@ -253,7 +253,7 @@
     <header class="max-w-prose">
       
       <h1 class="mb-8 mt-0 text-4xl font-extrabold text-neutral-900 dark:text-neutral">
-        Oscilloscope Software/Hardware Co-design on Zynq-7010 SoC
+        High-Speed FPGA Signal Acquisition and Processing on Zynq-7010 SoC
       </h1>
       
         <div class="mb-10 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
@@ -289,7 +289,7 @@
   <div class="flex flex-row flex-wrap items-center">
     
     
-      <time datetime="2025-12-10 00:00:00 &#43;0000 UTC">10 December 2025</time><span class="px-2 text-primary-500">&middot;</span><span title="Reading time">15 mins</span>
+      <time datetime="2025-12-10 00:00:00 &#43;0000 UTC">10 December 2025</time><span class="px-2 text-primary-500">&middot;</span><span title="Reading time">16 mins</span>
     
 
     
@@ -339,8 +339,40 @@
                                         AD7606 ADC --&gt;|  16-bit parallel bus |
                                         HDMI output &lt;-|  TMDS serializer     |
                                                       +----------------------+
+</code></pre><pre tabindex="0"><code>  +---------------------+        AXI4-Lite Bus        +----------------------+
+  |  ARM Cortex-A9 (PS) | &lt;-------------------------&gt; |   PL (VHDL Fabric)   |
+  |                     |                             |                      |
+  |  Vitis C firmware   |                             |  final_oscope        |
+  |  - UART CLI         |   slv_reg0: CH1 data (R)    |  +-----------------+ |
+  |  - TTC0 ISR         |   slv_reg1: CH2 data (R)    |  | ADC FSM         | |
+  |  - Trigger control  |   slv_reg2: status (R)      |  | Sample timer    | |
+  |  - Function gen     |   slv_reg3: control (W)     |  | Trigger logic   | |
+  |                     |   slv_reg4: trig volt (W)   |  | HDMI renderer   | |
+  +---------------------+   slv_reg5: trig time (W)   |  +-----------------+ |
+                            slv_reg6+: unused         |          |           |
+                                                      |          |           |
+                                                      |   BRAM waveform      |
+                                                      |          |           |
+                                                      |          v           |
+                                                      |  +----------------+  |
+                                                      |  | enhancedPwm    |  |
+                                                      |  | (AXI wrapper)  |  |
+                                                      |  |                |  |
+                                                      |  | dutyCycle &lt;-   |  |
+                                                      |  |   BRAM sample  |  |
+                                                      |  | pwmCounter     |  |
+                                                      |  | PWM output     |  |
+                                                      |  +----------------+  |
+                                                      |          |           |
+                                                      |          v           |
+                                                      |     PWM waveform     |
+                                                      |   (RC / filter out)  |
+                                                      |                      |
+                                        AD7606 ADC --&gt;|  16-bit parallel bus |
+                                        HDMI output &lt;-|  TMDS serializer     |
+                                                      +----------------------+
 </code></pre><hr>
-<h2 id="programmable-logic--vhdl-design" class="relative group">Programmable Logic — VHDL Design <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#programmable-logic--vhdl-design" aria-label="Anchor">#</a></span></h2><h3 id="datapath-and-control" class="relative group">Datapath and Control <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#datapath-and-control" aria-label="Anchor">#</a></span></h3><p>The PL follows a standard datapath and control design. The datapath (<code>acquireToHDMI_datapath.vhdl</code>) contains all registers, counters, BRAMs, comparators, and pixel converters as structural VHDL instantiations. The control module (<code>acquireToHDMI_fsm.vhdl</code>) is a finite state machine that observes the status word (<code>sw</code>) from the datapath and drives a control word (<code>cw</code>) back to it — the two modules communicate only through these two buses, with no direct logic between them.</p>
+<h2 id="programmable-logic--vhdl-design" class="relative group">Programmable Logic — VHDL Design <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#programmable-logic--vhdl-design" aria-label="Anchor">#</a></span></h2><h3 id="datapath-and-control" class="relative group">Datapath and Control <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#datapath-and-control" aria-label="Anchor">#</a></span></h3><p>The PL follows a standard datapath and control design. The datapath (<code>acquireToHDMI_datapath.vhdl</code>) contains all registers, counters, BRAMs, comparators, and pixel converters as structural VHDL instantiations. The control module (<code>acquireToHDMI_fsm.vhdl</code>) is a finite state machine that observes the status word (<code>sw</code>) from the datapath and drives a control word (<code>cw</code>) back to it — the two modules communicate only through these two buses, with no direct logic between them. The datapath additionally manages the TMDS signals required for HDMI display.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-vhdl" data-lang="vhdl"><span style="display:flex;"><span><span style="color:#66d9ef">entity</span> <span style="color:#a6e22e">acquireToHDMI_datapath</span> <span style="color:#66d9ef">is</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">PORT</span> ( clk <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span>  <span style="color:#66d9ef">STD_LOGIC</span>;
 </span></span><span style="display:flex;"><span>        resetn <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span>  <span style="color:#66d9ef">STD_LOGIC</span>;
@@ -1216,7 +1248,7 @@
               <span class="flex flex-col">
                 <span
                   class="mt-[0.1rem] leading-6 group-hover:underline group-hover:decoration-primary-500"
-                  >Carrier Offset Estimation and Phase-Locking in a QPSK Digital Receiver using Extended Kalman Filter</span
+                  >Extended Kalman Filter Receiver for Carrier Synchronization in QPSK Systems</span
                 >
                 <span class="mt-[0.1rem] text-xs text-neutral-500 dark:text-neutral-400">
                   

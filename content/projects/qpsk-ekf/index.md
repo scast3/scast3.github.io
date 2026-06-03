@@ -1,5 +1,5 @@
 ---
-title: "Carrier Offset Estimation and Phase-Locking in a QPSK Digital Receiver using Extended Kalman Filter"
+title: "Extended Kalman Filter Receiver for Carrier Synchronization in QPSK Systems"
 date: 2026-04-30
 summary: "test"
 tags: ["MATLAB", "Simulink", "Kalman Filter", "DSP", "Communications"]
