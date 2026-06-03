@@ -351,7 +351,7 @@ PORT MAP(
 | 3 | `sampleTimerRollover` — sample period elapsed |
 | 4 | `flag_q` — new sample ready flag |
 
-Additionally, a second custom AXI4-Lite peripheral was used to implement the software-controlled function generator with `enhancedPwm`. In this wrapper, the duty cycle is mapped to the lower 9 bits of `slv_reg0`:
+Additionally, a second custom AXI4-Lite peripheral was used to implement the software-controlled function generator with `enhancedPwm`. In this wrapper, the duty cycle is mapped to the lower 9 bits of the write register `slv_reg0` and the pwm count is mapped to the lower 8 bits of the read register `slv_reg1`:
 
 ```vhdl
 enhancedPwm_inst : enhancedPWM
@@ -376,7 +376,30 @@ The final design was implemented in Vivado as a Zynq-based system integrating th
 
 After completing the memory mapping, the firmware was designed under Xilinx Vitis (bare-metal, no OS) which provides a UART command-line interface for real-time oscilloscope control. The C code accesses the read and write registers passed through by the AXI wrapper.
 
+### UART Command Interface
+
+The user interacts and controls the system through a UART based command-line interface. This was implemented in the main loop which blocks on `XUartPs_RecvByte()` and dispatches on a single character:
+
+| Key | Action |
+|---|---|
+| `t` | Toggle trigger / forced acquisition mode |
+| `n` | Single-shot acquire (pulse `single_mode` bit high then low) |
+| `+` / `-` | Increment / decrement trigger voltage by 1000 LSB |
+| `v` | Reset trigger voltage to 0 |
+| `a` / `b` | Toggle CH1 / CH2 enable |
+| `s` | Toggle function generator on/off |
+| `w` | Select sine or sinc waveform |
+| `d` | Set PWM duty cycle manually |
+| `u` | Read and print 64 sequential samples from CH1 |
+| `r` | Universal reset (not implemented) |
+| `?` | Print help menu |
+
+Many of the functions read and write to/from the memory mapped registers. This communication between PS and PL uses the generated `FINAL_OSCOPE_mReadReg`, `FINAL_OSCOPE_mWriteReg`, `ENHANCEDPWM_AXI_mReadReg`, and `ENHANCEDPWM_AXI_mWriteReg` macros.
+
+
 ### Function Generation using Direct Digital Synthesis (DDS)
+
+Case `w` allows the user to determine whether to generate a sine or sinc wave and case `P` allows the user to define the frequency.
 
 A software based DDS engine was implemented in the PS to generate programmable waveforms for the oscilloscope. This was done using the Triple Timer Counter (TTC0) which generated interrupts at 10 kHz. 
 
@@ -408,28 +431,7 @@ By varying the phase increment, the frequency of the waveform could be adjusted 
 
 Using a linear regression where I experimented with different phase increments and measured the output function frequency with a Keysight oscilloscope, it was determined that the association between frequency and phase increment was `phaseIncrement = 6.5516 * frequency + 0.0062`. This equation gives the user the option to define the desired function frequency via the UART interface.
 
-### UART Command Interface
-
-The main loop blocks on `XUartPs_RecvByte()` and dispatches on a single character:
-
-| Key | Action |
-|---|---|
-| `t` | Toggle trigger / forced acquisition mode |
-| `n` | Single-shot acquire (pulse `single_mode` bit high then low) |
-| `+` / `-` | Increment / decrement trigger voltage by 1000 LSB |
-| `v` | Reset trigger voltage to 0 |
-| `a` / `b` | Toggle CH1 / CH2 enable |
-| `s` | Toggle function generator on/off |
-| `w` | Select sine or sinc waveform |
-| `d` | Set PWM duty cycle manually |
-| `u` | Read and print 64 sequential samples from CH1 |
-| `r` | Universal reset (pulse reset bit in control register) |
-| `?` | Print help menu |
-
-### Register Access Pattern
-
-All PS↔PL communication goes through the AXI register map using the generated `FINAL_OSCOPE_mReadReg` / `FINAL_OSCOPE_mWriteReg` macros. A typical read-modify-write on the control register looks like:
-
+### Toggling Oscilloscope Modes and Trigger conditions
 ```c
 // Toggle forced mode bit
 u32 reg = FINAL_OSCOPE_mReadReg(XPAR_FINAL_OSCOPE_0_BASEADDR,
@@ -448,6 +450,68 @@ int16_t voltage = (int16_t)(full & 0xFFFF);
 voltage += 1000;
 FINAL_OSCOPE_mWriteReg(BASEADDR, REG4_OFFSET,
     (full & 0xFFFF0000) | ((u32)voltage & 0xFFFF));
+```
+
+### Toggling Channel Enables
+
+```c
+u32 slv3_read_ch1 = FINAL_OSCOPE_mReadReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
+            #define CH1_TOGGLE_MASK (1 << 2)
+            u32 updated_ch1 = slv3_read_ch1 ^ CH1_TOGGLE_MASK;
+            int new_bit_value_ch1 = (updated_ch1 >> 2) & 1;
+
+            if (new_bit_value_ch1 == 1) {
+                printf("Channel 1 on\r\n");
+            } else {
+                printf("Channel 1 off\r\n");
+            }
+            FINAL_OSCOPE_mWriteReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, updated_ch1 );
+```
+
+### Spooling Samples
+
+```c
+case 'u':
+            printf("Display final 64 samples\r\n");
+            #define FLAG_CLEAR_BIT (7)
+            #define FLAG_Q_BIT (4) 
+            #define FLAG_Q_MASK (1 << FLAG_Q_BIT) // slv reg 2 (read from)
+            #define FLAG_CLEAR_MASK (1 << FLAG_CLEAR_BIT) // slv reg 3 (write to)
+
+            #define SINGLE_MODE_MASK (1 << 0)
+            u32 reg3_config = FINAL_OSCOPE_mReadReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
+            FINAL_OSCOPE_mWriteReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, reg3_config | SINGLE_MODE_MASK);
+
+            u32 reg3_initial = FINAL_OSCOPE_mReadReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
+            FINAL_OSCOPE_mWriteReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, reg3_initial & (~FLAG_CLEAR_MASK));
+
+
+            for (int i = 0; i < 64; i++) {
+                
+                // wait for 1 falg to be set
+                uint32_t current_q_bit;
+                printf("Current Q: %u \r\n", current_q_bit);
+                u32 slv2_flag_read;
+                do {
+                    slv2_flag_read = FINAL_OSCOPE_mReadReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG2_OFFSET);
+                    //current_q_bit = (slv2_flag_read & FLAG_Q_MASK); // Check if Q is set to 1
+                } while ((slv2_flag_read & FLAG_Q_MASK) == 0); // Loop until the bit is 1
+                printf("Exited do while loop, bit should be 1. Q bit: %d\r\n", current_q_bit);
+
+                // once Q=1
+                u32 ch1data_32bit = FINAL_OSCOPE_mReadReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG0_OFFSET);
+                printf("ch1[%d]: %lu\r\n", i, (unsigned long)ch1data_32bit);
+
+                // clear flag - set to high then to low 
+                
+                u32 reg3_set_clear = FINAL_OSCOPE_mReadReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
+                FINAL_OSCOPE_mWriteReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, reg3_set_clear | FLAG_CLEAR_MASK);
+                u32 reg3_clear_done = FINAL_OSCOPE_mReadReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
+                FINAL_OSCOPE_mWriteReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, reg3_clear_done & (~FLAG_CLEAR_MASK));
+
+            }
+            printf("64 samples read complete.\r\n");
+            break;
 ```
 
 ---
