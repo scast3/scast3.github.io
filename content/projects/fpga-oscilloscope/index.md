@@ -399,9 +399,7 @@ Many of the functions read and write to/from the memory mapped registers. This c
 
 ### Function Generation using Direct Digital Synthesis (DDS)
 
-Case `w` allows the user to determine whether to generate a sine or sinc wave and case `P` allows the user to define the frequency.
-
-A software based DDS engine was implemented in the PS to generate programmable waveforms for the oscilloscope. This was done using the Triple Timer Counter (TTC0) which generated interrupts at 10 kHz. 
+Case `w` allows the user to determine whether to generate a sine or sinc wave and case `P` allows the user to define the frequency. This was done with a software based DDS engine which was implemented to generate programmable waveforms for the oscilloscope and the Triple Timer Counter (TTC0) which generated interrupts at 10 kHz. 
 
 Within the interrupt service routine (ISR), a 16-bit `phaseAccumulator` is advanced by a configurable `phaseIncrement`. The upper bits of the accumulator are used to index a 64-point lookup table containing either sine or sinc waveform samples. The resulting sample is then written directly into the FPGA fabric via the memory-mapped register `slv_reg0` of the enhancedPwm IP using `ENHANCEDPWM_AXI_mWriteReg`, where it is consumed as the PWM duty cycle input.
 
@@ -431,15 +429,41 @@ By varying the phase increment, the frequency of the waveform could be adjusted 
 
 Using a linear regression where I experimented with different phase increments and measured the output function frequency with a Keysight oscilloscope, it was determined that the association between frequency and phase increment was `phaseIncrement = 6.5516 * frequency + 0.0062`. This equation gives the user the option to define the desired function frequency via the UART interface.
 
-### Toggling Oscilloscope Modes and Trigger conditions
-```c
-// Toggle forced mode bit
-u32 reg = FINAL_OSCOPE_mReadReg(XPAR_FINAL_OSCOPE_0_BASEADDR,
-                                 FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
-reg ^= (1 << 1);  // flip forced_mode bit
-FINAL_OSCOPE_mWriteReg(XPAR_FINAL_OSCOPE_0_BASEADDR,
-                        FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, reg);
+### Toggling Oscilloscope Modes
+
+The user can change the oscilloscope mode between trigger and forced using the `t` command. The mode is controlled by bit 1 in the memory mapped `slv_reg3`. This bit selects between trigger and forced mode. A `FORCED_MASK (1<<1)` is used to isolate the corresponding control bit without affecting the other bits in the control register.
+```C
+u32 slv3_read = FINAL_OSCOPE_mReadReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
+
+u32 updated_reg = slv3_read ^ FORCED_MASK;
+
+int new_forced_bit = (updated_reg >> 1) & 1;
+
+if (new_forced_bit == 1) {
+    printf("FORCED MODE - wait for button press\r\n");
+} else {
+    printf("TRIGGER MODE\r\n");
+}
+
+FINAL_OSCOPE_mWriteReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, updated_reg );
 ```
+Toggling is performed via an XOR operation so that repeated user inputs flip the mode deterministically. The updated register value is written back over AXI4-Lite, which immediately updates the acquisition logic in the FPGA fabric in real time.
+
+When in forced mode, the user can do a single shot acquisition with the `n` command. This is controlled with bit 0 of `slv_reg3`. The `SINGLE_MASK (1 << 0)` is used to target this bit:
+
+```c
+u32 slv3_read_single = FINAL_OSCOPE_mReadReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
+
+u32 reg_high = slv3_read_single | SINGLE_MASK; // set high regardless
+FINAL_OSCOPE_mWriteReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, reg_high);
+
+u32 reg_low = reg_high & (~SINGLE_MASK); // clear bit 0
+FINAL_OSCOPE_mWriteReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, reg_low);
+```
+The bit is asserted as a brief pulse rather than a latched state. This generates a single-cycle trigger event in the FPGA fabric, doing a single acquisition frame before automatically resetting.
+
+
+### Modifying Trigger Voltage
 
 The trigger voltage is stored as a signed 16-bit value in the lower half of a 32-bit register, requiring a careful mask-and-cast on both read and write to preserve the upper 16 bits and handle two's complement correctly:
 
