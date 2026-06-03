@@ -12,7 +12,7 @@ weight: 1                   # lower = appears first in listings
 
 ## Overview
 
-For this project, I designed a two-channel oscilloscope on a Xilinx Zynq-7010 SoC. The design captures analog signals from the AD7606 ADC and displays the waveforms in real time over HDMI. The design splits responsibility across two domains on the same chip: programmable logic (PL) which is implemented in VHDL, handles the acquisition and video pipeline which is very timing-dependent, while the ARM Cortex-A9 processing system (PS) runs embedded C firmware for user control through a command line interface.
+This project is the hardware/software co-design of a two-channel oscilloscope on the Xilinx Zynq-7010 SoC. The design captures analog signals from the AD7606 ADC and displays the waveforms in real time over HDMI. The design splits responsibility across two domains on the same chip: programmable logic (PL) which is implemented in VHDL, handles the acquisition and video pipeline which is very timing-dependent, while the ARM Cortex-A9 processing system (PS) runs embedded C firmware for user control through a command line interface.
 
 The two domains communicate through a custom AXI4-Lite slave peripheral, giving the ARM processor memory-mapped access to control registers, status flags, and live sample data in the FPGA fabric.
 
@@ -27,7 +27,11 @@ The two domains communicate through a custom AXI4-Lite slave peripheral, giving 
 
 ## System Architecture
 
-The top-level VHDL entity `acquireToHDMI.vhdl` is packaged in an IP named `final_oscope` and instantiates a datapath (`acquireToHDMI_datapath.vhdl`) handling the ADC interface, waveform buffering, and video rendering. The datapath uses the submodules `videoSignalGenerator.vhdl` to generate the HDMI signals and `scopeFace` to assign the correct RBG values to each coordiate to display the oscilloscope interface. Furthermore, a Moore FSM (`acquireToHDMI_fsm.vhdl`) generating the control word that sequences all operations. In addition, the module `scopeToHdmi.vhdl` The AXI wrapper (`final_oscope_slave_lite_v1_0_S00_AXI.vhdl`) instantiates this top-level and exposes its ports as memory-mapped registers to the PS. The signals fed from the wrapper were accessed in the file `helloworld.c`. For function generation, the enhancedPwm IP is used which takes in a duty cycle and outputs the pwm signal.
+The top-level VHDL entity `acquireToHDMI` is packaged in an IP named `final_oscope` and instantiates a datapath `acquireToHDMI_datapath` handling the ADC interface, waveform buffering, and video rendering. The datapath uses the submodules `videoSignalGenerator` to generate the HDMI signals and `scopeFace` to assign the correct RGB values to each coordiate to display the oscilloscope interface. Furthermore, a Moore state machine `acquireToHDMI_fsm` generates the control word that serves as the control inputs to the logic components inteh datapath. 
+
+The AXI wrapper `final_oscope_slave_lite_v1_0_S00_AXI` instantiates this top-level and exposes its ports as memory-mapped registers to the PS. The signals fed from the wrapper are accessed in the file `helloworld.c` which defines the command-line user interfacing. For function generation, the enhancedPwm IP is used which takes in a duty cycle and outputs the pwm signal.
+
+The interaction between the IPs in the PL and the PS through memory-mapped registers can be seen below:
 
 ```
   +---------------------+        AXI4-Lite Bus        +----------------------+
@@ -70,7 +74,7 @@ AD7606 ADC
 
 ### Datapath and Control
 
-The PL follows a standard datapath and control design. The datapath `acquireToHDMI_datapath.vhdl` contains all the registers, counters, BRAMs, comparators, and 2's complement pixel converters as structural VHDL instantiations. The control module `acquireToHDMI_fsm.vhdl` is a finite state machine that uses the status word `sw` from the datapath for state transitions. Each state drives a control word `cw` back to the datapath. The two modules communicate only through these two buses, with no direct logic between them. The datapath additionally manages the TMDS signals required for HDMI display.
+The PL follows a standard datapath and control design. The datapath `acquireToHdmi_datapath` contains all the registers, counters, BRAMs, comparators, and 2's complement pixel converters as structural VHDL instantiations. The control module `acquireToHdmi_fsm` is a finite state machine that uses the status word `sw` from the datapath for state transitions. Each state drives a control word `cw` back to the datapath. The two modules communicate only through these two buses, with no direct logic between them. The datapath additionally manages the TMDS signals required for HDMI display.
 
 ```vhdl
 entity acquireToHDMI_datapath is
@@ -288,7 +292,7 @@ The AXI wrapper `final_oscope_slave_lite_v1_0_S00_AXI.vhdl` implements a custom 
 | slv_reg4 | Write | Trigger voltage (signed 16-bit) |
 | slv_reg5 | Write | Trigger time (signed 16-bit) - unused |
 
-The bit mapping for the control register and status flag register is done in the instantiation and signal assignment:
+The bit mapping for the control and status registers is implemented during the oscilloscope IP instantiation:
 
 
 ```vhdl
@@ -347,7 +351,24 @@ PORT MAP(
 | 3 | `sampleTimerRollover` — sample period elapsed |
 | 4 | `flag_q` — new sample ready flag |
 
-The wrapper `final_oscope_slave_lite_v1_0_S00_AXI` was used to create the `final_oscope` IP with the appropriate signal inputs and outputs. This was combined with the `enhancedPwm_AXI` IP and the processing unit, to create the final vivado design block diagram seen below:
+Additionally, a second custom AXI4-Lite peripheral was used to implement the software-controlled function generator with `enhancedPwm`. In this wrapper, the duty cycle is mapped to the lower 9 bits of `slv_reg0`:
+
+```vhdl
+enhancedPwm_inst : enhancedPWM
+PORT MAP(
+    clk => S_AXI_ACLK,
+    resetn => S_AXI_ARESETN,
+    enb => enb_ext,
+
+    dutyCycle => slv_reg0(8 downto 0),
+
+    pwmCount => pwmCount_int(7 downto 0),
+    rollOver => rollOver_ext,
+    pwmSignal => pwmSignal_ext
+);
+```
+
+The final design was implemented in Vivado as a Zynq-based system integrating the Processing System with custom AXI4-Lite IP blocks `final_oscope` and `enhancedPwm`, then synthesized into a single FPGA bitstream that was then accessed by the Vitis application for embedded firmware development. The block diagram of the Vivado design used to generate the bitstream can be seen below:
 
 ![vivado block diagram](images/vivado_block.png)
 
@@ -355,11 +376,37 @@ The wrapper `final_oscope_slave_lite_v1_0_S00_AXI` was used to create the `final
 
 After completing the memory mapping, the firmware was designed under Xilinx Vitis (bare-metal, no OS) which provides a UART command-line interface for real-time oscilloscope control. The C code accesses the read and write registers passed through by the AXI wrapper.
 
-### Function Generator with TTC0 Timer ISR and Direct Digital Synthesis
+### Function Generation using Direct Digital Synthesis (DDS)
 
-A Triple Timer Counter (TTC0) is configured to fire at 10 kHz. On each interrupt, the ISR steps a 16-bit phase accumulator by a configurable `phaseIncrement` and indexes a 64-entry LUT to produce the next DAC output value via an enhanced PWM peripheral. The user is able to choose the generation of either a sine or sinc function. Each is represented by a 64-point quantized sine LUT.
+A software based DDS engine was implemented in the PS to generate programmable waveforms for the oscilloscope. This was done using the Triple Timer Counter (TTC0) which generated interrupts at 10 kHz. 
 
-Output frequency is set by entering a value in Hz over UART; the firmware computes the correct phase increment using a pre-characterized linear regression (`phaseIncrement = 6.5516 * frequency + 0.0062`).
+Within the interrupt service routine (ISR), a 16-bit `phaseAccumulator` is advanced by a configurable `phaseIncrement`. The upper bits of the accumulator are used to index a 64-point lookup table containing either sine or sinc waveform samples. The resulting sample is then written directly into the FPGA fabric via the memory-mapped register `slv_reg0` of the enhancedPwm IP using `ENHANCEDPWM_AXI_mWriteReg`, where it is consumed as the PWM duty cycle input.
+
+```c
+static void Ttc0IsrHander(void *CallBackRef, u32 StatusEvent)
+{
+    static u16 phaseAccumulator = 0;
+    u16 lutIndex = 0;
+    u8 dutyCycleValue = 128;
+
+    // Do ISR stuff here
+    if (generateWave == TRUE) {
+        phaseAccumulator += phaseIncrement;
+        lutIndex = (phaseAccumulator >> 10);
+
+        if (currentWaveform == WAVE_SINE) {
+            dutyCycleValue = sinLut[lutIndex];
+        } else {
+            dutyCycleValue = sincLut[lutIndex];
+        }
+        ENHANCEDPWM_AXI_mWriteReg(XPAR_ENHANCEDPWM_AXI_0_BASEADDR , DUTY_CYCLE_OFFSET, dutyCycleValue);
+    }
+}
+```
+
+By varying the phase increment, the frequency of the waveform could be adjusted independently of the interrupt rate which allows precise digital frequency synthesis without modifying timer configuration. 
+
+Using a linear regression where I experimented with different phase increments and measured the output function frequency with a Keysight oscilloscope, it was determined that the association between frequency and phase increment was `phaseIncrement = 6.5516 * frequency + 0.0062`. This equation gives the user the option to define the desired function frequency via the UART interface.
 
 ### UART Command Interface
 

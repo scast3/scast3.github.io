@@ -123,7 +123,7 @@
     "keywords": ["FPGA","VHDL","Verification","Xilinx"],
     
     "mainEntityOfPage": "true",
-    "wordCount": "3115"
+    "wordCount": "3367"
   }
   </script>
     
@@ -289,7 +289,7 @@
   <div class="flex flex-row flex-wrap items-center">
     
     
-      <time datetime="2025-12-10 00:00:00 &#43;0000 UTC">10 December 2025</time><span class="px-2 text-primary-500">&middot;</span><span title="Reading time">15 mins</span>
+      <time datetime="2025-12-10 00:00:00 &#43;0000 UTC">10 December 2025</time><span class="px-2 text-primary-500">&middot;</span><span title="Reading time">16 mins</span>
     
 
     
@@ -307,7 +307,7 @@
     <section class="prose mt-0 flex max-w-full flex-col dark:prose-invert lg:flex-row">
       
       <div class="min-h-0 min-w-0 max-w-prose grow">
-        <h2 id="overview" class="relative group">Overview <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#overview" aria-label="Anchor">#</a></span></h2><p>For this project, I designed a two-channel oscilloscope on a Xilinx Zynq-7010 SoC. The design captures analog signals from the AD7606 ADC and displays the waveforms in real time over HDMI. The design splits responsibility across two domains on the same chip: programmable logic (PL) which is implemented in VHDL, handles the acquisition and video pipeline which is very timing-dependent, while the ARM Cortex-A9 processing system (PS) runs embedded C firmware for user control through a command line interface.</p>
+        <h2 id="overview" class="relative group">Overview <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#overview" aria-label="Anchor">#</a></span></h2><p>This project is the hardware/software co-design of a two-channel oscilloscope on the Xilinx Zynq-7010 SoC. The design captures analog signals from the AD7606 ADC and displays the waveforms in real time over HDMI. The design splits responsibility across two domains on the same chip: programmable logic (PL) which is implemented in VHDL, handles the acquisition and video pipeline which is very timing-dependent, while the ARM Cortex-A9 processing system (PS) runs embedded C firmware for user control through a command line interface.</p>
 <p>The two domains communicate through a custom AXI4-Lite slave peripheral, giving the ARM processor memory-mapped access to control registers, status flags, and live sample data in the FPGA fabric.</p>
 <div style="width: 500px; margin: 0 auto; text-align: center;">
 <p>
@@ -324,7 +324,9 @@
 </p>
 </div>
 <hr>
-<h2 id="system-architecture" class="relative group">System Architecture <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#system-architecture" aria-label="Anchor">#</a></span></h2><p>The top-level VHDL entity <code>acquireToHDMI.vhdl</code> is packaged in an IP named <code>final_oscope</code> and instantiates a datapath (<code>acquireToHDMI_datapath.vhdl</code>) handling the ADC interface, waveform buffering, and video rendering. The datapath uses the submodules <code>videoSignalGenerator.vhdl</code> to generate the HDMI signals and <code>scopeFace</code> to assign the correct RBG values to each coordiate to display the oscilloscope interface. Furthermore, a Moore FSM (<code>acquireToHDMI_fsm.vhdl</code>) generating the control word that sequences all operations. In addition, the module <code>scopeToHdmi.vhdl</code> The AXI wrapper (<code>final_oscope_slave_lite_v1_0_S00_AXI.vhdl</code>) instantiates this top-level and exposes its ports as memory-mapped registers to the PS. The signals fed from the wrapper were accessed in the file <code>helloworld.c</code>. For function generation, the enhancedPwm IP is used which takes in a duty cycle and outputs the pwm signal.</p>
+<h2 id="system-architecture" class="relative group">System Architecture <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#system-architecture" aria-label="Anchor">#</a></span></h2><p>The top-level VHDL entity <code>acquireToHDMI</code> is packaged in an IP named <code>final_oscope</code> and instantiates a datapath <code>acquireToHDMI_datapath</code> handling the ADC interface, waveform buffering, and video rendering. The datapath uses the submodules <code>videoSignalGenerator</code> to generate the HDMI signals and <code>scopeFace</code> to assign the correct RGB values to each coordiate to display the oscilloscope interface. Furthermore, a Moore state machine <code>acquireToHDMI_fsm</code> generates the control word that serves as the control inputs to the logic components inteh datapath.</p>
+<p>The AXI wrapper <code>final_oscope_slave_lite_v1_0_S00_AXI</code> instantiates this top-level and exposes its ports as memory-mapped registers to the PS. The signals fed from the wrapper are accessed in the file <code>helloworld.c</code> which defines the command-line user interfacing. For function generation, the enhancedPwm IP is used which takes in a duty cycle and outputs the pwm signal.</p>
+<p>The interaction between the IPs in the PL and the PS through memory-mapped registers can be seen below:</p>
 <pre tabindex="0"><code>  +---------------------+        AXI4-Lite Bus        +----------------------+
   |  ARM Cortex-A9 (PS) | &lt;-------------------------&gt; |   PL (VHDL Fabric)   |
   |                     |                             |                      |
@@ -356,7 +358,7 @@
 | UART CLI | Trigger Config | Function Generator | Interrupt Handler |
 +--------------------------------------------------------------------+
 </code></pre><hr>
-<h2 id="programmable-logic--vhdl-design" class="relative group">Programmable Logic — VHDL Design <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#programmable-logic--vhdl-design" aria-label="Anchor">#</a></span></h2><h3 id="datapath-and-control" class="relative group">Datapath and Control <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#datapath-and-control" aria-label="Anchor">#</a></span></h3><p>The PL follows a standard datapath and control design. The datapath <code>acquireToHDMI_datapath.vhdl</code> contains all the registers, counters, BRAMs, comparators, and 2&rsquo;s complement pixel converters as structural VHDL instantiations. The control module <code>acquireToHDMI_fsm.vhdl</code> is a finite state machine that uses the status word <code>sw</code> from the datapath for state transitions. Each state drives a control word <code>cw</code> back to the datapath. The two modules communicate only through these two buses, with no direct logic between them. The datapath additionally manages the TMDS signals required for HDMI display.</p>
+<h2 id="programmable-logic--vhdl-design" class="relative group">Programmable Logic — VHDL Design <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#programmable-logic--vhdl-design" aria-label="Anchor">#</a></span></h2><h3 id="datapath-and-control" class="relative group">Datapath and Control <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#datapath-and-control" aria-label="Anchor">#</a></span></h3><p>The PL follows a standard datapath and control design. The datapath <code>acquireToHdmi_datapath</code> contains all the registers, counters, BRAMs, comparators, and 2&rsquo;s complement pixel converters as structural VHDL instantiations. The control module <code>acquireToHdmi_fsm</code> is a finite state machine that uses the status word <code>sw</code> from the datapath for state transitions. Each state drives a control word <code>cw</code> back to the datapath. The two modules communicate only through these two buses, with no direct logic between them. The datapath additionally manages the TMDS signals required for HDMI display.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-vhdl" data-lang="vhdl"><span style="display:flex;"><span><span style="color:#66d9ef">entity</span> <span style="color:#a6e22e">acquireToHDMI_datapath</span> <span style="color:#66d9ef">is</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">PORT</span> ( clk <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span>  <span style="color:#66d9ef">STD_LOGIC</span>;
 </span></span><span style="display:flex;"><span>        resetn <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span>  <span style="color:#66d9ef">STD_LOGIC</span>;
@@ -865,7 +867,7 @@
 			</tr>
 	</tbody>
 </table>
-<p>The bit mapping for the control register and status flag register is done in the instantiation and signal assignment:</p>
+<p>The bit mapping for the control and status registers is implemented during the oscilloscope IP instantiation:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-vhdl" data-lang="vhdl"><span style="display:flex;"><span><span style="color:#66d9ef">signal</span> ch1_data_int <span style="color:#f92672">:</span> <span style="color:#66d9ef">std_logic_vector</span>(C_S_AXI_DATA_WIDTH<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>); <span style="color:#75715e">-- read reg 0</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">signal</span> ch2_data_int <span style="color:#f92672">:</span> <span style="color:#66d9ef">std_logic_vector</span>(C_S_AXI_DATA_WIDTH<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>); <span style="color:#75715e">-- read reg 1</span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">signal</span> status_reg_int <span style="color:#f92672">:</span> <span style="color:#66d9ef">std_logic_vector</span>(C_S_AXI_DATA_WIDTH<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>); <span style="color:#75715e">-- read reg 2</span>
@@ -967,7 +969,20 @@
 			</tr>
 	</tbody>
 </table>
-<p>The wrapper <code>final_oscope_slave_lite_v1_0_S00_AXI</code> was used to create the <code>final_oscope</code> IP with the appropriate signal inputs and outputs. This was combined with the <code>enhancedPwm_AXI</code> IP and the processing unit, to create the final vivado design block diagram seen below:</p>
+<p>Additionally, a second custom AXI4-Lite peripheral was used to implement the software-controlled function generator with <code>enhancedPwm</code>. In this wrapper, the duty cycle is mapped to the lower 9 bits of <code>slv_reg0</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-vhdl" data-lang="vhdl"><span style="display:flex;"><span>enhancedPwm_inst <span style="color:#f92672">:</span> enhancedPWM
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">PORT</span> <span style="color:#66d9ef">MAP</span>(
+</span></span><span style="display:flex;"><span>    clk <span style="color:#f92672">=&gt;</span> S_AXI_ACLK,
+</span></span><span style="display:flex;"><span>    resetn <span style="color:#f92672">=&gt;</span> S_AXI_ARESETN,
+</span></span><span style="display:flex;"><span>    enb <span style="color:#f92672">=&gt;</span> enb_ext,
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    dutyCycle <span style="color:#f92672">=&gt;</span> slv_reg0(<span style="color:#ae81ff">8</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>),
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    pwmCount <span style="color:#f92672">=&gt;</span> pwmCount_int(<span style="color:#ae81ff">7</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>),
+</span></span><span style="display:flex;"><span>    rollOver <span style="color:#f92672">=&gt;</span> rollOver_ext,
+</span></span><span style="display:flex;"><span>    pwmSignal <span style="color:#f92672">=&gt;</span> pwmSignal_ext
+</span></span><span style="display:flex;"><span>);
+</span></span></code></pre></div><p>The final design was implemented in Vivado as a Zynq-based system integrating the Processing System with custom AXI4-Lite IP blocks <code>final_oscope</code> and <code>enhancedPwm</code>, then synthesized into a single FPGA bitstream that was then accessed by the Vitis application for embedded firmware development. The block diagram of the Vivado design used to generate the bitstream can be seen below:</p>
 <p>
 
 
@@ -1032,8 +1047,29 @@
 </figure>
 </p>
 <h2 id="processing-system--arm-cortex-a9-embedded-c" class="relative group">Processing System — ARM Cortex-A9 (Embedded C) <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#processing-system--arm-cortex-a9-embedded-c" aria-label="Anchor">#</a></span></h2><p>After completing the memory mapping, the firmware was designed under Xilinx Vitis (bare-metal, no OS) which provides a UART command-line interface for real-time oscilloscope control. The C code accesses the read and write registers passed through by the AXI wrapper.</p>
-<h3 id="function-generator-with-ttc0-timer-isr-and-direct-digital-synthesis" class="relative group">Function Generator with TTC0 Timer ISR and Direct Digital Synthesis <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#function-generator-with-ttc0-timer-isr-and-direct-digital-synthesis" aria-label="Anchor">#</a></span></h3><p>A Triple Timer Counter (TTC0) is configured to fire at 10 kHz. On each interrupt, the ISR steps a 16-bit phase accumulator by a configurable <code>phaseIncrement</code> and indexes a 64-entry LUT to produce the next DAC output value via an enhanced PWM peripheral. The user is able to choose the generation of either a sine or sinc function. Each is represented by a 64-point quantized sine LUT.</p>
-<p>Output frequency is set by entering a value in Hz over UART; the firmware computes the correct phase increment using a pre-characterized linear regression (<code>phaseIncrement = 6.5516 * frequency + 0.0062</code>).</p>
+<h3 id="function-generation-using-direct-digital-synthesis-dds" class="relative group">Function Generation using Direct Digital Synthesis (DDS) <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#function-generation-using-direct-digital-synthesis-dds" aria-label="Anchor">#</a></span></h3><p>A software based DDS engine was implemented in the PS to generate programmable waveforms for the oscilloscope. This was done using the Triple Timer Counter (TTC0) which generated interrupts at 10 kHz.</p>
+<p>Within the interrupt service routine (ISR), a 16-bit <code>phaseAccumulator</code> is advanced by a configurable <code>phaseIncrement</code>. The upper bits of the accumulator are used to index a 64-point lookup table containing either sine or sinc waveform samples. The resulting sample is then written directly into the FPGA fabric via the memory-mapped register <code>slv_reg0</code> of the enhancedPwm IP using <code>ENHANCEDPWM_AXI_mWriteReg</code>, where it is consumed as the PWM duty cycle input.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">Ttc0IsrHander</span>(<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>CallBackRef, u32 StatusEvent)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">static</span> u16 phaseAccumulator <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    u16 lutIndex <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    u8 dutyCycleValue <span style="color:#f92672">=</span> <span style="color:#ae81ff">128</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Do ISR stuff here
+</span></span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (generateWave <span style="color:#f92672">==</span> TRUE) {
+</span></span><span style="display:flex;"><span>        phaseAccumulator <span style="color:#f92672">+=</span> phaseIncrement;
+</span></span><span style="display:flex;"><span>        lutIndex <span style="color:#f92672">=</span> (phaseAccumulator <span style="color:#f92672">&gt;&gt;</span> <span style="color:#ae81ff">10</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (currentWaveform <span style="color:#f92672">==</span> WAVE_SINE) {
+</span></span><span style="display:flex;"><span>            dutyCycleValue <span style="color:#f92672">=</span> sinLut[lutIndex];
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            dutyCycleValue <span style="color:#f92672">=</span> sincLut[lutIndex];
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">ENHANCEDPWM_AXI_mWriteReg</span>(XPAR_ENHANCEDPWM_AXI_0_BASEADDR , DUTY_CYCLE_OFFSET, dutyCycleValue);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>By varying the phase increment, the frequency of the waveform could be adjusted independently of the interrupt rate which allows precise digital frequency synthesis without modifying timer configuration.</p>
+<p>Using a linear regression where I experimented with different phase increments and measured the output function frequency with a Keysight oscilloscope, it was determined that the association between frequency and phase increment was <code>phaseIncrement = 6.5516 * frequency + 0.0062</code>. This equation gives the user the option to define the desired function frequency via the UART interface.</p>
 <h3 id="uart-command-interface" class="relative group">UART Command Interface <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#uart-command-interface" aria-label="Anchor">#</a></span></h3><p>The main loop blocks on <code>XUartPs_RecvByte()</code> and dispatches on a single character:</p>
 <table>
 	<thead>
