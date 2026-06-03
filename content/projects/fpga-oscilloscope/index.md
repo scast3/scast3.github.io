@@ -465,15 +465,17 @@ The bit is asserted as a brief pulse rather than a latched state. This generates
 
 ### Modifying Trigger Voltage
 
-The trigger voltage is stored as a signed 16-bit value in the lower half of a 32-bit register, requiring a careful mask-and-cast on both read and write to preserve the upper 16 bits and handle two's complement correctly:
+The trigger voltage is stored in the lower 16 bits of `slv_reg4` as a signed value. The user can increase/decrease this value with the commands `+` and `-` respectively. When the user adjusts the trigger level, the firmware reads the full register, extracts bits `[15:0]` as an `int16_t`, applies an increment or decrement (+/-1000), and then writes the updated value back through AXI4-Lite. This ensures only the trigger threshold is modified without affecting unrelated control fields. A `v` command to reset simply overwrites the lower 16 bits with zero while leaving the upper register contents unchanged.
+
+Example of the update mechanism:
 
 ```c
 // Read signed 16-bit trigger voltage
-u32 full = FINAL_OSCOPE_mReadReg(BASEADDR, REG4_OFFSET);
+u32 full = FINAL_OSCOPE_mReadReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG4_OFFSET);
 int16_t voltage = (int16_t)(full & 0xFFFF);
-voltage += 1000;
-FINAL_OSCOPE_mWriteReg(BASEADDR, REG4_OFFSET,
-    (full & 0xFFFF0000) | ((u32)voltage & 0xFFFF));
+voltage += 1000; // or -1000
+FINAL_OSCOPE_mWriteReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG4_OFFSET,
+     (full & 0xFFFF0000) | ((u32)voltage & 0xFFFF));
 ```
 
 ### Toggling Channel Enables
