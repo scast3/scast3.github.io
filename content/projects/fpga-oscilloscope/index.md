@@ -463,6 +463,25 @@ FINAL_OSCOPE_mWriteReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_RE
 The bit is asserted as a brief pulse rather than a latched state. This generates a single-cycle trigger event in the FPGA fabric, doing a single acquisition frame before automatically resetting.
 
 
+### Toggling Channel Enables
+
+The user can enable/disable channel 1 with the `a` command and channel 2 with the `b` command. Channel 1 and 2 enable control corresponds to bits 2 and 3 of `slv_reg3` respectively. A `CH1_TOGGLE_MASK (1 << 2)` is used to isolate this bit while preserving all other configuration fields in the register.
+
+```c
+u32 slv3_read_ch1 = FINAL_OSCOPE_mReadReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
+u32 updated_ch1 = slv3_read_ch1 ^ CH1_TOGGLE_MASK;
+int new_bit_value_ch1 = (updated_ch1 >> 2) & 1;
+
+if (new_bit_value_ch1 == 1) {
+    printf("Channel 1 on\r\n");
+} else {
+    printf("Channel 1 off\r\n");
+}
+FINAL_OSCOPE_mWriteReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, updated_ch1 );
+```
+
+Similar to the oscilloscope mode control, the XOR operation toggles the enable state deterministically on each user command.
+
 ### Modifying Trigger Voltage
 
 The trigger voltage is stored in the lower 16 bits of `slv_reg4` as a signed value. The user can increase/decrease this value with the commands `+` and `-` respectively. When the user adjusts the trigger level, the firmware reads the full register, extracts bits `[15:0]` as an `int16_t`, applies an increment or decrement (+/-1000), and then writes the updated value back through AXI4-Lite. This ensures only the trigger threshold is modified without affecting unrelated control fields. A `v` command to reset simply overwrites the lower 16 bits with zero while leaving the upper register contents unchanged.
@@ -476,22 +495,6 @@ int16_t voltage = (int16_t)(full & 0xFFFF);
 voltage += 1000; // or -1000
 FINAL_OSCOPE_mWriteReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG4_OFFSET,
      (full & 0xFFFF0000) | ((u32)voltage & 0xFFFF));
-```
-
-### Toggling Channel Enables
-
-```c
-u32 slv3_read_ch1 = FINAL_OSCOPE_mReadReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
-            #define CH1_TOGGLE_MASK (1 << 2)
-            u32 updated_ch1 = slv3_read_ch1 ^ CH1_TOGGLE_MASK;
-            int new_bit_value_ch1 = (updated_ch1 >> 2) & 1;
-
-            if (new_bit_value_ch1 == 1) {
-                printf("Channel 1 on\r\n");
-            } else {
-                printf("Channel 1 off\r\n");
-            }
-            FINAL_OSCOPE_mWriteReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, updated_ch1 );
 ```
 
 ### Spooling Samples
