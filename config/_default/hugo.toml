@@ -1,4 +1,4 @@
-baseURL = "http://localhost:1313/"
+baseURL = "https://scast3.github.io/"
 title = "Santiago's Engineering Portfolio"
 theme = "congo"
 defaultContentLanguage = "en"

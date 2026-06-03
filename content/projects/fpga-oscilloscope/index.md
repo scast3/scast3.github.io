@@ -483,8 +483,6 @@ FINAL_OSCOPE_mWriteReg(BASEADDR, REG4_OFFSET,
 
 ---
 
-![AXI bus signals diagram](images/final_diagram.png)
-
 ## Tools Used
 
 - **Xilinx Vivado** — VHDL synthesis, implementation, AXI IP packaging
