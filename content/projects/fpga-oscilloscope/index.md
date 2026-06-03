@@ -45,39 +45,24 @@ The top-level VHDL entity `acquireToHDMI.vhdl` is packaged in an IP named `final
                                         HDMI output <-|  TMDS serializer     |
                                                       +----------------------+
 ```
+### Data Flow
 ```
-  +---------------------+        AXI4-Lite Bus        +----------------------+
-  |  ARM Cortex-A9 (PS) | <-------------------------> |   PL (VHDL Fabric)   |
-  |                     |                             |                      |
-  |  Vitis C firmware   |                             |  final_oscope        |
-  |  - UART CLI         |   slv_reg0: CH1 data (R)    |  +-----------------+ |
-  |  - TTC0 ISR         |   slv_reg1: CH2 data (R)    |  | ADC FSM         | |
-  |  - Trigger control  |   slv_reg2: status (R)      |  | Sample timer    | |
-  |  - Function gen     |   slv_reg3: control (W)     |  | Trigger logic   | |
-  |                     |   slv_reg4: trig volt (W)   |  | HDMI renderer   | |
-  +---------------------+   slv_reg5: trig time (W)   |  +-----------------+ |
-                            slv_reg6+: unused         |          |           |
-                                                      |          |           |
-                                                      |   BRAM waveform      |
-                                                      |          |           |
-                                                      |          v           |
-                                                      |  +----------------+  |
-                                                      |  | enhancedPwm    |  |
-                                                      |  | (AXI wrapper)  |  |
-                                                      |  |                |  |
-                                                      |  | dutyCycle <-   |  |
-                                                      |  |   BRAM sample  |  |
-                                                      |  | pwmCounter     |  |
-                                                      |  | PWM output     |  |
-                                                      |  +----------------+  |
-                                                      |          |           |
-                                                      |          v           |
-                                                      |     PWM waveform     |
-                                                      |   (RC / filter out)  |
-                                                      |                      |
-                                        AD7606 ADC -->|  16-bit parallel bus |
-                                        HDMI output <-|  TMDS serializer     |
-                                                      +----------------------+
+AD7606 ADC
+     |
+     v
++------------------+      +------------------+      +------------------+
+| Sample Capture   | ---> | Trigger Engine   | ---> | Waveform BRAM    |
++------------------+      +------------------+      +------------------+
+                                                           |
+                                                           +-------> HDMI Renderer ---> HDMI
+                                                           |
+                                                           +-------> PWM Generator ---> Analog Out
+
+                          AXI4-Lite Control Plane
++--------------------------------------------------------------------+
+| ARM Cortex-A9 (Vitis C)                                             |
+| UART CLI | Trigger Config | Function Generator | Interrupt Handler |
++--------------------------------------------------------------------+
 ```
 ---
 
@@ -85,7 +70,7 @@ The top-level VHDL entity `acquireToHDMI.vhdl` is packaged in an IP named `final
 
 ### Datapath and Control
 
-The PL follows a standard datapath and control design. The datapath (`acquireToHDMI_datapath.vhdl`) contains all registers, counters, BRAMs, comparators, and pixel converters as structural VHDL instantiations. The control module (`acquireToHDMI_fsm.vhdl`) is a finite state machine that observes the status word (`sw`) from the datapath and drives a control word (`cw`) back to it — the two modules communicate only through these two buses, with no direct logic between them. The datapath additionally manages the TMDS signals required for HDMI display.
+The PL follows a standard datapath and control design. The datapath `acquireToHDMI_datapath.vhdl` contains all the registers, counters, BRAMs, comparators, and 2's complement pixel converters as structural VHDL instantiations. The control module `acquireToHDMI_fsm.vhdl` is a finite state machine that uses the status word `sw` from the datapath for state transitions. Each state drives a control word `cw` back to the datapath. The two modules communicate only through these two buses, with no direct logic between them. The datapath additionally manages the TMDS signals required for HDMI display.
 
 ```vhdl
 entity acquireToHDMI_datapath is
@@ -112,25 +97,47 @@ entity acquireToHDMI_datapath is
 end acquireToHDMI_datapath;
 ```
 
+Furthermore, a user input to the datapath is the `sampleRate_ctrl` which controls the sample rate of the ADC acquisition. The design supports four present sampling rates:
+
+| Sampling Mode | Clock Cycles | 
+|---|---|
+| `HIGHEST_RATE` | 300 |
+| `HIGH_RATE` | 600 |
+| `LOW_RATE` | 1200 |
+| `LOWEST_RATE` | 2400 |
+
 ### CW and SW Signals
 
-The FSM has no knowledge of signal values — it only sees a vector of condition bits (the status word) and outputs a vector of control bits (the control word). Every datapath resource — counters, registers, BRAM write enables — is gated by a dedicated bit in `cw`. This makes the state outputs in the FSM completely readable as a lookup table: each state drives a fixed `cw` pattern with named bit positions defined in the shared package.
+The datapath and control design uses the status and control words to implement the ADC acquisition functionality. The status word is a 10-bit standard logic vector and the control word is a 22-bit standard logic vector. Every resource in the datapath such as counters, registers, BRAM write enables are controlled by a dedicated bit in the `cw` vector. This makes the state outputs in the FSM completely readable as a lookup table: each state drives a fixed `cw` binary combination with named bit positions defined in the shared package.
 
-**Key status word (sw) bits observed by the FSM:**
+**All 10 status word bits observed by the FSM:**
 
-| Bit | Signal | Source in datapath |
+| Bit | Description | Source in datapath |
 |---|---|---|
-| `BUSY_SW` | AD7606 busy pin | External ADC pin |
-| `SHORT_DELAY_DONE_SW` | Short counter == target | `shortCompare` |
-| `LONG_DELAY_DONE_SW` | Long counter == target | `longCompare` |
-| `FULL_SW` | BRAM write address == screen width | `cmp_BRAM_full` |
-| `SAMPLE_SW` | Sample counter == rate target | `sampleCompare` |
-| `TRIG_CH1_SW` | CH1 rising edge detected | Trigger comparators |
-| `TRIG_CH2_SW` | CH2 rising edge detected | Trigger comparators |
-| `STORE_SW` | SR latch — BRAM fill active | SR latch process |
-| `SINGLE_SW` / `FORCED_SW` | Mode from PS control reg | user input (AXI slv_reg3) |
+| `BUSY_SW` | AD7606 busy signal | External ADC pin |
+| `SHORT_DELAY_DONE_SW` | Short counter == `x10` | `shortCompare` Comparator |
+| `LONG_DELAY_DONE_SW` | Long counter == `x00FFFF` | `longCompare` Comparator |
+| `FULL_SW` | BRAM is full: write address == display width | `cmp_BRAM_full` Comparator |
+| `SAMPLE_SW` | Sample counter == `sampleRate_ctrl` | `sampleCompare` Comparator |
+| `TRIG_CH1_SW` | CH1 rising edge detected | Channel 1 trigger comparators |
+| `TRIG_CH2_SW` | CH2 rising edge detected | Channel 2 trigger comparators |
+| `STORE_SW` | Stores ADC samples into BRAM | SR latch process |
+| `FORCED_SW` | Mode from PS control reg | user command (AXI slv_reg3) |
+| `SINGLE_SW` | Mode from PS control reg | user command (AXI slv_reg3) |
 
-**Key control word (cw) bits driven by the FSM:**
+
+The `FORCED` and `SINGLE` status word bits determine the mode of the oscilloscope and acquisition logic, which are entirely controlled by the user in the PS.
+
+| Condition | Mode | Description |
+|---|---|---|
+| `sw(FORCED_SW)==0` | Triggered Mode | Channel 1 trigger event starts acquisition into BRAM |
+| `sw(FORCED_SW)==1` | Forced Mode | User command starts acquisition into BRAM |
+| `sw(SINGLE_SW)==0` | N/A | Nothing - User has not yet sent a command | 
+| `sw(SINGLE_SW)==1` | Single Acquisition Mode | User command starts a single "snapshot" acquisition |
+
+**Key control word bits driven by the FSM:**
+
+In each state in the FSM, the module writes a specific 22-bit value to the `cw` vector which drives the logic components in the datapath.
 
 | Bit(s) | Function |
 |---|---|

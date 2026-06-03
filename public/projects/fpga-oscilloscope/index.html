@@ -123,7 +123,7 @@
     "keywords": ["FPGA","VHDL","Verification","Xilinx"],
     
     "mainEntityOfPage": "true",
-    "wordCount": "3369"
+    "wordCount": "3403"
   }
   </script>
     
@@ -339,40 +339,24 @@
                                         AD7606 ADC --&gt;|  16-bit parallel bus |
                                         HDMI output &lt;-|  TMDS serializer     |
                                                       +----------------------+
-</code></pre><pre tabindex="0"><code>  +---------------------+        AXI4-Lite Bus        +----------------------+
-  |  ARM Cortex-A9 (PS) | &lt;-------------------------&gt; |   PL (VHDL Fabric)   |
-  |                     |                             |                      |
-  |  Vitis C firmware   |                             |  final_oscope        |
-  |  - UART CLI         |   slv_reg0: CH1 data (R)    |  +-----------------+ |
-  |  - TTC0 ISR         |   slv_reg1: CH2 data (R)    |  | ADC FSM         | |
-  |  - Trigger control  |   slv_reg2: status (R)      |  | Sample timer    | |
-  |  - Function gen     |   slv_reg3: control (W)     |  | Trigger logic   | |
-  |                     |   slv_reg4: trig volt (W)   |  | HDMI renderer   | |
-  +---------------------+   slv_reg5: trig time (W)   |  +-----------------+ |
-                            slv_reg6+: unused         |          |           |
-                                                      |          |           |
-                                                      |   BRAM waveform      |
-                                                      |          |           |
-                                                      |          v           |
-                                                      |  +----------------+  |
-                                                      |  | enhancedPwm    |  |
-                                                      |  | (AXI wrapper)  |  |
-                                                      |  |                |  |
-                                                      |  | dutyCycle &lt;-   |  |
-                                                      |  |   BRAM sample  |  |
-                                                      |  | pwmCounter     |  |
-                                                      |  | PWM output     |  |
-                                                      |  +----------------+  |
-                                                      |          |           |
-                                                      |          v           |
-                                                      |     PWM waveform     |
-                                                      |   (RC / filter out)  |
-                                                      |                      |
-                                        AD7606 ADC --&gt;|  16-bit parallel bus |
-                                        HDMI output &lt;-|  TMDS serializer     |
-                                                      +----------------------+
+</code></pre><h3 id="data-flow" class="relative group">Data Flow <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#data-flow" aria-label="Anchor">#</a></span></h3><pre tabindex="0"><code>AD7606 ADC
+     |
+     v
++------------------+      +------------------+      +------------------+
+| Sample Capture   | ---&gt; | Trigger Engine   | ---&gt; | Waveform BRAM    |
++------------------+      +------------------+      +------------------+
+                                                           |
+                                                           +-------&gt; HDMI Renderer ---&gt; HDMI
+                                                           |
+                                                           +-------&gt; PWM Generator ---&gt; Analog Out
+
+                          AXI4-Lite Control Plane
++--------------------------------------------------------------------+
+| ARM Cortex-A9 (Vitis C)                                             |
+| UART CLI | Trigger Config | Function Generator | Interrupt Handler |
++--------------------------------------------------------------------+
 </code></pre><hr>
-<h2 id="programmable-logic--vhdl-design" class="relative group">Programmable Logic — VHDL Design <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#programmable-logic--vhdl-design" aria-label="Anchor">#</a></span></h2><h3 id="datapath-and-control" class="relative group">Datapath and Control <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#datapath-and-control" aria-label="Anchor">#</a></span></h3><p>The PL follows a standard datapath and control design. The datapath (<code>acquireToHDMI_datapath.vhdl</code>) contains all registers, counters, BRAMs, comparators, and pixel converters as structural VHDL instantiations. The control module (<code>acquireToHDMI_fsm.vhdl</code>) is a finite state machine that observes the status word (<code>sw</code>) from the datapath and drives a control word (<code>cw</code>) back to it — the two modules communicate only through these two buses, with no direct logic between them. The datapath additionally manages the TMDS signals required for HDMI display.</p>
+<h2 id="programmable-logic--vhdl-design" class="relative group">Programmable Logic — VHDL Design <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#programmable-logic--vhdl-design" aria-label="Anchor">#</a></span></h2><h3 id="datapath-and-control" class="relative group">Datapath and Control <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#datapath-and-control" aria-label="Anchor">#</a></span></h3><p>The PL follows a standard datapath and control design. The datapath <code>acquireToHDMI_datapath.vhdl</code> contains all the registers, counters, BRAMs, comparators, and 2&rsquo;s complement pixel converters as structural VHDL instantiations. The control module <code>acquireToHDMI_fsm.vhdl</code> is a finite state machine that uses the status word <code>sw</code> from the datapath for state transitions. Each state drives a control word <code>cw</code> back to the datapath. The two modules communicate only through these two buses, with no direct logic between them. The datapath additionally manages the TMDS signals required for HDMI display.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-vhdl" data-lang="vhdl"><span style="display:flex;"><span><span style="color:#66d9ef">entity</span> <span style="color:#a6e22e">acquireToHDMI_datapath</span> <span style="color:#66d9ef">is</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">PORT</span> ( clk <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span>  <span style="color:#66d9ef">STD_LOGIC</span>;
 </span></span><span style="display:flex;"><span>        resetn <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span>  <span style="color:#66d9ef">STD_LOGIC</span>;
@@ -395,65 +379,130 @@
 </span></span><span style="display:flex;"><span>        sampleRate_ctrl <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">STD_LOGIC_VECTOR</span>(<span style="color:#ae81ff">1</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>)
 </span></span><span style="display:flex;"><span>    );
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span> <span style="color:#a6e22e">acquireToHDMI_datapath</span>;
-</span></span></code></pre></div><h3 id="cw-and-sw-signals" class="relative group">CW and SW Signals <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#cw-and-sw-signals" aria-label="Anchor">#</a></span></h3><p>The FSM has no knowledge of signal values — it only sees a vector of condition bits (the status word) and outputs a vector of control bits (the control word). Every datapath resource — counters, registers, BRAM write enables — is gated by a dedicated bit in <code>cw</code>. This makes the state outputs in the FSM completely readable as a lookup table: each state drives a fixed <code>cw</code> pattern with named bit positions defined in the shared package.</p>
-<p><strong>Key status word (sw) bits observed by the FSM:</strong></p>
+</span></span></code></pre></div><p>Furthermore, a user input to the datapath is the <code>sampleRate_ctrl</code> which controls the sample rate of the ADC acquisition. The design supports four present sampling rates:</p>
+<table>
+	<thead>
+			<tr>
+					<th>Sampling Mode</th>
+					<th>Clock Cycles</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>HIGHEST_RATE</code></td>
+					<td>300</td>
+			</tr>
+			<tr>
+					<td><code>HIGH_RATE</code></td>
+					<td>600</td>
+			</tr>
+			<tr>
+					<td><code>LOW_RATE</code></td>
+					<td>1200</td>
+			</tr>
+			<tr>
+					<td><code>LOWEST_RATE</code></td>
+					<td>2400</td>
+			</tr>
+	</tbody>
+</table>
+<h3 id="cw-and-sw-signals" class="relative group">CW and SW Signals <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#cw-and-sw-signals" aria-label="Anchor">#</a></span></h3><p>The datapath and control design uses the status and control words to implement the ADC acquisition functionality. The status word is a 10-bit standard logic vector and the control word is a 22-bit standard logic vector. Every resource in the datapath such as counters, registers, BRAM write enables are controlled by a dedicated bit in the <code>cw</code> vector. This makes the state outputs in the FSM completely readable as a lookup table: each state drives a fixed <code>cw</code> binary combination with named bit positions defined in the shared package.</p>
+<p><strong>All 10 status word bits observed by the FSM:</strong></p>
 <table>
 	<thead>
 			<tr>
 					<th>Bit</th>
-					<th>Signal</th>
+					<th>Description</th>
 					<th>Source in datapath</th>
 			</tr>
 	</thead>
 	<tbody>
 			<tr>
 					<td><code>BUSY_SW</code></td>
-					<td>AD7606 busy pin</td>
+					<td>AD7606 busy signal</td>
 					<td>External ADC pin</td>
 			</tr>
 			<tr>
 					<td><code>SHORT_DELAY_DONE_SW</code></td>
-					<td>Short counter == target</td>
-					<td><code>shortCompare</code></td>
+					<td>Short counter == <code>x10</code></td>
+					<td><code>shortCompare</code> Comparator</td>
 			</tr>
 			<tr>
 					<td><code>LONG_DELAY_DONE_SW</code></td>
-					<td>Long counter == target</td>
-					<td><code>longCompare</code></td>
+					<td>Long counter == <code>x00FFFF</code></td>
+					<td><code>longCompare</code> Comparator</td>
 			</tr>
 			<tr>
 					<td><code>FULL_SW</code></td>
-					<td>BRAM write address == screen width</td>
-					<td><code>cmp_BRAM_full</code></td>
+					<td>BRAM is full: write address == display width</td>
+					<td><code>cmp_BRAM_full</code> Comparator</td>
 			</tr>
 			<tr>
 					<td><code>SAMPLE_SW</code></td>
-					<td>Sample counter == rate target</td>
-					<td><code>sampleCompare</code></td>
+					<td>Sample counter == <code>sampleRate_ctrl</code></td>
+					<td><code>sampleCompare</code> Comparator</td>
 			</tr>
 			<tr>
 					<td><code>TRIG_CH1_SW</code></td>
 					<td>CH1 rising edge detected</td>
-					<td>Trigger comparators</td>
+					<td>Channel 1 trigger comparators</td>
 			</tr>
 			<tr>
 					<td><code>TRIG_CH2_SW</code></td>
 					<td>CH2 rising edge detected</td>
-					<td>Trigger comparators</td>
+					<td>Channel 2 trigger comparators</td>
 			</tr>
 			<tr>
 					<td><code>STORE_SW</code></td>
-					<td>SR latch — BRAM fill active</td>
+					<td>Stores ADC samples into BRAM</td>
 					<td>SR latch process</td>
 			</tr>
 			<tr>
-					<td><code>SINGLE_SW</code> / <code>FORCED_SW</code></td>
+					<td><code>FORCED_SW</code></td>
 					<td>Mode from PS control reg</td>
-					<td>user input (AXI slv_reg3)</td>
+					<td>user command (AXI slv_reg3)</td>
+			</tr>
+			<tr>
+					<td><code>SINGLE_SW</code></td>
+					<td>Mode from PS control reg</td>
+					<td>user command (AXI slv_reg3)</td>
 			</tr>
 	</tbody>
 </table>
-<p><strong>Key control word (cw) bits driven by the FSM:</strong></p>
+<p>The <code>FORCED</code> and <code>SINGLE</code> status word bits determine the mode of the oscilloscope and acquisition logic, which are entirely controlled by the user in the PS.</p>
+<table>
+	<thead>
+			<tr>
+					<th>Condition</th>
+					<th>Mode</th>
+					<th>Description</th>
+			</tr>
+	</thead>
+	<tbody>
+			<tr>
+					<td><code>sw(FORCED_SW)==0</code></td>
+					<td>Triggered Mode</td>
+					<td>Channel 1 trigger event starts acquisition into BRAM</td>
+			</tr>
+			<tr>
+					<td><code>sw(FORCED_SW)==1</code></td>
+					<td>Forced Mode</td>
+					<td>User command starts acquisition into BRAM</td>
+			</tr>
+			<tr>
+					<td><code>sw(SINGLE_SW)==0</code></td>
+					<td>N/A</td>
+					<td>Nothing - User has not yet sent a command</td>
+			</tr>
+			<tr>
+					<td><code>sw(SINGLE_SW)==1</code></td>
+					<td>Single Acquisition Mode</td>
+					<td>User command starts a single &ldquo;snapshot&rdquo; acquisition</td>
+			</tr>
+	</tbody>
+</table>
+<p><strong>Key control word bits driven by the FSM:</strong></p>
+<p>In each state in the FSM, the module writes a specific 22-bit value to the <code>cw</code> vector which drives the logic components in the datapath.</p>
 <table>
 	<thead>
 			<tr>
