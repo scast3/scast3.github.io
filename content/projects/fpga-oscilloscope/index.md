@@ -499,48 +499,29 @@ FINAL_OSCOPE_mWriteReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_RE
 
 ### Spooling Samples
 
+The `u` command allows the user to read the last 64 waveform samples from the FPGA. The routine first asserts the single mode control bit to enable a single shot acquisition. It then enters a loop to retrieve 64 samples. To ensure that the sample being read by the PS is displayed before getting overwritten by the hardware, a handshake protocol was designed using a flag register. The status bit `FLAG_Q_BIT` was mapped to bit 4 on `slv_reg2` and the `FLAG_CLEAR_BIT` was mapped to bit 7 on `slv_reg3`. The appropriate bit masks `FLAG_Q_MASK (1 << FLAG_Q_BIT)` and `FLAG_CLEAR_MASK (1 << FLAG_CLEAR_BIT)` were used. 
+
+For each sample, the ARM processor constantly polled `slv_reg2` until the `FLAG_Q_BIT` went high:
+
 ```c
-case 'u':
-            printf("Display final 64 samples\r\n");
-            #define FLAG_CLEAR_BIT (7)
-            #define FLAG_Q_BIT (4) 
-            #define FLAG_Q_MASK (1 << FLAG_Q_BIT) // slv reg 2 (read from)
-            #define FLAG_CLEAR_MASK (1 << FLAG_CLEAR_BIT) // slv reg 3 (write to)
+do {
+    slv2_flag_read = FINAL_OSCOPE_mReadReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG2_OFFSET);
+} while ((slv2_flag_read & FLAG_Q_MASK) == 0); // Loop until the q bit is 1
+```
+Once the ready flag was detected, the contents of `slv_reg0` which corresponds to the channel 1 data was read and displayed:
 
-            #define SINGLE_MODE_MASK (1 << 0)
-            u32 reg3_config = FINAL_OSCOPE_mReadReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
-            FINAL_OSCOPE_mWriteReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, reg3_config | SINGLE_MODE_MASK);
+```c
+u32 ch1data_32bit = FINAL_OSCOPE_mReadReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG0_OFFSET);
+printf("ch1[%d]: %lu\r\n", i, (unsigned long)ch1data_32bit);
+```
+To acknowledge that the sample was recieved, the software generated a pulse on the `FLAG_CLEAR_BIT` to clear the register and notify to the FPGA that the next sample was ready to be loaded:
 
-            u32 reg3_initial = FINAL_OSCOPE_mReadReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
-            FINAL_OSCOPE_mWriteReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, reg3_initial & (~FLAG_CLEAR_MASK));
-
-
-            for (int i = 0; i < 64; i++) {
-                
-                // wait for 1 falg to be set
-                uint32_t current_q_bit;
-                printf("Current Q: %u \r\n", current_q_bit);
-                u32 slv2_flag_read;
-                do {
-                    slv2_flag_read = FINAL_OSCOPE_mReadReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG2_OFFSET);
-                    //current_q_bit = (slv2_flag_read & FLAG_Q_MASK); // Check if Q is set to 1
-                } while ((slv2_flag_read & FLAG_Q_MASK) == 0); // Loop until the bit is 1
-                printf("Exited do while loop, bit should be 1. Q bit: %d\r\n", current_q_bit);
-
-                // once Q=1
-                u32 ch1data_32bit = FINAL_OSCOPE_mReadReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG0_OFFSET);
-                printf("ch1[%d]: %lu\r\n", i, (unsigned long)ch1data_32bit);
-
-                // clear flag - set to high then to low 
-                
-                u32 reg3_set_clear = FINAL_OSCOPE_mReadReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
-                FINAL_OSCOPE_mWriteReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, reg3_set_clear | FLAG_CLEAR_MASK);
-                u32 reg3_clear_done = FINAL_OSCOPE_mReadReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
-                FINAL_OSCOPE_mWriteReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, reg3_clear_done & (~FLAG_CLEAR_MASK));
-
-            }
-            printf("64 samples read complete.\r\n");
-            break;
+```c
+// clear flag - set to high then to low 
+u32 reg3_set_clear = FINAL_OSCOPE_mReadReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
+FINAL_OSCOPE_mWriteReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, reg3_set_clear | FLAG_CLEAR_MASK);
+u32 reg3_clear_done = FINAL_OSCOPE_mReadReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
+FINAL_OSCOPE_mWriteReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, reg3_clear_done & (~FLAG_CLEAR_MASK));
 ```
 
 ---

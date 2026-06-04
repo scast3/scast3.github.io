@@ -123,7 +123,7 @@
     "keywords": ["FPGA","VHDL","Verification","Xilinx"],
     
     "mainEntityOfPage": "true",
-    "wordCount": "3997"
+    "wordCount": "4049"
   }
   </script>
     
@@ -289,7 +289,7 @@
   <div class="flex flex-row flex-wrap items-center">
     
     
-      <time datetime="2025-12-10 00:00:00 &#43;0000 UTC">10 December 2025</time><span class="px-2 text-primary-500">&middot;</span><span title="Reading time">19 mins</span>
+      <time datetime="2025-12-10 00:00:00 &#43;0000 UTC">10 December 2025</time><span class="px-2 text-primary-500">&middot;</span><span title="Reading time">20 mins</span>
     
 
     
@@ -1170,47 +1170,20 @@
 </span></span><span style="display:flex;"><span>voltage <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1000</span>; <span style="color:#75715e">// or -1000
 </span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">FINAL_OSCOPE_mWriteReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG4_OFFSET,
 </span></span><span style="display:flex;"><span>     (full <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xFFFF0000</span>) <span style="color:#f92672">|</span> ((u32)voltage <span style="color:#f92672">&amp;</span> <span style="color:#ae81ff">0xFFFF</span>));
-</span></span></code></pre></div><h3 id="spooling-samples" class="relative group">Spooling Samples <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#spooling-samples" aria-label="Anchor">#</a></span></h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;u&#39;</span><span style="color:#f92672">:</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Display final 64 samples</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>            <span style="color:#75715e">#define FLAG_CLEAR_BIT (7)
-</span></span></span><span style="display:flex;"><span>            <span style="color:#75715e">#define FLAG_Q_BIT (4) 
-</span></span></span><span style="display:flex;"><span>            <span style="color:#75715e">#define FLAG_Q_MASK (1 &lt;&lt; FLAG_Q_BIT) </span><span style="color:#75715e">// slv reg 2 (read from)
-</span></span></span><span style="display:flex;"><span>            <span style="color:#75715e">#define FLAG_CLEAR_MASK (1 &lt;&lt; FLAG_CLEAR_BIT) </span><span style="color:#75715e">// slv reg 3 (write to)
-</span></span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            <span style="color:#75715e">#define SINGLE_MODE_MASK (1 &lt;&lt; 0)
-</span></span></span><span style="display:flex;"><span>            u32 reg3_config <span style="color:#f92672">=</span> <span style="color:#a6e22e">FINAL_OSCOPE_mReadReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
-</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">FINAL_OSCOPE_mWriteReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, reg3_config <span style="color:#f92672">|</span> SINGLE_MODE_MASK);
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            u32 reg3_initial <span style="color:#f92672">=</span> <span style="color:#a6e22e">FINAL_OSCOPE_mReadReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
-</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">FINAL_OSCOPE_mWriteReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, reg3_initial <span style="color:#f92672">&amp;</span> (<span style="color:#f92672">~</span>FLAG_CLEAR_MASK));
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">64</span>; i<span style="color:#f92672">++</span>) {
-</span></span><span style="display:flex;"><span>                
-</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// wait for 1 falg to be set
-</span></span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">uint32_t</span> current_q_bit;
-</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Current Q: %u </span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">&#34;</span>, current_q_bit);
-</span></span><span style="display:flex;"><span>                u32 slv2_flag_read;
-</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">do</span> {
-</span></span><span style="display:flex;"><span>                    slv2_flag_read <span style="color:#f92672">=</span> <span style="color:#a6e22e">FINAL_OSCOPE_mReadReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG2_OFFSET);
-</span></span><span style="display:flex;"><span>                    <span style="color:#75715e">//current_q_bit = (slv2_flag_read &amp; FLAG_Q_MASK); // Check if Q is set to 1
-</span></span></span><span style="display:flex;"><span>                } <span style="color:#66d9ef">while</span> ((slv2_flag_read <span style="color:#f92672">&amp;</span> FLAG_Q_MASK) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>); <span style="color:#75715e">// Loop until the bit is 1
-</span></span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Exited do while loop, bit should be 1. Q bit: %d</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">&#34;</span>, current_q_bit);
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// once Q=1
-</span></span></span><span style="display:flex;"><span>                u32 ch1data_32bit <span style="color:#f92672">=</span> <span style="color:#a6e22e">FINAL_OSCOPE_mReadReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG0_OFFSET);
-</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;ch1[%d]: %lu</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">&#34;</span>, i, (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span>)ch1data_32bit);
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// clear flag - set to high then to low 
-</span></span></span><span style="display:flex;"><span>                
-</span></span><span style="display:flex;"><span>                u32 reg3_set_clear <span style="color:#f92672">=</span> <span style="color:#a6e22e">FINAL_OSCOPE_mReadReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
-</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">FINAL_OSCOPE_mWriteReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, reg3_set_clear <span style="color:#f92672">|</span> FLAG_CLEAR_MASK);
-</span></span><span style="display:flex;"><span>                u32 reg3_clear_done <span style="color:#f92672">=</span> <span style="color:#a6e22e">FINAL_OSCOPE_mReadReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
-</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">FINAL_OSCOPE_mWriteReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, reg3_clear_done <span style="color:#f92672">&amp;</span> (<span style="color:#f92672">~</span>FLAG_CLEAR_MASK));
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            }
-</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;64 samples read complete.</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">&#34;</span>);
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>;
+</span></span></code></pre></div><h3 id="spooling-samples" class="relative group">Spooling Samples <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#spooling-samples" aria-label="Anchor">#</a></span></h3><p>The <code>u</code> command allows the user to read the last 64 waveform samples from the FPGA. The routine first asserts the single mode control bit to enable a single shot acquisition. It then enters a loop to retrieve 64 samples. To ensure that the sample being read by the PS is displayed before getting overwritten by the hardware, a handshake protocol was designed using a flag register. The status bit <code>FLAG_Q_BIT</code> was mapped to bit 4 on <code>slv_reg2</code> and the <code>FLAG_CLEAR_BIT</code> was mapped to bit 7 on <code>slv_reg3</code>. The appropriate bit masks <code>FLAG_Q_MASK (1 &lt;&lt; FLAG_Q_BIT)</code> and <code>FLAG_CLEAR_MASK (1 &lt;&lt; FLAG_CLEAR_BIT)</code> were used.</p>
+<p>For each sample, the ARM processor constantly polled <code>slv_reg2</code> until the <code>FLAG_Q_BIT</code> went high:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">do</span> {
+</span></span><span style="display:flex;"><span>    slv2_flag_read <span style="color:#f92672">=</span> <span style="color:#a6e22e">FINAL_OSCOPE_mReadReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG2_OFFSET);
+</span></span><span style="display:flex;"><span>} <span style="color:#66d9ef">while</span> ((slv2_flag_read <span style="color:#f92672">&amp;</span> FLAG_Q_MASK) <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>); <span style="color:#75715e">// Loop until the q bit is 1
+</span></span></span></code></pre></div><p>Once the ready flag was detected, the contents of <code>slv_reg0</code> which corresponds to the channel 1 data was read and displayed:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>u32 ch1data_32bit <span style="color:#f92672">=</span> <span style="color:#a6e22e">FINAL_OSCOPE_mReadReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG0_OFFSET);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;ch1[%d]: %lu</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">&#34;</span>, i, (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span>)ch1data_32bit);
+</span></span></code></pre></div><p>To acknowledge that the sample was recieved, the software generated a pulse on the <code>FLAG_CLEAR_BIT</code> to clear the register and notify to the FPGA that the next sample was ready to be loaded:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// clear flag - set to high then to low 
+</span></span></span><span style="display:flex;"><span>u32 reg3_set_clear <span style="color:#f92672">=</span> <span style="color:#a6e22e">FINAL_OSCOPE_mReadReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">FINAL_OSCOPE_mWriteReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, reg3_set_clear <span style="color:#f92672">|</span> FLAG_CLEAR_MASK);
+</span></span><span style="display:flex;"><span>u32 reg3_clear_done <span style="color:#f92672">=</span> <span style="color:#a6e22e">FINAL_OSCOPE_mReadReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">FINAL_OSCOPE_mWriteReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, reg3_clear_done <span style="color:#f92672">&amp;</span> (<span style="color:#f92672">~</span>FLAG_CLEAR_MASK));
 </span></span></code></pre></div><hr>
 <h2 id="key-design-decisions" class="relative group">Key Design Decisions <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#key-design-decisions" aria-label="Anchor">#</a></span></h2><p><strong>Splitting acquisition and rendering into PL.</strong> Doing the ADC sequencing and HDMI pixel rendering in VHDL keeps all hard real-time operations in the fabric and away from the ARM. The PS only needs to write configuration registers and poll status — it never has to meet a pixel clock deadline.</p>
 <p><strong>AXI flag handshake for sample-ready.</strong> Rather than polling the ADC busy signal directly from software, the PL sets a <code>flag_q</code> bit in the status register when a new sample is ready, and the PS acknowledges it by pulsing <code>flag_clear</code>. This decouples the ADC conversion timing from the software polling rate and avoids missed samples.</p>
