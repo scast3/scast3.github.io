@@ -110,6 +110,19 @@ Furthermore, a user input to the datapath is the `sampleRate_ctrl` which control
 | `LOW_RATE` | 1200 |
 | `LOWEST_RATE` | 2400 |
 
+```vhdl
+sampleMux : genericMux4x1
+    GENERIC MAP(32)
+    PORT MAP(
+        y0 => HIGHEST_RATE, 
+        y1 => HIGH_RATE,
+        y2 => LOWEST_RATE,
+        y3 => LOW_RATE,
+        s => sampleRate_ctrl,
+        f => currentRate
+    );
+```
+
 ### CW and SW Signals
 
 The datapath and control design uses the status and control words to implement the ADC acquisition functionality. The status word is a 10-bit standard logic vector and the control word is a 22-bit standard logic vector. Every resource in the datapath such as counters, registers, BRAM write enables are controlled by a dedicated bit in the `cw` vector. This makes the state outputs in the FSM completely readable as a lookup table: each state drives a fixed `cw` binary combination with named bit positions defined in the shared package.
@@ -122,7 +135,7 @@ The datapath and control design uses the status and control words to implement t
 | `SHORT_DELAY_DONE_SW` | Short counter == `x10` | `shortCompare` Comparator |
 | `LONG_DELAY_DONE_SW` | Long counter == `x00FFFF` | `longCompare` Comparator |
 | `FULL_SW` | BRAM is full: write address == display width | `cmp_BRAM_full` Comparator |
-| `SAMPLE_SW` | Sample counter == `sampleRate_ctrl` | `sampleCompare` Comparator |
+| `SAMPLE_SW` | Sample counter == `sampleMux` output | `sampleCompare` Comparator |
 | `TRIG_CH1_SW` | CH1 rising edge detected | Channel 1 trigger comparators |
 | `TRIG_CH2_SW` | CH2 rising edge detected | Channel 2 trigger comparators |
 | `STORE_SW` | Stores ADC samples into BRAM | SR latch process |
