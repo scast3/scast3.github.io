@@ -389,6 +389,7 @@ The user interacts and controls the system through a UART based command-line int
 | `a` / `b` | Toggle CH1 / CH2 enable |
 | `s` | Toggle function generator on/off |
 | `w` | Select sine or sinc waveform |
+| `P` | Change function frequency |
 | `d` | Set PWM duty cycle manually |
 | `u` | Read and print 64 sequential samples from CH1 |
 | `r` | Universal reset (not implemented) |

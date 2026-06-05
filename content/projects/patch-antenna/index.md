@@ -3,15 +3,17 @@ title: "Circularly Polarized Patch Antenna and Array Design for X-Band Communica
 date: 2026-05-01
 summary: "test"
 tags: ["HFSS", "RF Design", "Antenna Theory", "VNA"]
-github: "https://github.com/scast3/antenna"
 tools: ["Matlab", "HFSS"]
+math: true
 status: "complete"          # complete | in-progress
 weight: 1                   # lower = appears first in listings
 ---
 
 ## Overview
 
-This project covers the full design-to-fabrication workflow for a circularly polarized (CP) microstrip patch antenna operating at 8.75 GHz, along with a 4-element circular array configuration. Circular polarization is achieved through a corner-chamfered square patch fed by a coaxial probe. All simulations were performed in Ansys HFSS, array pattern calculations in MATLAB, and the single element was physically fabricated and measured.
+This project was the design, simulation, and analysis of a circularly polarized (CP) microstrip patch antenna operating at a center frequency of 8.75 GHz, along with a 4-element array configuration.
+
+Circular polarization is achieved through a corner-chamfered patch fed by a coaxial probe beneath the ground plane offset from the edge. The single element design is first validated against all specifications before a 4-element array is investigated at element spacings of $0.5\lambda$, $0.75\lambda$, and $\lambda$ to evaluate mutual coupling and radiation performance. All simulations were performed in Ansys HFSS.
 
 **Design targets:**
 
@@ -26,23 +28,29 @@ This project covers the full design-to-fabrication workflow for a circularly pol
 
 ## Antenna Design
 
+ In this design, a Rogers RO3003 substrate was used with a relative permittivity of $\varepsilon_r = 3.0$ and a thickness of $h = 1.52$ mm.
+
 ### Patch Dimensions
 
-A square patch geometry is required to support the two orthogonal modes (TM10 and TM01) needed for circular polarization. Closed-form design equations were used to get initial dimensions on a Rogers RO3003 substrate (εr = 3.0, h = 1.52 mm), then refined through HFSS parametric sweeps and optimization.
+Before simulation, the theoretical dimensions for the patch antenna were calculated using closed-form design equations. In this design, a Rogers RO3003 substrate was used with a relative permittivity of $\varepsilon_r = 3.0$ and a thickness of $h = 1.52$ mm.
 
-The effective dielectric constant and fringing field extension were calculated analytically, yielding a starting patch size of approximately 9.11 × 9.11 mm. The coaxial feed offset for a 50 Ω match was estimated at y₀ ≈ 2.84 mm from the radiating edge.
+A square patch geometry is required to support the two orthogonal modes needed for circular polarization. The effective dielectric constant and fringing field extension were calculated analytically, giving a starting patch size of 9.11 × 9.11 mm. 
+
+The coaxial feed offset for a 50 Ω match was estimated at $y_0 \approx$ 2.84 mm from the edge.
 
 ### Circular Polarization via Corner Chamfer
 
-Two opposite corners of the square patch are truncated by a length dL. This perturbation splits the fundamental resonant mode into two orthogonal modes with a 90° phase shift between them, producing circular polarization from a single feed. The truncation length is related to the antenna quality factor Q₀:
+To achieve circular polarization using a single probe feed, two opposite corners of the square patch are truncated by a length $dL$. The truncation length is related to the quality factor $Q_0$:
 
-```
-dL = L * sqrt(1 / (2 * Q0))
-```
+$$
+dL = L \sqrt{\frac{1}{2 Q_0}}
+$$
 
-With Q₀ ≈ 40, the initial chamfer estimate was dL ≈ 1.02 mm.
+For the RO3003 substrate at 8.75 GHz, an estimated quality factor of $Q_0 \approx 40$ yields a truncation length of $dL \approx 1.02$ mm. This perturbation splits the fundamental mode into two orthogonal modes with the required 90° phase shift for circular polarization.
 
 ### Final Optimized Parameters
+
+In HFSS, the dimensions derived from the equations were modified to meet the desired specification of the antennas. The final parameters were obtained through a combination of parametric sweeps and optimization runs.
 
 | Parameter | Value |
 |---|---|
@@ -56,7 +64,13 @@ With Q₀ ≈ 40, the initial chamfer estimate was dL ≈ 1.02 mm.
 | Chamfer cut dL | 1.8 mm |
 | Feed offset y₀ | 2.3 mm |
 
-The final patch is slightly non-square (9.00 × 9.25 mm) — this asymmetry was intentional, found through optimization to simultaneously satisfy bandwidth and axial ratio requirements.
+The final patch after optimization is slightly nonsquare (9.00 × 9.25 mm) to simultaneously satisfy bandwidth and axial ratio requirements.
+
+<div style="width: 500px; margin: 0 auto; text-align: center;">
+
+![patch](images/patch_view.png)
+
+</div>
 
 ---
 
@@ -66,15 +80,24 @@ The final patch is slightly non-square (9.00 × 9.25 mm) — this asymmetry was 
 
 Two resonant dips appear at approximately 8.5 GHz and 9.0 GHz, corresponding to the two orthogonal modes introduced by the chamfer. Both remain below -10 dB, yielding a simulated bandwidth of 8.353 – 9.307 GHz (10.8%), comfortably exceeding the 8.5 – 9.0 GHz requirement.
 
+![s11](images/s11_single.png)
+
+
 ### Axial Ratio
 
 At broadside (θ = 0°), an axial ratio of 2.89 dB was achieved at 8.75 GHz, confirming good circular polarization quality just under the 3 dB requirement.
+
+![axial](images/axial_single.png)
 
 ### Polarization Performance
 
 The RHCP realized gain exceeds the LHCP gain by **15.68 dB** at broadside, meeting the ≥ 15 dB isolation requirement. The patch radiates left-hand circular polarization (LHCP).
 
+![pol](images/polarization.png)
+
 ### Gain and Directivity
+
+![gain_single](images/gain_single.png)
 
 | Parameter | Value |
 |---|---|
@@ -98,6 +121,8 @@ The RHCP realized gain exceeds the LHCP gain by **15.68 dB** at broadside, meeti
 
 Four single elements were arranged in a circular array and independently fed with equal amplitude and phase. The array radius was evaluated at three spacings relative to the free-space wavelength at 8.75 GHz (λ ≈ 34.3 mm):
 
+![config](images/array_config.png)
+
 | Configuration | Spacing | Radius |
 |---|---|---|
 | Config 1 | 0.5λ | 17.15 mm |
@@ -117,6 +142,12 @@ AF(theta, phi) = sum over n of exp(j*k*(x_n*sin(theta)*cos(phi) + y_n*sin(theta)
 ```
 
 MATLAB results were compared against HFSS full-array simulations and showed good agreement across all three spacings.
+
+![05_2d](images/05_gain_2d.png)
+
+![075_2d](images/075_gain_2d.png)
+
+![1_2d](images/1_gain_2d.png)
 
 ### Array Observations
 
@@ -158,5 +189,3 @@ Additional fabrication factors that likely contributed to the shift:
 - **MATLAB** — array factor calculation, pattern multiplication, data visualization
 - **Bantam Tools CNC Mill** — PCB fabrication
 - **R140 VNA** — S11 measurement
-
-[View on GitHub →](https://github.com/scast3/antenna)

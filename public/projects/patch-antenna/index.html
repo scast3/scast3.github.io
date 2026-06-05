@@ -123,7 +123,7 @@
     "keywords": ["HFSS","RF Design","Antenna Theory","VNA"],
     
     "mainEntityOfPage": "true",
-    "wordCount": "1038"
+    "wordCount": "1128"
   }
   </script>
     
@@ -171,6 +171,23 @@
   
   
     
+  
+  <link rel="stylesheet" href="/lib/katex/katex.min.css">
+  
+  <script defer src="/lib/katex/katex.min.js"></script>
+  
+  <script defer src="/lib/katex/auto-render.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: "$$", right: "$$", display: true},
+          {left: "$", right: "$", display: false}
+        ]
+      });
+    });
+  </script>
+
   
 </head>
 <body
@@ -289,7 +306,7 @@
   <div class="flex flex-row flex-wrap items-center">
     
     
-      <time datetime="2026-05-01 00:00:00 &#43;0000 UTC">1 May 2026</time><span class="px-2 text-primary-500">&middot;</span><span title="Reading time">5 mins</span>
+      <time datetime="2026-05-01 00:00:00 &#43;0000 UTC">1 May 2026</time><span class="px-2 text-primary-500">&middot;</span><span title="Reading time">6 mins</span>
     
 
     
@@ -307,7 +324,8 @@
     <section class="prose mt-0 flex max-w-full flex-col dark:prose-invert lg:flex-row">
       
       <div class="min-h-0 min-w-0 max-w-prose grow">
-        <h2 id="overview" class="relative group">Overview <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#overview" aria-label="Anchor">#</a></span></h2><p>This project covers the full design-to-fabrication workflow for a circularly polarized (CP) microstrip patch antenna operating at 8.75 GHz, along with a 4-element circular array configuration. Circular polarization is achieved through a corner-chamfered square patch fed by a coaxial probe. All simulations were performed in Ansys HFSS, array pattern calculations in MATLAB, and the single element was physically fabricated and measured.</p>
+        <h2 id="overview" class="relative group">Overview <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#overview" aria-label="Anchor">#</a></span></h2><p>This project was the design, simulation, and analysis of a circularly polarized (CP) microstrip patch antenna operating at a center frequency of 8.75 GHz, along with a 4-element array configuration.</p>
+<p>Circular polarization is achieved through a corner-chamfered patch fed by a coaxial probe beneath the ground plane offset from the edge. The single element design is first validated against all specifications before a 4-element array is investigated at element spacings of $0.5\lambda$, $0.75\lambda$, and $\lambda$ to evaluate mutual coupling and radiation performance. All simulations were performed in Ansys HFSS.</p>
 <p><strong>Design targets:</strong></p>
 <table>
 	<thead>
@@ -336,12 +354,16 @@
 	</tbody>
 </table>
 <hr>
-<h2 id="antenna-design" class="relative group">Antenna Design <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#antenna-design" aria-label="Anchor">#</a></span></h2><h3 id="patch-dimensions" class="relative group">Patch Dimensions <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#patch-dimensions" aria-label="Anchor">#</a></span></h3><p>A square patch geometry is required to support the two orthogonal modes (TM10 and TM01) needed for circular polarization. Closed-form design equations were used to get initial dimensions on a Rogers RO3003 substrate (εr = 3.0, h = 1.52 mm), then refined through HFSS parametric sweeps and optimization.</p>
-<p>The effective dielectric constant and fringing field extension were calculated analytically, yielding a starting patch size of approximately 9.11 × 9.11 mm. The coaxial feed offset for a 50 Ω match was estimated at y₀ ≈ 2.84 mm from the radiating edge.</p>
-<h3 id="circular-polarization-via-corner-chamfer" class="relative group">Circular Polarization via Corner Chamfer <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#circular-polarization-via-corner-chamfer" aria-label="Anchor">#</a></span></h3><p>Two opposite corners of the square patch are truncated by a length dL. This perturbation splits the fundamental resonant mode into two orthogonal modes with a 90° phase shift between them, producing circular polarization from a single feed. The truncation length is related to the antenna quality factor Q₀:</p>
-<pre tabindex="0"><code>dL = L * sqrt(1 / (2 * Q0))
-</code></pre><p>With Q₀ ≈ 40, the initial chamfer estimate was dL ≈ 1.02 mm.</p>
-<h3 id="final-optimized-parameters" class="relative group">Final Optimized Parameters <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#final-optimized-parameters" aria-label="Anchor">#</a></span></h3><table>
+<h2 id="antenna-design" class="relative group">Antenna Design <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#antenna-design" aria-label="Anchor">#</a></span></h2><p>In this design, a Rogers RO3003 substrate was used with a relative permittivity of $\varepsilon_r = 3.0$ and a thickness of $h = 1.52$ mm.</p>
+<h3 id="patch-dimensions" class="relative group">Patch Dimensions <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#patch-dimensions" aria-label="Anchor">#</a></span></h3><p>Before simulation, the theoretical dimensions for the patch antenna were calculated using closed-form design equations. In this design, a Rogers RO3003 substrate was used with a relative permittivity of $\varepsilon_r = 3.0$ and a thickness of $h = 1.52$ mm.</p>
+<p>A square patch geometry is required to support the two orthogonal modes needed for circular polarization. The effective dielectric constant and fringing field extension were calculated analytically, giving a starting patch size of 9.11 × 9.11 mm.</p>
+<p>The coaxial feed offset for a 50 Ω match was estimated at $y_0 \approx$ 2.84 mm from the edge.</p>
+<h3 id="circular-polarization-via-corner-chamfer" class="relative group">Circular Polarization via Corner Chamfer <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#circular-polarization-via-corner-chamfer" aria-label="Anchor">#</a></span></h3><p>To achieve circular polarization using a single probe feed, two opposite corners of the square patch are truncated by a length $dL$. The truncation length is related to the quality factor $Q_0$:</p>
+$$
+dL = L \sqrt{\frac{1}{2 Q_0}}
+$$<p>For the RO3003 substrate at 8.75 GHz, an estimated quality factor of $Q_0 \approx 40$ yields a truncation length of $dL \approx 1.02$ mm. This perturbation splits the fundamental mode into two orthogonal modes with the required 90° phase shift for circular polarization.</p>
+<h3 id="final-optimized-parameters" class="relative group">Final Optimized Parameters <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#final-optimized-parameters" aria-label="Anchor">#</a></span></h3><p>In HFSS, the dimensions derived from the equations were modified to meet the desired specification of the antennas. The final parameters were obtained through a combination of parametric sweeps and optimization runs.</p>
+<table>
 	<thead>
 			<tr>
 					<th>Parameter</th>
@@ -387,12 +409,324 @@
 			</tr>
 	</tbody>
 </table>
-<p>The final patch is slightly non-square (9.00 × 9.25 mm) — this asymmetry was intentional, found through optimization to simultaneously satisfy bandwidth and axial ratio requirements.</p>
+<p>The final patch after optimization is slightly nonsquare (9.00 × 9.25 mm) to simultaneously satisfy bandwidth and axial ratio requirements.</p>
+<div style="width: 500px; margin: 0 auto; text-align: center;">
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            
+              srcset="http://localhost:1313/projects/patch-antenna/images/patch_view_hu_b2269a16d137bf4e.webp"
+            
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="414"
+        height="406"
+        class="mx-auto my-0 rounded-md"
+        alt="patch"
+        loading="lazy" decoding="async"
+        
+          src="http://localhost:1313/projects/patch-antenna/images/patch_view.png"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
+</div>
 <hr>
 <h2 id="single-element-simulation-results" class="relative group">Single Element Simulation Results <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#single-element-simulation-results" aria-label="Anchor">#</a></span></h2><h3 id="s11--impedance-bandwidth" class="relative group">S11 — Impedance Bandwidth <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#s11--impedance-bandwidth" aria-label="Anchor">#</a></span></h3><p>Two resonant dips appear at approximately 8.5 GHz and 9.0 GHz, corresponding to the two orthogonal modes introduced by the chamfer. Both remain below -10 dB, yielding a simulated bandwidth of 8.353 – 9.307 GHz (10.8%), comfortably exceeding the 8.5 – 9.0 GHz requirement.</p>
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="http://localhost:1313/projects/patch-antenna/images/s11_single_hu_e5b54ed5aeef4471.webp 330w,http://localhost:1313/projects/patch-antenna/images/s11_single_hu_cc390de1dda16a36.webp 660w
+            
+              ,http://localhost:1313/projects/patch-antenna/images/s11_single_hu_ae4a053bd6c96bfd.webp 1024w
+            
+            
+              ,http://localhost:1313/projects/patch-antenna/images/s11_single_hu_4adc20eb3862656.webp 1320w
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="1535"
+        height="867"
+        class="mx-auto my-0 rounded-md"
+        alt="s11"
+        loading="lazy" decoding="async"
+        
+          src="http://localhost:1313/projects/patch-antenna/images/s11_single_hu_387ef3b758e5a594.png" srcset="http://localhost:1313/projects/patch-antenna/images/s11_single_hu_d577729df4072db6.png 330w,http://localhost:1313/projects/patch-antenna/images/s11_single_hu_387ef3b758e5a594.png 660w
+          
+            ,http://localhost:1313/projects/patch-antenna/images/s11_single_hu_e0d329cb0ca78583.png 1024w
+          
+          
+            ,http://localhost:1313/projects/patch-antenna/images/s11_single_hu_3954e03c290c869d.png 1320w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
 <h3 id="axial-ratio" class="relative group">Axial Ratio <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#axial-ratio" aria-label="Anchor">#</a></span></h3><p>At broadside (θ = 0°), an axial ratio of 2.89 dB was achieved at 8.75 GHz, confirming good circular polarization quality just under the 3 dB requirement.</p>
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="http://localhost:1313/projects/patch-antenna/images/axial_single_hu_6310a1113e2362f7.webp 330w,http://localhost:1313/projects/patch-antenna/images/axial_single_hu_30b25028bbb3360e.webp 660w
+            
+              ,http://localhost:1313/projects/patch-antenna/images/axial_single_hu_da834856346806d7.webp 1024w
+            
+            
+              
+                ,http://localhost:1313/projects/patch-antenna/images/axial_single_hu_14c4c9c47ecdf3f3.webp 1047w
+              
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="1047"
+        height="518"
+        class="mx-auto my-0 rounded-md"
+        alt="axial"
+        loading="lazy" decoding="async"
+        
+          src="http://localhost:1313/projects/patch-antenna/images/axial_single_hu_6442a2dc3168caf5.png" srcset="http://localhost:1313/projects/patch-antenna/images/axial_single_hu_41d080835ab11bc2.png 330w,http://localhost:1313/projects/patch-antenna/images/axial_single_hu_6442a2dc3168caf5.png 660w
+          
+            ,http://localhost:1313/projects/patch-antenna/images/axial_single_hu_5653e8486a2ddef3.png 1024w
+          
+          
+            ,http://localhost:1313/projects/patch-antenna/images/axial_single.png 1047w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
 <h3 id="polarization-performance" class="relative group">Polarization Performance <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#polarization-performance" aria-label="Anchor">#</a></span></h3><p>The RHCP realized gain exceeds the LHCP gain by <strong>15.68 dB</strong> at broadside, meeting the ≥ 15 dB isolation requirement. The patch radiates left-hand circular polarization (LHCP).</p>
-<h3 id="gain-and-directivity" class="relative group">Gain and Directivity <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#gain-and-directivity" aria-label="Anchor">#</a></span></h3><table>
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="http://localhost:1313/projects/patch-antenna/images/polarization_hu_2e8e7c0c26989cdf.webp 330w,http://localhost:1313/projects/patch-antenna/images/polarization_hu_1da7584c2377eda4.webp 660w
+            
+              ,http://localhost:1313/projects/patch-antenna/images/polarization_hu_d103cb17d514cf50.webp 1024w
+            
+            
+              
+                ,http://localhost:1313/projects/patch-antenna/images/polarization_hu_c61379da4c112a2.webp 1070w
+              
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="1070"
+        height="531"
+        class="mx-auto my-0 rounded-md"
+        alt="pol"
+        loading="lazy" decoding="async"
+        
+          src="http://localhost:1313/projects/patch-antenna/images/polarization_hu_b8cfeaef803cc96b.png" srcset="http://localhost:1313/projects/patch-antenna/images/polarization_hu_8a0f4ef15bf21d54.png 330w,http://localhost:1313/projects/patch-antenna/images/polarization_hu_b8cfeaef803cc96b.png 660w
+          
+            ,http://localhost:1313/projects/patch-antenna/images/polarization_hu_6254a68ea70dddc6.png 1024w
+          
+          
+            ,http://localhost:1313/projects/patch-antenna/images/polarization.png 1070w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
+<h3 id="gain-and-directivity" class="relative group">Gain and Directivity <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#gain-and-directivity" aria-label="Anchor">#</a></span></h3><p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="http://localhost:1313/projects/patch-antenna/images/gain_single_hu_c4164822851a7f01.webp 330w,http://localhost:1313/projects/patch-antenna/images/gain_single_hu_aec78a1c6c849fb.webp 660w
+            
+              ,http://localhost:1313/projects/patch-antenna/images/gain_single_hu_890b74e93dc30024.webp 1024w
+            
+            
+              
+                ,http://localhost:1313/projects/patch-antenna/images/gain_single_hu_797f85400a7fc1b7.webp 1028w
+              
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="1028"
+        height="553"
+        class="mx-auto my-0 rounded-md"
+        alt="gain_single"
+        loading="lazy" decoding="async"
+        
+          src="http://localhost:1313/projects/patch-antenna/images/gain_single_hu_9da51921701fefb3.png" srcset="http://localhost:1313/projects/patch-antenna/images/gain_single_hu_3d79f0914e40648b.png 330w,http://localhost:1313/projects/patch-antenna/images/gain_single_hu_9da51921701fefb3.png 660w
+          
+            ,http://localhost:1313/projects/patch-antenna/images/gain_single_hu_c9ed2b0fc9592c61.png 1024w
+          
+          
+            ,http://localhost:1313/projects/patch-antenna/images/gain_single.png 1028w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
+<table>
 	<thead>
 			<tr>
 					<th>Parameter</th>
@@ -448,6 +782,58 @@
 </table>
 <hr>
 <h2 id="4-element-circular-array" class="relative group">4-Element Circular Array <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#4-element-circular-array" aria-label="Anchor">#</a></span></h2><h3 id="configuration" class="relative group">Configuration <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#configuration" aria-label="Anchor">#</a></span></h3><p>Four single elements were arranged in a circular array and independently fed with equal amplitude and phase. The array radius was evaluated at three spacings relative to the free-space wavelength at 8.75 GHz (λ ≈ 34.3 mm):</p>
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            
+              srcset="http://localhost:1313/projects/patch-antenna/images/array_config_hu_1cc93b99b2032aed.webp"
+            
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="575"
+        height="542"
+        class="mx-auto my-0 rounded-md"
+        alt="config"
+        loading="lazy" decoding="async"
+        
+          src="http://localhost:1313/projects/patch-antenna/images/array_config.png"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
 <table>
 	<thead>
 			<tr>
@@ -478,6 +864,207 @@
 <h3 id="radiation-pattern-calculation" class="relative group">Radiation Pattern Calculation <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#radiation-pattern-calculation" aria-label="Anchor">#</a></span></h3><p>Array patterns were computed using pattern multiplication in MATLAB — the single-element HFSS gain pattern (converted to linear scale) was combined with the analytically derived array factor for a circular array:</p>
 <pre tabindex="0"><code>AF(theta, phi) = sum over n of exp(j*k*(x_n*sin(theta)*cos(phi) + y_n*sin(theta)*sin(phi)))
 </code></pre><p>MATLAB results were compared against HFSS full-array simulations and showed good agreement across all three spacings.</p>
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="http://localhost:1313/projects/patch-antenna/images/05_gain_2d_hu_55452f2d01d99072.webp 330w,http://localhost:1313/projects/patch-antenna/images/05_gain_2d_hu_f8f99d990b471b76.webp 660w
+            
+              
+                ,http://localhost:1313/projects/patch-antenna/images/05_gain_2d_hu_940d4f1967206ebc.webp 1011w
+              
+            
+            
+              
+                ,http://localhost:1313/projects/patch-antenna/images/05_gain_2d_hu_940d4f1967206ebc.webp 1011w
+              
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="1011"
+        height="521"
+        class="mx-auto my-0 rounded-md"
+        alt="05_2d"
+        loading="lazy" decoding="async"
+        
+          src="http://localhost:1313/projects/patch-antenna/images/05_gain_2d_hu_2c0c197c7b6a45f8.png" srcset="http://localhost:1313/projects/patch-antenna/images/05_gain_2d_hu_dc980cc63942aea5.png 330w,http://localhost:1313/projects/patch-antenna/images/05_gain_2d_hu_2c0c197c7b6a45f8.png 660w
+          
+            ,http://localhost:1313/projects/patch-antenna/images/05_gain_2d.png 1011w
+          
+          
+            ,http://localhost:1313/projects/patch-antenna/images/05_gain_2d.png 1011w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="http://localhost:1313/projects/patch-antenna/images/075_gain_2d_hu_2bde7a8cee3e3713.webp 330w,http://localhost:1313/projects/patch-antenna/images/075_gain_2d_hu_d932b9a4ea693de2.webp 660w
+            
+              
+                ,http://localhost:1313/projects/patch-antenna/images/075_gain_2d_hu_3d3b7d089bac4686.webp 1006w
+              
+            
+            
+              
+                ,http://localhost:1313/projects/patch-antenna/images/075_gain_2d_hu_3d3b7d089bac4686.webp 1006w
+              
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="1006"
+        height="507"
+        class="mx-auto my-0 rounded-md"
+        alt="075_2d"
+        loading="lazy" decoding="async"
+        
+          src="http://localhost:1313/projects/patch-antenna/images/075_gain_2d_hu_5ad06658feff9296.png" srcset="http://localhost:1313/projects/patch-antenna/images/075_gain_2d_hu_f3eb0e36840ae914.png 330w,http://localhost:1313/projects/patch-antenna/images/075_gain_2d_hu_5ad06658feff9296.png 660w
+          
+            ,http://localhost:1313/projects/patch-antenna/images/075_gain_2d.png 1006w
+          
+          
+            ,http://localhost:1313/projects/patch-antenna/images/075_gain_2d.png 1006w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="http://localhost:1313/projects/patch-antenna/images/1_gain_2d_hu_5000d15baa8c39fe.webp 330w,http://localhost:1313/projects/patch-antenna/images/1_gain_2d_hu_6517b8125f1d83.webp 660w
+            
+              
+                ,http://localhost:1313/projects/patch-antenna/images/1_gain_2d_hu_944afcaa774c4f9e.webp 981w
+              
+            
+            
+              
+                ,http://localhost:1313/projects/patch-antenna/images/1_gain_2d_hu_944afcaa774c4f9e.webp 981w
+              
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="981"
+        height="512"
+        class="mx-auto my-0 rounded-md"
+        alt="1_2d"
+        loading="lazy" decoding="async"
+        
+          src="http://localhost:1313/projects/patch-antenna/images/1_gain_2d_hu_58f8f3645101f7d8.png" srcset="http://localhost:1313/projects/patch-antenna/images/1_gain_2d_hu_8e654f819e0866a9.png 330w,http://localhost:1313/projects/patch-antenna/images/1_gain_2d_hu_58f8f3645101f7d8.png 660w
+          
+            ,http://localhost:1313/projects/patch-antenna/images/1_gain_2d.png 981w
+          
+          
+            ,http://localhost:1313/projects/patch-antenna/images/1_gain_2d.png 981w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
 <h3 id="array-observations" class="relative group">Array Observations <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#array-observations" aria-label="Anchor">#</a></span></h3><ul>
 <li>The 0.5λ configuration produced the highest total realized gain with wide, clean main beam and low sidelobes</li>
 <li>The 0.75λ and 1.0λ configurations produced narrower main beams but with significantly larger sidelobes</li>
@@ -503,7 +1090,6 @@
 <li><strong>Bantam Tools CNC Mill</strong> — PCB fabrication</li>
 <li><strong>R140 VNA</strong> — S11 measurement</li>
 </ul>
-<p><a href="https://github.com/scast3/antenna" target="_blank" rel="noreferrer">View on GitHub →</a></p>
 
       </div>
     </section>

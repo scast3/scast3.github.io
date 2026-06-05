@@ -123,7 +123,7 @@
     "keywords": ["FPGA","VHDL","Verification","Xilinx"],
     
     "mainEntityOfPage": "true",
-    "wordCount": "4049"
+    "wordCount": "4053"
   }
   </script>
     
@@ -1085,6 +1085,10 @@
 					<td>Select sine or sinc waveform</td>
 			</tr>
 			<tr>
+					<td><code>P</code></td>
+					<td>Change function frequency</td>
+			</tr>
+			<tr>
 					<td><code>d</code></td>
 					<td>Set PWM duty cycle manually</td>
 			</tr>
@@ -1180,10 +1184,14 @@
 </span></span><span style="display:flex;"><span><span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;ch1[%d]: %lu</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">&#34;</span>, i, (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">long</span>)ch1data_32bit);
 </span></span></code></pre></div><p>To acknowledge that the sample was recieved, the software generated a pulse on the <code>FLAG_CLEAR_BIT</code> to clear the register and notify to the FPGA that the next sample was ready to be loaded:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#75715e">// clear flag - set to high then to low 
-</span></span></span><span style="display:flex;"><span>u32 reg3_set_clear <span style="color:#f92672">=</span> <span style="color:#a6e22e">FINAL_OSCOPE_mReadReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">FINAL_OSCOPE_mWriteReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, reg3_set_clear <span style="color:#f92672">|</span> FLAG_CLEAR_MASK);
-</span></span><span style="display:flex;"><span>u32 reg3_clear_done <span style="color:#f92672">=</span> <span style="color:#a6e22e">FINAL_OSCOPE_mReadReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">FINAL_OSCOPE_mWriteReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, reg3_clear_done <span style="color:#f92672">&amp;</span> (<span style="color:#f92672">~</span>FLAG_CLEAR_MASK));
+</span></span></span><span style="display:flex;"><span>u32 reg3_set_clear <span style="color:#f92672">=</span> <span style="color:#a6e22e">FINAL_OSCOPE_mReadReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, 
+</span></span><span style="display:flex;"><span>        FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">FINAL_OSCOPE_mWriteReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, 
+</span></span><span style="display:flex;"><span>        FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, reg3_set_clear <span style="color:#f92672">|</span> FLAG_CLEAR_MASK);
+</span></span><span style="display:flex;"><span>u32 reg3_clear_done <span style="color:#f92672">=</span> <span style="color:#a6e22e">FINAL_OSCOPE_mReadReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, 
+</span></span><span style="display:flex;"><span>        FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">FINAL_OSCOPE_mWriteReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, 
+</span></span><span style="display:flex;"><span>        FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, reg3_clear_done <span style="color:#f92672">&amp;</span> (<span style="color:#f92672">~</span>FLAG_CLEAR_MASK));
 </span></span></code></pre></div><hr>
 <h2 id="key-design-decisions" class="relative group">Key Design Decisions <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#key-design-decisions" aria-label="Anchor">#</a></span></h2><p><strong>Splitting acquisition and rendering into PL.</strong> Doing the ADC sequencing and HDMI pixel rendering in VHDL keeps all hard real-time operations in the fabric and away from the ARM. The PS only needs to write configuration registers and poll status — it never has to meet a pixel clock deadline.</p>
 <p><strong>AXI flag handshake for sample-ready.</strong> Rather than polling the ADC busy signal directly from software, the PL sets a <code>flag_q</code> bit in the status register when a new sample is ready, and the PS acknowledges it by pulsing <code>flag_clear</code>. This decouples the ADC conversion timing from the software polling rate and avoids missed samples.</p>
