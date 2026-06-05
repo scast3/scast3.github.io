@@ -101,7 +101,7 @@ entity acquireToHDMI_datapath is
 end acquireToHDMI_datapath;
 ```
 
-Furthermore, a user input to the datapath is the `sampleRate_ctrl` which controls the sample rate of the ADC acquisition. The design supports four present sampling rates:
+Furthermore, a user input to the datapath is the 2-bit `sampleRate_ctrl` which controls a 4 to 1 multiplexer `sampleMux` that outputs the sample rate of the ADC acquisition. The design supports four present sampling rates:
 
 | Sampling Mode | Clock Cycles | 
 |---|---|
