@@ -190,7 +190,7 @@ The FSM drives the external ADC signals `CONVST`, `CS`, `RD`, and `RESET` in the
 
 ### Trigger Logic
 
-A trigger occurs when the samples cross a certain threshold of `triggerVolt16bitSigned` which is set by the user in the PS (with a default of 0V). To ensure the trigger is on rising edge, the previous and current sample are tracked. For each channel, two chained register instances capture consecutive ADC samples (sample 1 and sample 2), and two signed comparator instances compare each against the `triggerVolt16bitSigned` vector. The `ch1_sample1_compare` comparator checks checks `sample1 > threshold` (rising condition) and the `ch1_sample1_compare` comparator checks `sample2 < threshold` (pre-crossing condition):
+A trigger occurs when the samples cross a certain threshold of `triggerVolt16bitSigned` which is set by the user in the PS (with a default of 0V). To ensure the trigger is on rising edge, the previous and current sample are tracked. For each channel, two chained register instances capture consecutive ADC samples (sample 1 and sample 2), and two signed comparator instances compare each against the `triggerVolt16bitSigned` vector. The `ch1_sample1_compare` comparator checks checks `sample1 > threshold` (rising condition) and the `ch2_sample1_compare` comparator checks `sample2 < threshold` (pre-crossing condition):
 
 ```vhdl
    -- ch1 trigger logic
@@ -442,6 +442,27 @@ static void Ttc0IsrHander(void *CallBackRef, u32 StatusEvent)
 By varying the phase increment, the frequency of the waveform could be adjusted independently of the interrupt rate which allows precise digital frequency synthesis without modifying timer configuration. 
 
 Using a linear regression where I experimented with different phase increments and measured the output function frequency with a Keysight oscilloscope, it was determined that the association between frequency and phase increment was `phaseIncrement = 6.5516 * frequency + 0.0062`. This equation gives the user the option to define the desired function frequency via the UART interface.
+
+### Changing Sampling Rates
+
+The `m` command allows the user to choose one of the four sampling rates. This control is implemented with a simple write to bits 4 and 5 of `slv_reg3`:
+
+```c
+u32 reg3 = FINAL_OSCOPE_mReadReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
+
+// clear bits 5:4
+reg3 &= ~(0x3 << 4);
+
+switch(c) {
+    case '0':
+        reg3 |= (0 << 4);
+        printf("Sample rate = 0\r\n");
+        break;
+    // other cases not shown
+}
+
+FINAL_OSCOPE_mWriteReg(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, reg3);
+```
 
 ### Toggling Oscilloscope Modes
 
