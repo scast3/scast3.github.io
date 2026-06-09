@@ -3,10 +3,11 @@ title = "About"
 draft = false
 +++
 
-I'm an electrical engineer with a background in digital signal processing and software development.
+I'm an Electrical Engineer at JHU Applied Physics Lab with interests in the field of Wireless/Communications Engineering. My background spans RF design, digital signal processing, and embedded implementation.
 
-I graduated from Colorado School of Mines with a master's degree in Electrical Engineering, dual bachelor's degrees in Computer Science and Mechanical Engineering. I have worked on a wide range or projects from data science/software development, wireless communications/dsp, to RF design. I have a diverse skillset but am still not sure where I want to focus my efforts, thus the personal projects. Since I like working on side projects in my free time, I decided to create this portfolio page.
+I hold a master's degree in Electrical Engineering from Colorado School of Mines and dual bachelor's degrees in Computer Science and Mechanical Engineering. My work overlaps the physical layer and the hardware it runs on from designing RF frontends and modeling digital receiver algorithms, to implementing real-time signal pipelines on FPGAs and embedded processors.
 
+The projects in this portfolio reflect the full wireless stack: Electromagnetic simulation/analysis in MATLAB and HFSS, RTL design, and bare-metal firmware. Building these projects helped me understand how wireless systems work from antenna to bits.
 ---
 
 ## Technical Skills
@@ -95,4 +96,4 @@ Relevant coursework: Finite Element Analysis, Instrumentation and Automation, Ae
 ---
 
 
-*Contact Info: Connect on [LinkedIn](https://www.linkedin.com/in/santiagoalejandro-castillo/). Github [github](https://github.com/scast3)*
+*Contact Info: Connect on [LinkedIn](https://www.linkedin.com/in/santiagoalejandro-castillo/) and/or [Github](https://github.com/scast3)*
