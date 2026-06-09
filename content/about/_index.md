@@ -8,6 +8,7 @@ I'm an Electrical Engineer at JHU Applied Physics Lab with interests in the fiel
 I hold a master's degree in Electrical Engineering from Colorado School of Mines and dual bachelor's degrees in Computer Science and Mechanical Engineering. My work overlaps the physical layer and the hardware it runs on from designing RF frontends and modeling digital receiver algorithms, to implementing real-time signal pipelines on FPGAs and embedded processors.
 
 The projects in this portfolio reflect the full wireless stack: Electromagnetic simulation/analysis in MATLAB and HFSS, RTL design, and bare-metal firmware. Building these projects helped me understand how wireless systems work from antenna to bits.
+
 ---
 
 ## Technical Skills
