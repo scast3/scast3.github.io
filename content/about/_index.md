@@ -11,36 +11,28 @@ I graduated from Colorado School of Mines with a master's degree in Electrical E
 
 ## Technical Skills
 
-### RF & Electromagnetics
-- Full-wave EM simulation in **Ansys HFSS** — antenna design, parametric sweeps, Optimetrics optimization
-- Microstrip patch antenna design including impedance matching, circular polarization, and array configuration
-- S-parameter analysis, VNA measurement, and correlation of simulated vs. measured results
-- Antenna array theory — array factor calculation, mutual coupling analysis, pattern multiplication
+### Digital Signal Processing
+- Extended Kalman Filter for nonlinear state estimation: carrier phase, frequency offset, drift, and amplitude tracking in QPSK receiver
+- Direct Digital Synthesis using phase accumulator + LUT architecture; ADC interface design (16-bit SAR, ±5 V, 200 kS/s)
+- Digital filter design (FIR/IIR), state-space modeling in discrete time, and signal simulation in MATLAB and Simulink
 
-### Embedded Systems, Firmware, and PCB Design
-- Firmware development in **C/C++** for microcontroller targets
-- Bare-metal and RTOS-based development
-- Peripheral interfacing — SPI, I2C, UART, GPIO
-- Debugging with JTAG/SWD, logic analyzers, and oscilloscopes
-- PCB Design in KiCad and Breadboard prototyping
+### RF & Electromagnetics
+- Full-wave EM simulation in Ansys HFSS antenna design, parametric sweeps, Optimetrics optimization
+- Microstrip patch antenna design including impedance matching, coax. feed, circular polarization, and array configuration
+- Circular array design with mutual coupling analysis and HFSS full-array verification
+- PCB fabrication on Rogers substrates using CNC milling; S-parameter analysis via VNA measurement
+
+### Embedded Systems, Firmware & PCB Design
+- PCB design in KiCad and Breadboard protptyping; hardware debugging with oscilloscopes and VNAs
+- Bare-metal firmware on ARM Cortex-A9 (Xilinx Vitis): AXI4-Lite memory-mapped register control
+- Interrupt-driven architecture using hardware timers (TTC0 at 10 kHz) for real-time waveform generation
+- PS–PL handshake protocol: flag/acknowledge signaling between ARM software and FPGA fabric
 
 ### FPGA & Digital Design
-- RTL design in **VHDL** targeting Xilinx devices
-- Pipelined fixed-point arithmetic, DSP48 inference
+- RTL design in VHDL on Xilinx Zynq-7010: datapath/control FSM architecture, custom AXI4-Lite slave IP, Vivado block design
+- Datapath and control architecture: FSM-driven control word / status word separation
+- Dual-port BRAM for cross-clock-domain buffering; acquisition clock -> pixel clock
 - Simulation and timing verification in ModelSim / Vivado
-
-### Signal Processing
-- Digital filter design and implementation (FIR/IIR)
-- Kalman filtering and state estimation for nonlinear systems
-- MATLAB and Simulink for modeling, simulation, and data analysis
-
-### Data Science
-- Machine Learning Development in Jupyter Notebooks
-- Computer Vision control system design using OpenCV
-
-### Computer Architecture & Systems Programming
-- Design of an 8-bit CPU using Verilog
-- Binary Exploitation using Ghidra, Buffer Overflows, Shellcode, Return Oriented Programming
 
 ### Tools & Platforms
 | Category | Tools |
@@ -103,4 +95,4 @@ Relevant coursework: Finite Element Analysis, Instrumentation and Automation, Ae
 ---
 
 
-*Contact Info: Reach me at sacastillo2025@gmail.com or connect on [LinkedIn](https://www.linkedin.com/in/santiagoalejandro-castillo/).*
+*Contact Info: Connect on [LinkedIn](https://www.linkedin.com/in/santiagoalejandro-castillo/). Github [github](https://github.com/scast3)*
