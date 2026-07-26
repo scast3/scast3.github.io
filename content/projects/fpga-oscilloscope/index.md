@@ -29,7 +29,7 @@ The two domains communicate through a custom AXI4-Lite slave peripheral, giving 
 
 The top-level VHDL entity `acquireToHDMI` is packaged in an IP named `final_oscope` and instantiates a datapath `acquireToHDMI_datapath` handling the ADC interface, waveform buffering, and video rendering. The datapath uses the submodules `videoSignalGenerator` to generate the HDMI signals and `scopeFace` to assign the correct RGB values to each coordiate to display the oscilloscope interface. Furthermore, a Moore state machine `acquireToHDMI_fsm` generates the control word that serves as the control inputs to the logic components inteh datapath. 
 
-The AXI wrapper `final_oscope_slave_lite_v1_0_S00_AXI` instantiates this top-level and exposes its ports as memory-mapped registers to the PS. The signals fed from the wrapper are accessed in the file `helloworld.c` which defines the command-line user interfacing. For function generation, the enhancedPwm IP is used which takes in a duty cycle and outputs the pwm signal.
+The AXI wrapper `final_oscope_slave_lite_v1_0_S00_AXI` instantiates this top-level and exposes its ports as memory-mapped registers to the PS. The signals fed from the wrapper are accessed in the file `main.c` which defines the command-line user interfacing. For function generation, the enhancedPwm IP is used which takes in a duty cycle and outputs the pwm signal.
 
 The interaction between the IPs in the PL and the PS through memory-mapped registers can be seen below:
 
