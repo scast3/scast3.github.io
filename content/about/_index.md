@@ -3,9 +3,15 @@ title = "About"
 draft = false
 +++
 
-I'm an Electrical Engineer at JHU Applied Physics Lab with interests in the field of Wireless/Communications Engineering. My background spans RF design, digital signal processing, and embedded implementation.
+<div style="width: 100px; margin: 0 auto; text-align: center;">
 
-I hold a master's degree in Electrical Engineering from Colorado School of Mines and dual bachelor's degrees in Computer Science and Mechanical Engineering. My work overlaps the physical layer and the hardware it runs on from designing RF frontends and modeling digital receiver algorithms, to implementing real-time signal pipelines on FPGAs and embedded processors.
+![me picture](me.jpeg)
+
+</div>
+
+I'm currently working as an Electrical Engineer at JHU Applied Physics Lab with interests in the field of Wireless Systems and Communication Theory. My experience has been in the fields of HDL design, signal processing, and C/C++ development.
+
+I hold a master's degree in Electrical Engineering from Colorado School of Mines and dual bachelor's degrees in Computer Science and Mechanical Engineering. My work has been in the wireless PHY layer from designing RF frontends and modeling digital receiver algorithms, to implementing real-time signal pipelines on FPGAs and embedded processors.
 
 The projects in this portfolio reflect the full wireless stack: Electromagnetic simulation/analysis in MATLAB and HFSS, RTL design, and bare-metal firmware. Building these projects helped me understand how wireless systems work from antenna to bits.
 
@@ -43,17 +49,17 @@ The projects in this portfolio reflect the full wireless stack: Electromagnetic 
 | FPGA | Xilinx Vivado, Vitis, Quartus Prime |
 | Embedded/PCB | Microchip MPLab, GCC toolchain, KiCad |
 | Languages | C, C++, MATLAB, VHDL, Verilog, Python |
-| Tools | Git, GitHub, Docker |
-| OS | Windows, Linux |
+| Tools | Git, GitHub, Docker, Wireshark |
+| OS | Windows, Ubuntu Linux |
 
 ---
 
 ## Experience
 
-### Radio Frequency Engineer — JHU Applied Physics Lab
+### Electrical Engineer — JHU Applied Physics Lab
 *July 2026 – Present*
 
-RF and FPGA design for communication systems.
+RF design and software development for communication systems.
 
 ### Embedded Systems and Digital Logic Lab Assistant — Colorado School of Mines
 *Jan. 2026 – May 2026*
