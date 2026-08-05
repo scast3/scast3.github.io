@@ -9,13 +9,18 @@ draft = false
 
 </div>
 
-I'm an Electrical Engineer at JHU Applied Physics Lab in the area of Communication Systems. My professional and academic work has been in the wireless PHY layer from designing RF frontends and modeling digital receiver algorithms, to implementing real-time signal pipelines on FPGAs and CPUs. These experiences have strengthened my skills in HDL design, communications theory/DSP, and C/C++ software development.
+Hello, I am Santiago!
+
+I'm currently an Electrical Engineer at JHU Applied Physics Lab working in the area of Communication Systems. My professional and academic work has been in the wireless PHY layer from receiver algorithm design to real-time DSP pipeline implementation in HDL and system-level software. Throughout my career, I have been passionate about tackling low latency and resource-constrained design challenges. 
+
+I'm especially interested in synchronization and estimation problems — carrier recovery, offset correction, adaptive filtering, etc — and what it takes to implement them as deterministic, real-time systems.
 
 I hold a master's degree in Electrical Engineering from Colorado School of Mines and dual bachelor's degrees in Computer Science and Mechanical Engineering.
 
-The projects in this portfolio reflect the full wireless stack: Electromagnetic simulation/analysis in MATLAB and HFSS, RTL design, and bare-metal firmware. Building these projects helped me understand how wireless systems work from antenna to bits.
+The projects in this portfolio reflect my PHY-layer interests: RTL design, bare-metal firmware, receiver algorithm modeling, and some RF frontend. Building these projects helped me understand how wireless systems work from antenna to bits.
 
 ---
+
 
 ## Technical Skills
 
@@ -65,7 +70,7 @@ The projects in this portfolio reflect the full wireless stack: Electromagnetic 
 ### Electrical Engineer — JHU Applied Physics Lab
 *July 2026 – Present*
 
-Designing low latency DSP pipeline in systems-level software to interface with SDR. RF design and hardware testing for communication systems. 
+Designing low latency DSP pipeline in systems-level software to interface with receiver. RF design and hardware testing for communication systems. 
 
 ### Embedded Systems and Digital Logic Lab Assistant — Colorado School of Mines
 *Jan. 2026 – May 2026*
