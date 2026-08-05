@@ -3,15 +3,15 @@ title = "About"
 draft = false
 +++
 
-<div style="width: 100px; margin: 0 auto; text-align: center;">
+<div style="width: 300px; margin: 0 auto; text-align: center;">
 
 ![me picture](me.jpeg)
 
 </div>
 
-I'm currently working as an Electrical Engineer at JHU Applied Physics Lab with interests in the field of Wireless Systems and Communication Theory. My experience has been in the fields of HDL design, signal processing, and C/C++ development.
+I'm an Electrical Engineer at JHU Applied Physics Lab in the area of Communication Systems. My professional and academic work has been in the wireless PHY layer from designing RF frontends and modeling digital receiver algorithms, to implementing real-time signal pipelines on FPGAs and CPUs. These experiences have strengthened my skills in HDL design, communications theory/DSP, and C/C++ software development.
 
-I hold a master's degree in Electrical Engineering from Colorado School of Mines and dual bachelor's degrees in Computer Science and Mechanical Engineering. My work has been in the wireless PHY layer from designing RF frontends and modeling digital receiver algorithms, to implementing real-time signal pipelines on FPGAs and embedded processors.
+I hold a master's degree in Electrical Engineering from Colorado School of Mines and dual bachelor's degrees in Computer Science and Mechanical Engineering.
 
 The projects in this portfolio reflect the full wireless stack: Electromagnetic simulation/analysis in MATLAB and HFSS, RTL design, and bare-metal firmware. Building these projects helped me understand how wireless systems work from antenna to bits.
 
@@ -22,13 +22,13 @@ The projects in this portfolio reflect the full wireless stack: Electromagnetic 
 ### Digital Signal Processing
 - Extended Kalman Filter for nonlinear state estimation: carrier phase, frequency offset, drift, and amplitude tracking in QPSK receiver
 - Direct Digital Synthesis using phase accumulator + LUT architecture; ADC interface design (16-bit SAR, ±5 V, 200 kS/s)
+- Real-time digital filtering and spectral analysis on live IQ streams from an SDR receiver
 - Digital filter design (FIR/IIR), state-space modeling in discrete time, and signal simulation in MATLAB and Simulink
 
-### RF & Electromagnetics
-- Full-wave EM simulation in Ansys HFSS antenna design, parametric sweeps, Optimetrics optimization
-- Microstrip patch antenna design including impedance matching, coax. feed, circular polarization, and array configuration
-- Circular array design with mutual coupling analysis and HFSS full-array verification
-- PCB fabrication on Rogers substrates using CNC milling; S-parameter analysis via VNA measurement
+### Real-Time Software Development
+- Designed real-time UDP IQ packet processing from an SDR, with FIFO buffering to decouple packet arrival from downstream digital filtering
+- Thread synchronization using mutexes in C++ to prevent race conditions between producer and consumer threads
+- SDR radio control via API: Sent acquisition parameters like sampling rate, center frequency, gain, etc via TCP
 
 ### Embedded Systems, Firmware & PCB Design
 - PCB design in KiCad and Breadboard protptyping; hardware debugging with oscilloscopes and VNAs
@@ -39,16 +39,22 @@ The projects in this portfolio reflect the full wireless stack: Electromagnetic 
 ### FPGA & Digital Design
 - RTL design in VHDL on Xilinx Zynq-7010: datapath/control FSM architecture, custom AXI4-Lite slave IP, Vivado block design
 - Datapath and control architecture: FSM-driven control word / status word separation
-- Dual-port BRAM for cross-clock-domain buffering; acquisition clock -> pixel clock
+- Dual-port BRAM for cross-clock-domain buffering; acquisition clock to pixel clock
 - Simulation and timing verification in ModelSim / Vivado
+
+### RF & Electromagnetics
+- Full-wave EM simulation in Ansys HFSS antenna design, parametric sweeps, Optimetrics optimization
+- Microstrip patch antenna design including impedance matching, coax. feed, circular polarization, and array configuration
+- Circular array design with mutual coupling analysis and HFSS full-array verification
+- PCB fabrication on Rogers substrates using CNC milling; S-parameter analysis via VNA measurement
 
 ### Tools & Platforms
 | Category | Tools |
 |---|---|
-| EM Simulation | Ansys HFSS |
+| Software | C, C++, MATLAB, VHDL, Verilog, Python |
 | FPGA | Xilinx Vivado, Vitis, Quartus Prime |
 | Embedded/PCB | Microchip MPLab, GCC toolchain, KiCad |
-| Languages | C, C++, MATLAB, VHDL, Verilog, Python |
+| EM Simulation | Ansys HFSS |
 | Tools | Git, GitHub, Docker, Wireshark |
 | OS | Windows, Ubuntu Linux |
 
@@ -59,7 +65,7 @@ The projects in this portfolio reflect the full wireless stack: Electromagnetic 
 ### Electrical Engineer — JHU Applied Physics Lab
 *July 2026 – Present*
 
-RF design and software development for communication systems.
+Designing low latency DSP pipeline in systems-level software to interface with SDR. RF design and hardware testing for communication systems. 
 
 ### Embedded Systems and Digital Logic Lab Assistant — Colorado School of Mines
 *Jan. 2026 – May 2026*
