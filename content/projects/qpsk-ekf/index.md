@@ -14,6 +14,8 @@ math: true
 
 This project simulates the effects of receiving a wireless signal that has been altered by carrier offsets and channel noise. I modeled the channel effects as a nonlinear state space system and then implemented an Extended Kalman Filter (EKF) to estimate these offsets and correct them. I decided to apply this to a quadrature shift phase keying (QPSK) modulation scheme since it is widely used in satellite communications which regularly have to correct doppler shifts. I am stil working on the real-time offset correction to turn this into a phase-locked loop (PLL) and potentially implement on a microcontroller. The simulation and algorithms were developed with Matlab and Simulink.
 
+<a href="images/ekf.pdf" download>Download Full Report</a>
+
 
 ## Background
 In a digital communication system, accurate demodulation requires the receiver to maintain synchronization with the incoming RF carrier. In practice, several physical effects distort the received signal and make this challenging. 
