@@ -7,7 +7,7 @@ tools: ["Wireshark"]
 status: "complete"          # complete | in-progress
 weight: 1                   # lower = appears first in listings
 ---
-
+In partnership with [W. Schageman](https://github.com/wallyschag)
 
 ## Overview
 
@@ -15,7 +15,7 @@ Developed an intrusion detection system to detect and triangulate the source of 
 
 <div style="width: 500px; margin: 0 auto; text-align: center;">
 
-![diagram](diagram.jpg)
+![diagram](images/diagram.png)
 
 </div>
 
