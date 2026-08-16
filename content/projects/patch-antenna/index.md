@@ -13,7 +13,7 @@ weight: 1                   # lower = appears first in listings
 
 This project was the design, simulation, and analysis of a circularly polarized (CP) microstrip patch antenna operating at a center frequency of 8.75 GHz, along with a 4-element array configuration.
 
-Circular polarization is achieved through a corner-chamfered patch fed by a coaxial probe beneath the ground plane offset from the edge. The single element design is first validated against all specifications before a 4-element array is investigated at element spacings of $0.5\lambda$, $0.75\lambda$, and $\lambda$ to evaluate mutual coupling and radiation performance. All simulations were performed in Ansys HFSS.
+Circular polarization is achieved through a corner-chamfered patch fed by a coaxial probe beneath the ground plane offset from the edge. The single element design is first validated against all specifications before a 4-element array is investigated at element spacings of $0.5\lambda$, $0.75\lambda$, and $\lambda$ to evaluate mutual coupling and radiation performance. All simulations were performed in Ansys HFSS. <a href="images/WifiSentry.pdf" download>Read full design and fabrication report.</a>
 
 **Design targets:**
 
