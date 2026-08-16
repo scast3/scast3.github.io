@@ -12,9 +12,11 @@ weight: 1                   # lower = appears first in listings
 
 Along with with [W. Schageman](https://github.com/wallyschag), developed an intrusion detection system to detect and triangulate the source of WiFi jamming via deauthentication attacks, common in network disruptions. ESP32(s) scan for deauth/dissoc packets in promiscuous mode, relaying alerts to a Raspberry Pi server for logging and analysis. Use Flipper Zero (with WiFi module/ESP32 marauder) to simulate deauthentication attacks in a lab environment. RSSI localization done via least squares multilateration.
 
+<a href="images/WifiSentry.pdf" download>Download Full Report</a>
+
 ![diagram](images/diagram.png)
 
-## System Architecture & Components
+## Components
 The system is divided into a distributed data acquisition network and a centralized processing core. 
 
 *   **Attacker Simulation Node**: A Flipper Zero equipped with an ESP32 WiFi Development Board running the ESP32 WiFi Marauder firmware. This node simulates real world network disruptions by generating thousands of spoofed 802.11 deauthentication packets per second.
@@ -28,8 +30,7 @@ The system is divided into a distributed data acquisition network and a centrali
 
 </div>
 
-All testing was done on our own private WiFi networks
-Testing in any other public or private space without permission is prohibited and illegal
+DISCLAIMER: All testing was done on my home WiFi network as testing in any other public or private space without permission is prohibited and illegal.
 
 
 ### Sensor Firmware
@@ -66,8 +67,18 @@ To pinpoint the spatial location of the attacker, the main thread extracts synch
 </div>
 
 *   **Signal Propagation Modeling**: RSSI values are converted into relative distance estimates using the Log-Distance Path Loss model.
-*   **Least Squares Multilateration**: The system treats the estimated distances as intersecting circles centered at each known sensor coordinate. It formulates an overdetermined system of non-linear geometric equations and resolves the optimal $X,Y$ coordinate of the attacker using a least-squares optimization matrix.
+*   **Least Squares Multilateration**: The system treats the estimated distances as intersecting circles centered at each known sensor coordinate. It formulates an overdetermined system of non-linear geometric equations and resolves the optimal (x,y) coordinate of the attacker using a least-squares optimization matrix.
 
+## Results
 
+<div style="width: 500px; margin: 0 auto; text-align: center;">
+
+![res](images/good-result.png)
+
+</div>
+
+## Conclusion
+
+This project successfully demonstrated that RSSI-based localization using ESP32 receivers can achieve sub-meter accuracy when both sensor geometry and path-loss parameters are properly calibrated. Our experiments showed that geometric layout plays a critical role in determining localization stability, with the equilateral configuration consistently outperforming right-triangle and isosceles arrangements. Additionally, we found that a path-loss exponent of $n = 4$ provided significantly more accurate distance estimates than $n = 3$, highlighting the importance of environment-specific calibration. While RSSI measurements remain inherently noisy, the use of least-squares trilateration combined with stable sensor placement allowed the system to achieve localization errors as low as $0.09$~m. These results indicate that low-cost receivers, when configured correctly, can provide reliable spatial awareness for indoor tracking and intrusion detection applications.
 
 [View on GitHub →](https://github.com/scast3/deauth_detect)
