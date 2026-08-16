@@ -1,5 +1,5 @@
 ---
-title: "High-Speed FPGA Signal Acquisition and Processing on Zynq-7010 SoC"
+title: "FPGA Signal Acquisition on Zynq SoC"
 date: 2025-12-10
 summary: "Designed an oscilloscope on an fpga in vhdl"
 tags: ["FPGA", "VHDL", "Verification", "Xilinx"]
@@ -48,25 +48,6 @@ The interaction between the IPs in the PL and the PS through memory-mapped regis
                                         AD7606 ADC -->|  16-bit parallel bus |
                                         HDMI output <-|  TMDS serializer     |
                                                       +----------------------+
-```
-### Data Flow
-```
-AD7606 ADC
-     |
-     v
-+------------------+      +------------------+      +------------------+
-| Sample Capture   | ---> | Trigger Engine   | ---> | Waveform BRAM    |
-+------------------+      +------------------+      +------------------+
-                                                           |
-                                                           +-------> HDMI Renderer ---> HDMI
-                                                           |
-                                                           +-------> PWM Generator ---> Analog Out
-
-                          AXI4-Lite Control Plane
-+--------------------------------------------------------------------+
-| ARM Cortex-A9 (Vitis C)                                             |
-| UART CLI | Trigger Config | Function Generator | Interrupt Handler |
-+--------------------------------------------------------------------+
 ```
 ---
 
