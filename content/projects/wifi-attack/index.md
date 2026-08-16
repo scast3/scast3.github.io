@@ -11,7 +11,13 @@ weight: 1                   # lower = appears first in listings
 
 ## Overview
 
-Detection and Localization of a Wifi deauth attack. Wireless communication between ESP32 devices and UART data transfer to Raspberry Pi. RSSI localization done via least squares multilateration
+Developed an intrusion detection system to detect and triangulate the source of WiFi jamming via deauthentication attacks, common in network disruptions. ESP32(s) scan for deauth/dissoc packets in promiscuous mode, relaying alerts to a Raspberry Pi server for logging and analysis. Use Flipper Zero (with WiFi module/ESP32 marauder) to simulate deauthentication attacks in a lab environment. RSSI localization done via least squares multilateration.
+
+<div style="width: 500px; margin: 0 auto; text-align: center;">
+
+![diagram](diagram.jpg)
+
+</div>
 
 
 [View on GitHub →](https://github.com/scast3/deauth_detect)

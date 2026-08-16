@@ -1,5 +1,5 @@
 ---
-title: "Carrier Synchronization in QPSK System using Kalman Filter"
+title: "QPSK Carrier Synchronization using Extended Kalman Filter"
 date: 2026-04-30
 summary: "test"
 tags: ["MATLAB", "Simulink", "Kalman Filter", "DSP", "Communications"]
