@@ -1,6 +1,6 @@
 ---
 title: "FIR Filter Design/Implementation"
-date: 2026-8-1
+date: 2026-08-01
 tags: ["Matlab", "C++", "VHDL"]
 tools: ["Vim", "Vivado"]
 status: "complete"          # complete | in-progress
