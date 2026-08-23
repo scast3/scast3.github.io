@@ -2,7 +2,6 @@
 title: "FIR Filter Design/Implementation"
 date: 2026-8-1
 tags: ["Matlab", "C++", "VHDL"]
-github: "https://github.com/scast3/deauth_detect"
 tools: ["Vim", "Vivado"]
 status: "complete"          # complete | in-progress
 weight: 1                   # lower = appears first in listings
@@ -15,6 +14,8 @@ Designing an FIR Filter in Matlab and implementing in C++ and VHDL to perform op
 - Sampling Rate: 100 MHz
 - Passband: 10 MHz
 - Stopband: 15 MHz
+
+## Theoretical Design
 
 The filter was first designed in matlab to determine the minimum amount of taps, and to find the corresponding FIR coefficients.
 
@@ -34,3 +35,9 @@ fprintf('%.6f\n',b');
 The response of the theoretical filter can be seen below:
 
 ![diagram](response.png)
+
+## Implementation
+
+### C++ Design
+
+### VHDL Design
