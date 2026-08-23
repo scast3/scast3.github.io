@@ -5,6 +5,7 @@ tags: ["Matlab", "C++", "VHDL"]
 tools: ["Vim", "Vivado"]
 status: "complete"          # complete | in-progress
 weight: 1                   # lower = appears first in listings
+math: true
 ---
 
 ## Overview
