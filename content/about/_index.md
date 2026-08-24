@@ -3,11 +3,13 @@ title = "About"
 draft = false
 +++
 
-<div style="width: 300px; margin: 0 auto; text-align: center;">
 
-![me picture](me.jpeg)
-
-</div>
+<table>
+  <tr>
+    <td><img src="surf.jpeg" height="300"></td>
+    <td><img src="hike.jpg" height="300"></td>
+  </tr>
+</table>
 
 Hello, I am Santiago!
 
