@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>VHDL on Santiago&#39;s Engineering Portfolio</title>
-		<link>http://localhost:1313/tags/vhdl/</link>
+		<link>https://scast3.github.io/tags/vhdl/</link>
 		<description>Recent content in VHDL on Santiago&#39;s Engineering Portfolio</description>
 		<generator>Hugo</generator>
 		<language>en-us</language>
@@ -10,14 +10,21 @@
 		
 		
 		
-			<lastBuildDate>Wed, 10 Dec 2025 00:00:00 +0000</lastBuildDate>
+			<lastBuildDate>Sat, 01 Aug 2026 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="http://localhost:1313/tags/vhdl/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="https://scast3.github.io/tags/vhdl/index.xml" rel="self" type="application/rss+xml" />
 			<item>
-				<title>High-Speed FPGA Signal Acquisition and Processing on Zynq-7010 SoC</title>
-				<link>http://localhost:1313/projects/fpga-oscilloscope/</link>
+				<title>FIR Filter Design/Implementation</title>
+				<link>https://scast3.github.io/projects/filter-design/</link>
+				<pubDate>Sat, 01 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://scast3.github.io/projects/filter-design/</guid>
+				<description>&lt;h2 id=&#34;overview&#34; class=&#34;relative group&#34;&gt;Overview &lt;span class=&#34;absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100&#34;&gt;&lt;a class=&#34;group-hover:text-primary-300 dark:group-hover:text-neutral-700&#34; style=&#34;text-decoration-line: none !important;&#34; href=&#34;#overview&#34; aria-label=&#34;Anchor&#34;&gt;#&lt;/a&gt;&lt;/span&gt;&lt;/h2&gt;&lt;p&gt;Designing an FIR Filter in Matlab and implementing in C++ and VHDL to perform optimization. The filter parameters were:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Sampling Rate: 100 MHz&lt;/li&gt;&#xA;&lt;li&gt;Passband: 10 MHz&lt;/li&gt;&#xA;&lt;li&gt;Stopband: 15 MHz&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;theoretical-design&#34; class=&#34;relative group&#34;&gt;Theoretical Design &lt;span class=&#34;absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100&#34;&gt;&lt;a class=&#34;group-hover:text-primary-300 dark:group-hover:text-neutral-700&#34; style=&#34;text-decoration-line: none !important;&#34; href=&#34;#theoretical-design&#34; aria-label=&#34;Anchor&#34;&gt;#&lt;/a&gt;&lt;/span&gt;&lt;/h2&gt;&lt;p&gt;The filter was first designed in matlab to determine the minimum amount of taps, and to find the corresponding FIR coefficients.&lt;/p&gt;</description>
+			</item>
+			<item>
+				<title>FPGA Signal Acquisition on Zynq SoC</title>
+				<link>https://scast3.github.io/projects/fpga-oscilloscope/</link>
 				<pubDate>Wed, 10 Dec 2025 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/projects/fpga-oscilloscope/</guid>
+				<guid>https://scast3.github.io/projects/fpga-oscilloscope/</guid>
 				<description>Designed an oscilloscope on an fpga in vhdl</description>
 			</item>
 	</channel>

@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>Tags on Santiago&#39;s Engineering Portfolio</title>
-		<link>http://localhost:1313/tags/</link>
+		<link>https://scast3.github.io/tags/</link>
 		<description>Recent content in Tags on Santiago&#39;s Engineering Portfolio</description>
 		<generator>Hugo</generator>
 		<language>en-us</language>
@@ -10,98 +10,126 @@
 		
 		
 		
-			<lastBuildDate>Fri, 01 May 2026 00:00:00 +0000</lastBuildDate>
+			<lastBuildDate>Sat, 01 Aug 2026 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="https://scast3.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
 			<item>
-				<title>Antenna Theory</title>
-				<link>http://localhost:1313/tags/antenna-theory/</link>
-				<pubDate>Fri, 01 May 2026 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/tags/antenna-theory/</guid>
+				<title>C&#43;&#43;</title>
+				<link>https://scast3.github.io/tags/c&#43;&#43;/</link>
+				<pubDate>Sat, 01 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://scast3.github.io/tags/c&#43;&#43;/</guid>
 				<description></description>
 			</item>
 			<item>
-				<title>HFSS</title>
-				<link>http://localhost:1313/tags/hfss/</link>
-				<pubDate>Fri, 01 May 2026 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/tags/hfss/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>RF Design</title>
-				<link>http://localhost:1313/tags/rf-design/</link>
-				<pubDate>Fri, 01 May 2026 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/tags/rf-design/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>VNA</title>
-				<link>http://localhost:1313/tags/vna/</link>
-				<pubDate>Fri, 01 May 2026 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/tags/vna/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>Communications</title>
-				<link>http://localhost:1313/tags/communications/</link>
-				<pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/tags/communications/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>DSP</title>
-				<link>http://localhost:1313/tags/dsp/</link>
-				<pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/tags/dsp/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>Kalman Filter</title>
-				<link>http://localhost:1313/tags/kalman-filter/</link>
-				<pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/tags/kalman-filter/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>MATLAB</title>
-				<link>http://localhost:1313/tags/matlab/</link>
-				<pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/tags/matlab/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>Simulink</title>
-				<link>http://localhost:1313/tags/simulink/</link>
-				<pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/tags/simulink/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>FPGA</title>
-				<link>http://localhost:1313/tags/fpga/</link>
-				<pubDate>Wed, 10 Dec 2025 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/tags/fpga/</guid>
-				<description></description>
-			</item>
-			<item>
-				<title>Verification</title>
-				<link>http://localhost:1313/tags/verification/</link>
-				<pubDate>Wed, 10 Dec 2025 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/tags/verification/</guid>
+				<title>Matlab</title>
+				<link>https://scast3.github.io/tags/matlab/</link>
+				<pubDate>Sat, 01 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://scast3.github.io/tags/matlab/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>VHDL</title>
-				<link>http://localhost:1313/tags/vhdl/</link>
+				<link>https://scast3.github.io/tags/vhdl/</link>
+				<pubDate>Sat, 01 Aug 2026 00:00:00 +0000</pubDate>
+				<guid>https://scast3.github.io/tags/vhdl/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Antenna Theory</title>
+				<link>https://scast3.github.io/tags/antenna-theory/</link>
+				<pubDate>Fri, 01 May 2026 00:00:00 +0000</pubDate>
+				<guid>https://scast3.github.io/tags/antenna-theory/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>HFSS</title>
+				<link>https://scast3.github.io/tags/hfss/</link>
+				<pubDate>Fri, 01 May 2026 00:00:00 +0000</pubDate>
+				<guid>https://scast3.github.io/tags/hfss/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>RF Design</title>
+				<link>https://scast3.github.io/tags/rf-design/</link>
+				<pubDate>Fri, 01 May 2026 00:00:00 +0000</pubDate>
+				<guid>https://scast3.github.io/tags/rf-design/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>VNA</title>
+				<link>https://scast3.github.io/tags/vna/</link>
+				<pubDate>Fri, 01 May 2026 00:00:00 +0000</pubDate>
+				<guid>https://scast3.github.io/tags/vna/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Communications</title>
+				<link>https://scast3.github.io/tags/communications/</link>
+				<pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate>
+				<guid>https://scast3.github.io/tags/communications/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>DSP</title>
+				<link>https://scast3.github.io/tags/dsp/</link>
+				<pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate>
+				<guid>https://scast3.github.io/tags/dsp/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Kalman Filter</title>
+				<link>https://scast3.github.io/tags/kalman-filter/</link>
+				<pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate>
+				<guid>https://scast3.github.io/tags/kalman-filter/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Simulink</title>
+				<link>https://scast3.github.io/tags/simulink/</link>
+				<pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate>
+				<guid>https://scast3.github.io/tags/simulink/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>FPGA</title>
+				<link>https://scast3.github.io/tags/fpga/</link>
 				<pubDate>Wed, 10 Dec 2025 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/tags/vhdl/</guid>
+				<guid>https://scast3.github.io/tags/fpga/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Verification</title>
+				<link>https://scast3.github.io/tags/verification/</link>
+				<pubDate>Wed, 10 Dec 2025 00:00:00 +0000</pubDate>
+				<guid>https://scast3.github.io/tags/verification/</guid>
 				<description></description>
 			</item>
 			<item>
 				<title>Xilinx</title>
-				<link>http://localhost:1313/tags/xilinx/</link>
+				<link>https://scast3.github.io/tags/xilinx/</link>
 				<pubDate>Wed, 10 Dec 2025 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/tags/xilinx/</guid>
+				<guid>https://scast3.github.io/tags/xilinx/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>ESP32</title>
+				<link>https://scast3.github.io/tags/esp32/</link>
+				<pubDate>Mon, 10 Nov 2025 00:00:00 +0000</pubDate>
+				<guid>https://scast3.github.io/tags/esp32/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Raspberry Pi</title>
+				<link>https://scast3.github.io/tags/raspberry-pi/</link>
+				<pubDate>Mon, 10 Nov 2025 00:00:00 +0000</pubDate>
+				<guid>https://scast3.github.io/tags/raspberry-pi/</guid>
+				<description></description>
+			</item>
+			<item>
+				<title>Wifi</title>
+				<link>https://scast3.github.io/tags/wifi/</link>
+				<pubDate>Mon, 10 Nov 2025 00:00:00 +0000</pubDate>
+				<guid>https://scast3.github.io/tags/wifi/</guid>
 				<description></description>
 			</item>
 	</channel>

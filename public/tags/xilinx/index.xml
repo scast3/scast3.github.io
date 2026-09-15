@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>Xilinx on Santiago&#39;s Engineering Portfolio</title>
-		<link>http://localhost:1313/tags/xilinx/</link>
+		<link>https://scast3.github.io/tags/xilinx/</link>
 		<description>Recent content in Xilinx on Santiago&#39;s Engineering Portfolio</description>
 		<generator>Hugo</generator>
 		<language>en-us</language>
@@ -12,12 +12,12 @@
 		
 			<lastBuildDate>Wed, 10 Dec 2025 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="http://localhost:1313/tags/xilinx/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="https://scast3.github.io/tags/xilinx/index.xml" rel="self" type="application/rss+xml" />
 			<item>
-				<title>High-Speed FPGA Signal Acquisition and Processing on Zynq-7010 SoC</title>
-				<link>http://localhost:1313/projects/fpga-oscilloscope/</link>
+				<title>FPGA Signal Acquisition on Zynq SoC</title>
+				<link>https://scast3.github.io/projects/fpga-oscilloscope/</link>
 				<pubDate>Wed, 10 Dec 2025 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/projects/fpga-oscilloscope/</guid>
+				<guid>https://scast3.github.io/projects/fpga-oscilloscope/</guid>
 				<description>Designed an oscilloscope on an fpga in vhdl</description>
 			</item>
 	</channel>

@@ -4,36 +4,36 @@
   
     
       <url>
-            <loc>http://localhost:1313/projects/patch-antenna/</loc>
+            <loc>https://scast3.github.io/projects/filter-design/</loc>
+            <lastmod>2026-08-01T00:00:00+00:00</lastmod>
+          </url>
+    
+  
+    
+      <url>
+            <loc>https://scast3.github.io/projects/patch-antenna/</loc>
             <lastmod>2026-05-01T00:00:00+00:00</lastmod>
           </url>
     
   
     
       <url>
-            <loc>http://localhost:1313/projects/qpsk-ekf/</loc>
+            <loc>https://scast3.github.io/projects/qpsk-ekf/</loc>
             <lastmod>2026-04-30T00:00:00+00:00</lastmod>
           </url>
     
   
     
       <url>
-            <loc>http://localhost:1313/projects/fpga-oscilloscope/</loc>
+            <loc>https://scast3.github.io/projects/fpga-oscilloscope/</loc>
             <lastmod>2025-12-10T00:00:00+00:00</lastmod>
           </url>
     
   
     
       <url>
-            <loc>http://localhost:1313/projects/</loc>
-            <lastmod>2026-05-29T16:00:38-06:00</lastmod>
-          </url>
-    
-  
-    
-      <url>
-            <loc>http://localhost:1313/</loc>
-            <lastmod>2026-05-29T16:00:38-06:00</lastmod>
+            <loc>https://scast3.github.io/projects/wifi-attack/</loc>
+            <lastmod>2025-11-10T00:00:00+00:00</lastmod>
           </url>
     
   
@@ -42,6 +42,28 @@
     
   
     
+      <url>
+            <loc>https://scast3.github.io/</loc>
+            <lastmod>2026-08-01T00:00:00+00:00</lastmod>
+          </url>
+    
+  
+    
+  
+    
+  
+    
+      <url>
+            <loc>https://scast3.github.io/projects/</loc>
+            <lastmod>2026-05-29T16:00:38-06:00</lastmod>
+          </url>
+    
+  
+    
+  
+    
+  
+    
   
     
   
@@ -67,7 +89,7 @@
   
     
       <url>
-            <loc>http://localhost:1313/about/</loc>
+            <loc>https://scast3.github.io/about/</loc>
           </url>
     
   

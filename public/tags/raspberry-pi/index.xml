@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+	<channel>
+		<title>Raspberry Pi on Santiago&#39;s Engineering Portfolio</title>
+		<link>https://scast3.github.io/tags/raspberry-pi/</link>
+		<description>Recent content in Raspberry Pi on Santiago&#39;s Engineering Portfolio</description>
+		<generator>Hugo</generator>
+		<language>en-us</language>
+		
+		
+		
+		
+			<lastBuildDate>Mon, 10 Nov 2025 00:00:00 +0000</lastBuildDate>
+		
+			<atom:link href="https://scast3.github.io/tags/raspberry-pi/index.xml" rel="self" type="application/rss+xml" />
+			<item>
+				<title>Wifi Deauthentication Attack Detection/Localization</title>
+				<link>https://scast3.github.io/projects/wifi-attack/</link>
+				<pubDate>Mon, 10 Nov 2025 00:00:00 +0000</pubDate>
+				<guid>https://scast3.github.io/projects/wifi-attack/</guid>
+				<description>&lt;h2 id=&#34;overview&#34; class=&#34;relative group&#34;&gt;Overview &lt;span class=&#34;absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100&#34;&gt;&lt;a class=&#34;group-hover:text-primary-300 dark:group-hover:text-neutral-700&#34; style=&#34;text-decoration-line: none !important;&#34; href=&#34;#overview&#34; aria-label=&#34;Anchor&#34;&gt;#&lt;/a&gt;&lt;/span&gt;&lt;/h2&gt;&lt;p&gt;Along with with &lt;a href=&#34;https://github.com/wallyschag&#34; target=&#34;_blank&#34; rel=&#34;noreferrer&#34;&gt;W. Schageman&lt;/a&gt;, developed an intrusion detection system to detect and triangulate the source of WiFi jamming via deauthentication attacks, common in network disruptions. ESP32(s) scan for deauth/dissoc packets in promiscuous mode, relaying alerts to a Raspberry Pi server for logging and analysis. Use Flipper Zero (with WiFi module/ESP32 marauder) to simulate deauthentication attacks in a lab environment. RSSI localization done via least squares multilateration.&lt;/p&gt;</description>
+			</item>
+	</channel>
+</rss>

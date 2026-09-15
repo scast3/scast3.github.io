@@ -11,13 +11,13 @@
   class="scroll-smooth"
   data-default-appearance="light"
   data-auto-appearance="true"
-><head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+><head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#FFFFFF" />
   
-  <title>High-Speed FPGA Signal Acquisition and Processing on Zynq-7010 SoC &middot; Santiago&#39;s Engineering Portfolio</title>
-    <meta name="title" content="High-Speed FPGA Signal Acquisition and Processing on Zynq-7010 SoC &middot; Santiago&#39;s Engineering Portfolio" />
+  <title>FPGA Signal Acquisition on Zynq SoC &middot; Santiago&#39;s Engineering Portfolio</title>
+    <meta name="title" content="FPGA Signal Acquisition on Zynq SoC &middot; Santiago&#39;s Engineering Portfolio" />
   
   
   
@@ -25,7 +25,7 @@
   
   <script
     type="text/javascript"
-    src="http://localhost:1313/js/appearance.min.8a082f81b27f3cb2ee528df0b0bdc39787034cf2cc34d4669fbc9977c929023c.js"
+    src="https://scast3.github.io/js/appearance.min.8a082f81b27f3cb2ee528df0b0bdc39787034cf2cc34d4669fbc9977c929023c.js"
     integrity="sha256-iggvgbJ/PLLuUo3wsL3Dl4cDTPLMNNRmn7yZd8kpAjw="
   ></script>
   
@@ -41,7 +41,7 @@
   <link
     type="text/css"
     rel="stylesheet"
-    href="http://localhost:1313/css/main.bundle.min.0e2ce03a8e4fe0b90a645486cb1b60e4cce678b0b8d0adef6fcd862cf35286fa.css"
+    href="https://scast3.github.io/css/main.bundle.min.0e2ce03a8e4fe0b90a645486cb1b60e4cce678b0b8d0adef6fcd862cf35286fa.css"
     integrity="sha256-DizgOo5P4LkKZFSGyxtg5MzmeLC40K3vb82GLPNShvo="
   />
   
@@ -63,7 +63,7 @@
   
   
   
-    <link rel="canonical" href="http://localhost:1313/projects/fpga-oscilloscope/" />
+    <link rel="canonical" href="https://scast3.github.io/projects/fpga-oscilloscope/" />
   
   
   
@@ -79,9 +79,9 @@
   
   
   
-  <meta property="og:url" content="http://localhost:1313/projects/fpga-oscilloscope/">
+  <meta property="og:url" content="https://scast3.github.io/projects/fpga-oscilloscope/">
 	<meta property="og:site_name" content="Santiago&#39;s Engineering Portfolio">
-	<meta property="og:title" content="High-Speed FPGA Signal Acquisition and Processing on Zynq-7010 SoC">
+	<meta property="og:title" content="FPGA Signal Acquisition on Zynq SoC">
 	<meta property="og:description" content="Designed an oscilloscope on an fpga in vhdl">
 	<meta property="og:locale" content="en_us">
 	<meta property="og:type" content="article">
@@ -95,7 +95,7 @@
 
   
 	<meta name="twitter:card" content="summary">
-	<meta name="twitter:title" content="High-Speed FPGA Signal Acquisition and Processing on Zynq-7010 SoC">
+	<meta name="twitter:title" content="FPGA Signal Acquisition on Zynq SoC">
 	<meta name="twitter:description" content="Designed an oscilloscope on an fpga in vhdl">
 
   
@@ -104,12 +104,12 @@
     "@context": "https://schema.org",
     "@type": "Article",
     "articleSection": "Projects",
-    "name": "High-Speed FPGA Signal Acquisition and Processing on Zynq-7010 SoC",
-    "headline": "High-Speed FPGA Signal Acquisition and Processing on Zynq-7010 SoC",
+    "name": "FPGA Signal Acquisition on Zynq SoC",
+    "headline": "FPGA Signal Acquisition on Zynq SoC",
     
     "abstract": "Designed an oscilloscope on an fpga in vhdl",
     "inLanguage": "en-us",
-    "url" : "http:\/\/localhost:1313\/projects\/fpga-oscilloscope\/",
+    "url" : "https:\/\/scast3.github.io\/projects\/fpga-oscilloscope\/",
     "author" : {
       "@type": "Person",
       "name": ""
@@ -123,7 +123,7 @@
     "keywords": ["FPGA","VHDL","Verification","Xilinx"],
     
     "mainEntityOfPage": "true",
-    "wordCount": "4053"
+    "wordCount": "4095"
   }
   </script>
     
@@ -134,19 +134,19 @@
    "itemListElement": [
      {
        "@type": "ListItem",
-       "item": "http://localhost:1313/",
-       "name": "Testing",
+       "item": "https://scast3.github.io/",
+       "name": "Portfolio Page 1",
        "position": 1
      },
      {
        "@type": "ListItem",
-       "item": "http://localhost:1313/projects/",
+       "item": "https://scast3.github.io/projects/",
        "name": "Projects",
        "position": 2
      },
      {
        "@type": "ListItem",
-       "name": "High Speed Fpga Signal Acquisition and Processing on Zynq 7010 So C",
+       "name": "Fpga Signal Acquisition on Zynq So C",
        "position": 3
      }
    ]
@@ -167,6 +167,11 @@
 
   
   
+  
+  
+  
+  
+
 
   
   
@@ -253,7 +258,7 @@
     <header class="max-w-prose">
       
       <h1 class="mb-8 mt-0 text-4xl font-extrabold text-neutral-900 dark:text-neutral">
-        High-Speed FPGA Signal Acquisition and Processing on Zynq-7010 SoC
+        FPGA Signal Acquisition on Zynq SoC
       </h1>
       
         <div class="mb-10 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
@@ -325,7 +330,7 @@
 </div>
 <hr>
 <h2 id="system-architecture" class="relative group">System Architecture <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#system-architecture" aria-label="Anchor">#</a></span></h2><p>The top-level VHDL entity <code>acquireToHDMI</code> is packaged in an IP named <code>final_oscope</code> and instantiates a datapath <code>acquireToHDMI_datapath</code> handling the ADC interface, waveform buffering, and video rendering. The datapath uses the submodules <code>videoSignalGenerator</code> to generate the HDMI signals and <code>scopeFace</code> to assign the correct RGB values to each coordiate to display the oscilloscope interface. Furthermore, a Moore state machine <code>acquireToHDMI_fsm</code> generates the control word that serves as the control inputs to the logic components inteh datapath.</p>
-<p>The AXI wrapper <code>final_oscope_slave_lite_v1_0_S00_AXI</code> instantiates this top-level and exposes its ports as memory-mapped registers to the PS. The signals fed from the wrapper are accessed in the file <code>helloworld.c</code> which defines the command-line user interfacing. For function generation, the enhancedPwm IP is used which takes in a duty cycle and outputs the pwm signal.</p>
+<p>The AXI wrapper <code>final_oscope_slave_lite_v1_0_S00_AXI</code> instantiates this top-level and exposes its ports as memory-mapped registers to the PS. The signals fed from the wrapper are accessed in the file <code>main.c</code> which defines the command-line user interfacing. For function generation, the enhancedPwm IP is used which takes in a duty cycle and outputs the pwm signal.</p>
 <p>The interaction between the IPs in the PL and the PS through memory-mapped registers can be seen below:</p>
 <pre tabindex="0"><code>  +---------------------+        AXI4-Lite Bus        +----------------------+
   |  ARM Cortex-A9 (PS) | &lt;-------------------------&gt; |   PL (VHDL Fabric)   |
@@ -341,22 +346,6 @@
                                         AD7606 ADC --&gt;|  16-bit parallel bus |
                                         HDMI output &lt;-|  TMDS serializer     |
                                                       +----------------------+
-</code></pre><h3 id="data-flow" class="relative group">Data Flow <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#data-flow" aria-label="Anchor">#</a></span></h3><pre tabindex="0"><code>AD7606 ADC
-     |
-     v
-+------------------+      +------------------+      +------------------+
-| Sample Capture   | ---&gt; | Trigger Engine   | ---&gt; | Waveform BRAM    |
-+------------------+      +------------------+      +------------------+
-                                                           |
-                                                           +-------&gt; HDMI Renderer ---&gt; HDMI
-                                                           |
-                                                           +-------&gt; PWM Generator ---&gt; Analog Out
-
-                          AXI4-Lite Control Plane
-+--------------------------------------------------------------------+
-| ARM Cortex-A9 (Vitis C)                                             |
-| UART CLI | Trigger Config | Function Generator | Interrupt Handler |
-+--------------------------------------------------------------------+
 </code></pre><hr>
 <h2 id="programmable-logic--vhdl-design" class="relative group">Programmable Logic — VHDL Design <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#programmable-logic--vhdl-design" aria-label="Anchor">#</a></span></h2><h3 id="datapath-and-control" class="relative group">Datapath and Control <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#datapath-and-control" aria-label="Anchor">#</a></span></h3><p>The PL follows a standard datapath and control design. The datapath <code>acquireToHdmi_datapath</code> contains all the registers, counters, BRAMs, comparators, and 2&rsquo;s complement pixel converters as structural VHDL instantiations. The control module <code>acquireToHdmi_fsm</code> is a finite state machine that uses the status word <code>sw</code> from the datapath for state transitions. Each state drives a control word <code>cw</code> back to the datapath. The two modules communicate only through these two buses, with no direct logic between them. The datapath additionally manages the TMDS signals required for HDMI display.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-vhdl" data-lang="vhdl"><span style="display:flex;"><span><span style="color:#66d9ef">entity</span> <span style="color:#a6e22e">acquireToHDMI_datapath</span> <span style="color:#66d9ef">is</span>
@@ -381,7 +370,7 @@
 </span></span><span style="display:flex;"><span>        sampleRate_ctrl <span style="color:#f92672">:</span> <span style="color:#66d9ef">in</span> <span style="color:#66d9ef">STD_LOGIC_VECTOR</span>(<span style="color:#ae81ff">1</span> <span style="color:#66d9ef">downto</span> <span style="color:#ae81ff">0</span>)
 </span></span><span style="display:flex;"><span>    );
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">end</span> <span style="color:#a6e22e">acquireToHDMI_datapath</span>;
-</span></span></code></pre></div><p>Furthermore, a user input to the datapath is the <code>sampleRate_ctrl</code> which controls the sample rate of the ADC acquisition. The design supports four present sampling rates:</p>
+</span></span></code></pre></div><p>Furthermore, a user input to the datapath is the 2-bit <code>sampleRate_ctrl</code> which controls a 4 to 1 multiplexer <code>sampleMux</code> that outputs the sample rate of the ADC acquisition. The design supports four present sampling rates:</p>
 <table>
 	<thead>
 			<tr>
@@ -408,7 +397,17 @@
 			</tr>
 	</tbody>
 </table>
-<h3 id="cw-and-sw-signals" class="relative group">CW and SW Signals <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#cw-and-sw-signals" aria-label="Anchor">#</a></span></h3><p>The datapath and control design uses the status and control words to implement the ADC acquisition functionality. The status word is a 10-bit standard logic vector and the control word is a 22-bit standard logic vector. Every resource in the datapath such as counters, registers, BRAM write enables are controlled by a dedicated bit in the <code>cw</code> vector. This makes the state outputs in the FSM completely readable as a lookup table: each state drives a fixed <code>cw</code> binary combination with named bit positions defined in the shared package.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-vhdl" data-lang="vhdl"><span style="display:flex;"><span>sampleMux <span style="color:#f92672">:</span> genericMux4x1
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">GENERIC</span> <span style="color:#66d9ef">MAP</span>(<span style="color:#ae81ff">32</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">PORT</span> <span style="color:#66d9ef">MAP</span>(
+</span></span><span style="display:flex;"><span>        y0 <span style="color:#f92672">=&gt;</span> HIGHEST_RATE, 
+</span></span><span style="display:flex;"><span>        y1 <span style="color:#f92672">=&gt;</span> HIGH_RATE,
+</span></span><span style="display:flex;"><span>        y2 <span style="color:#f92672">=&gt;</span> LOWEST_RATE,
+</span></span><span style="display:flex;"><span>        y3 <span style="color:#f92672">=&gt;</span> LOW_RATE,
+</span></span><span style="display:flex;"><span>        s <span style="color:#f92672">=&gt;</span> sampleRate_ctrl,
+</span></span><span style="display:flex;"><span>        f <span style="color:#f92672">=&gt;</span> currentRate
+</span></span><span style="display:flex;"><span>    );
+</span></span></code></pre></div><h3 id="cw-and-sw-signals" class="relative group">CW and SW Signals <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#cw-and-sw-signals" aria-label="Anchor">#</a></span></h3><p>The datapath and control design uses the status and control words to implement the ADC acquisition functionality. The status word is a 10-bit standard logic vector and the control word is a 22-bit standard logic vector. Every resource in the datapath such as counters, registers, BRAM write enables are controlled by a dedicated bit in the <code>cw</code> vector. This makes the state outputs in the FSM completely readable as a lookup table: each state drives a fixed <code>cw</code> binary combination with named bit positions defined in the shared package.</p>
 <p><strong>All 10 status word bits observed by the FSM:</strong></p>
 <table>
 	<thead>
@@ -441,7 +440,7 @@
 			</tr>
 			<tr>
 					<td><code>SAMPLE_SW</code></td>
-					<td>Sample counter == <code>sampleRate_ctrl</code></td>
+					<td>Sample counter == <code>sampleMux</code> output</td>
 					<td><code>sampleCompare</code> Comparator</td>
 			</tr>
 			<tr>
@@ -588,13 +587,13 @@
       
         <source
           
-            srcset="http://localhost:1313/projects/fpga-oscilloscope/images/fsm_hu_2120eb9f4d9aaf.webp 330w,http://localhost:1313/projects/fpga-oscilloscope/images/fsm_hu_53cf8fbfe48791ac.webp 660w
+            srcset="https://scast3.github.io/projects/fpga-oscilloscope/images/fsm_hu_2120eb9f4d9aaf.webp 330w,https://scast3.github.io/projects/fpga-oscilloscope/images/fsm_hu_53cf8fbfe48791ac.webp 660w
             
-              ,http://localhost:1313/projects/fpga-oscilloscope/images/fsm_hu_771fa7a66be9ae69.webp 1024w
+              ,https://scast3.github.io/projects/fpga-oscilloscope/images/fsm_hu_771fa7a66be9ae69.webp 1024w
             
             
               
-                ,http://localhost:1313/projects/fpga-oscilloscope/images/fsm_hu_4a24565857bac9f5.webp 1210w
+                ,https://scast3.github.io/projects/fpga-oscilloscope/images/fsm_hu_4a24565857bac9f5.webp 1210w
               
             "
           
@@ -609,12 +608,12 @@
         alt="fsm filler - TODO CHANGE LATER"
         loading="lazy" decoding="async"
         
-          src="http://localhost:1313/projects/fpga-oscilloscope/images/fsm_hu_3334ba5be6a602d1.png" srcset="http://localhost:1313/projects/fpga-oscilloscope/images/fsm_hu_7d974e073ab86b62.png 330w,http://localhost:1313/projects/fpga-oscilloscope/images/fsm_hu_3334ba5be6a602d1.png 660w
+          src="https://scast3.github.io/projects/fpga-oscilloscope/images/fsm_hu_3334ba5be6a602d1.png" srcset="https://scast3.github.io/projects/fpga-oscilloscope/images/fsm_hu_7d974e073ab86b62.png 330w,https://scast3.github.io/projects/fpga-oscilloscope/images/fsm_hu_3334ba5be6a602d1.png 660w
           
-            ,http://localhost:1313/projects/fpga-oscilloscope/images/fsm_hu_c52c40143537be8a.png 1024w
+            ,https://scast3.github.io/projects/fpga-oscilloscope/images/fsm_hu_c52c40143537be8a.png 1024w
           
           
-            ,http://localhost:1313/projects/fpga-oscilloscope/images/fsm.png 1210w
+            ,https://scast3.github.io/projects/fpga-oscilloscope/images/fsm.png 1210w
           "
           sizes="100vw"
         
@@ -630,7 +629,7 @@
 <p><strong>In forced mode</strong>: the FSM parks in <code>WAIT_FORCED</code> and only proceeds on a <code>SINGLE_SW</code> pulse from the PS, immediately setting the store flag and capturing one frame.</p>
 <h3 id="adc-interface-ad7606" class="relative group">ADC Interface (AD7606) <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#adc-interface-ad7606" aria-label="Anchor">#</a></span></h3><p>The ALINX daughter board AN706, contains an Analog Devices AD7606 8-channel 16-bit ADC which was used to digitize the analog input. The AD7606 uses a successive approximation register (SAR) approach. The converter accepts analog input voltages in the range of -5 V to +5 V and produces a signed 16-bit two&rsquo;s-complement output value; it also supports sampling rates up to 200 kS/s and presents the conversion result through a parallel digital interface.</p>
 <p>The FSM drives the external ADC signals <code>CONVST</code>, <code>CS</code>, <code>RD</code>, and <code>RESET</code> in the correct sequence, asserting conversion start, waiting for the <code>BUSY</code> flag to deassert (states <code>BUSY_0</code> -&gt; <code>BUSY_1</code>), then clocking out the 16-bit result. Two short-delay counters in the datapath provide the required ADC setup and hold timing. Sampling rate is controlled by a 4-to-1 mux (<code>sampleMux</code>) that selects between four preset counter targets based on the 2-bit <code>sampleRate_select</code> from the PS.</p>
-<h3 id="trigger-logic" class="relative group">Trigger Logic <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#trigger-logic" aria-label="Anchor">#</a></span></h3><p>A trigger occurs when the samples cross a certain threshold of <code>triggerVolt16bitSigned</code> which is set by the user in the PS (with a default of 0V). To ensure the trigger is on rising edge, the previous and current sample are tracked. For each channel, two chained register instances capture consecutive ADC samples (sample 1 and sample 2), and two signed comparator instances compare each against the <code>triggerVolt16bitSigned</code> vector. The <code>ch1_sample1_compare</code> comparator checks checks <code>sample1 &gt; threshold</code> (rising condition) and the <code>ch1_sample1_compare</code> comparator checks <code>sample2 &lt; threshold</code> (pre-crossing condition):</p>
+<h3 id="trigger-logic" class="relative group">Trigger Logic <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#trigger-logic" aria-label="Anchor">#</a></span></h3><p>A trigger occurs when the samples cross a certain threshold of <code>triggerVolt16bitSigned</code> which is set by the user in the PS (with a default of 0V). To ensure the trigger is on rising edge, the previous and current sample are tracked. For each channel, two chained register instances capture consecutive ADC samples (sample 1 and sample 2), and two signed comparator instances compare each against the <code>triggerVolt16bitSigned</code> vector. The <code>ch1_sample1_compare</code> comparator checks checks <code>sample1 &gt; threshold</code> (rising condition) and the <code>ch2_sample1_compare</code> comparator checks <code>sample2 &lt; threshold</code> (pre-crossing condition):</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-vhdl" data-lang="vhdl"><span style="display:flex;"><span>   <span style="color:#75715e">-- ch1 trigger logic</span>
 </span></span><span style="display:flex;"><span>    ch1_trigger_sample1_signed <span style="color:#f92672">&lt;=</span> <span style="color:#66d9ef">signed</span>(ch1_trigger_sample1);
 </span></span><span style="display:flex;"><span>    ch1_sample1_compare <span style="color:#f92672">:</span> genericCompare_Signed
@@ -710,12 +709,12 @@
       
         <source
           
-            srcset="http://localhost:1313/projects/fpga-oscilloscope/images/datapath_hu_eb0b85e96be7e94a.webp 330w,http://localhost:1313/projects/fpga-oscilloscope/images/datapath_hu_5861a4e5e4ac637f.webp 660w
+            srcset="https://scast3.github.io/projects/fpga-oscilloscope/images/datapath_hu_eb0b85e96be7e94a.webp 330w,https://scast3.github.io/projects/fpga-oscilloscope/images/datapath_hu_5861a4e5e4ac637f.webp 660w
             
-              ,http://localhost:1313/projects/fpga-oscilloscope/images/datapath_hu_afd971475304f0f.webp 1024w
+              ,https://scast3.github.io/projects/fpga-oscilloscope/images/datapath_hu_afd971475304f0f.webp 1024w
             
             
-              ,http://localhost:1313/projects/fpga-oscilloscope/images/datapath_hu_c570efba08df5b9b.webp 1320w
+              ,https://scast3.github.io/projects/fpga-oscilloscope/images/datapath_hu_c570efba08df5b9b.webp 1320w
             "
           
           sizes="100vw"
@@ -729,12 +728,12 @@
         alt="datapath"
         loading="lazy" decoding="async"
         
-          src="http://localhost:1313/projects/fpga-oscilloscope/images/datapath_hu_cbec27c0f2000b87.png" srcset="http://localhost:1313/projects/fpga-oscilloscope/images/datapath_hu_2b3351e2c67eb841.png 330w,http://localhost:1313/projects/fpga-oscilloscope/images/datapath_hu_cbec27c0f2000b87.png 660w
+          src="https://scast3.github.io/projects/fpga-oscilloscope/images/datapath_hu_cbec27c0f2000b87.png" srcset="https://scast3.github.io/projects/fpga-oscilloscope/images/datapath_hu_2b3351e2c67eb841.png 330w,https://scast3.github.io/projects/fpga-oscilloscope/images/datapath_hu_cbec27c0f2000b87.png 660w
           
-            ,http://localhost:1313/projects/fpga-oscilloscope/images/datapath_hu_fe6927d750217865.png 1024w
+            ,https://scast3.github.io/projects/fpga-oscilloscope/images/datapath_hu_fe6927d750217865.png 1024w
           
           
-            ,http://localhost:1313/projects/fpga-oscilloscope/images/datapath_hu_e285ede0528e7d7c.png 1320w
+            ,https://scast3.github.io/projects/fpga-oscilloscope/images/datapath_hu_e285ede0528e7d7c.png 1320w
           "
           sizes="100vw"
         
@@ -775,12 +774,12 @@
       
         <source
           
-            srcset="http://localhost:1313/projects/fpga-oscilloscope/images/hdmi_hu_ed81842bdb5ca3d8.webp 330w,http://localhost:1313/projects/fpga-oscilloscope/images/hdmi_hu_2e92d77a1d88ae04.webp 660w
+            srcset="https://scast3.github.io/projects/fpga-oscilloscope/images/hdmi_hu_ed81842bdb5ca3d8.webp 330w,https://scast3.github.io/projects/fpga-oscilloscope/images/hdmi_hu_2e92d77a1d88ae04.webp 660w
             
-              ,http://localhost:1313/projects/fpga-oscilloscope/images/hdmi_hu_3461b37fd00bcd.webp 1024w
+              ,https://scast3.github.io/projects/fpga-oscilloscope/images/hdmi_hu_3461b37fd00bcd.webp 1024w
             
             
-              ,http://localhost:1313/projects/fpga-oscilloscope/images/hdmi_hu_bebabd40994311c5.webp 1320w
+              ,https://scast3.github.io/projects/fpga-oscilloscope/images/hdmi_hu_bebabd40994311c5.webp 1320w
             "
           
           sizes="100vw"
@@ -794,12 +793,12 @@
         alt="hdmi"
         loading="lazy" decoding="async"
         
-          src="http://localhost:1313/projects/fpga-oscilloscope/images/hdmi_hu_a13e4314c330719c.jpg" srcset="http://localhost:1313/projects/fpga-oscilloscope/images/hdmi_hu_8d79cbaca283a37d.jpg 330w,http://localhost:1313/projects/fpga-oscilloscope/images/hdmi_hu_a13e4314c330719c.jpg 660w
+          src="https://scast3.github.io/projects/fpga-oscilloscope/images/hdmi_hu_a13e4314c330719c.jpg" srcset="https://scast3.github.io/projects/fpga-oscilloscope/images/hdmi_hu_8d79cbaca283a37d.jpg 330w,https://scast3.github.io/projects/fpga-oscilloscope/images/hdmi_hu_a13e4314c330719c.jpg 660w
           
-            ,http://localhost:1313/projects/fpga-oscilloscope/images/hdmi_hu_b3330f5cb85a878c.jpg 1024w
+            ,https://scast3.github.io/projects/fpga-oscilloscope/images/hdmi_hu_b3330f5cb85a878c.jpg 1024w
           
           
-            ,http://localhost:1313/projects/fpga-oscilloscope/images/hdmi_hu_79f2fe4e1c803129.jpg 1320w
+            ,https://scast3.github.io/projects/fpga-oscilloscope/images/hdmi_hu_79f2fe4e1c803129.jpg 1320w
           "
           sizes="100vw"
         
@@ -1011,12 +1010,12 @@
       
         <source
           
-            srcset="http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_e81ac31b272630a2.webp 330w,http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_4aac984c9ccc3092.webp 660w
+            srcset="https://scast3.github.io/projects/fpga-oscilloscope/images/vivado_block_hu_e81ac31b272630a2.webp 330w,https://scast3.github.io/projects/fpga-oscilloscope/images/vivado_block_hu_4aac984c9ccc3092.webp 660w
             
-              ,http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_6d62808ee01aab22.webp 1024w
+              ,https://scast3.github.io/projects/fpga-oscilloscope/images/vivado_block_hu_6d62808ee01aab22.webp 1024w
             
             
-              ,http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_2d49beb5ee42e038.webp 1320w
+              ,https://scast3.github.io/projects/fpga-oscilloscope/images/vivado_block_hu_2d49beb5ee42e038.webp 1320w
             "
           
           sizes="100vw"
@@ -1030,12 +1029,12 @@
         alt="vivado block diagram"
         loading="lazy" decoding="async"
         
-          src="http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_7bb968155c409a97.png" srcset="http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_9edbd449998d80ca.png 330w,http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_7bb968155c409a97.png 660w
+          src="https://scast3.github.io/projects/fpga-oscilloscope/images/vivado_block_hu_7bb968155c409a97.png" srcset="https://scast3.github.io/projects/fpga-oscilloscope/images/vivado_block_hu_9edbd449998d80ca.png 330w,https://scast3.github.io/projects/fpga-oscilloscope/images/vivado_block_hu_7bb968155c409a97.png 660w
           
-            ,http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_595993b3ee385c5a.png 1024w
+            ,https://scast3.github.io/projects/fpga-oscilloscope/images/vivado_block_hu_595993b3ee385c5a.png 1024w
           
           
-            ,http://localhost:1313/projects/fpga-oscilloscope/images/vivado_block_hu_ce0003135ebe4693.png 1320w
+            ,https://scast3.github.io/projects/fpga-oscilloscope/images/vivado_block_hu_ce0003135ebe4693.png 1320w
           "
           sizes="100vw"
         
@@ -1130,7 +1129,22 @@
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>By varying the phase increment, the frequency of the waveform could be adjusted independently of the interrupt rate which allows precise digital frequency synthesis without modifying timer configuration.</p>
 <p>Using a linear regression where I experimented with different phase increments and measured the output function frequency with a Keysight oscilloscope, it was determined that the association between frequency and phase increment was <code>phaseIncrement = 6.5516 * frequency + 0.0062</code>. This equation gives the user the option to define the desired function frequency via the UART interface.</p>
-<h3 id="toggling-oscilloscope-modes" class="relative group">Toggling Oscilloscope Modes <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#toggling-oscilloscope-modes" aria-label="Anchor">#</a></span></h3><p>The user can change the oscilloscope mode between trigger and forced using the <code>t</code> command. The mode is controlled by bit 1 in the memory mapped <code>slv_reg3</code>. This bit selects between trigger and forced mode. A <code>FORCED_MASK (1&lt;&lt;1)</code> is used to isolate the corresponding control bit without affecting the other bits in the control register.</p>
+<h3 id="changing-sampling-rates" class="relative group">Changing Sampling Rates <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#changing-sampling-rates" aria-label="Anchor">#</a></span></h3><p>The <code>m</code> command allows the user to choose one of the four sampling rates. This control is implemented with a simple write to bits 4 and 5 of <code>slv_reg3</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>u32 reg3 <span style="color:#f92672">=</span> <span style="color:#a6e22e">FINAL_OSCOPE_mReadReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// clear bits 5:4
+</span></span></span><span style="display:flex;"><span>reg3 <span style="color:#f92672">&amp;=</span> <span style="color:#f92672">~</span>(<span style="color:#ae81ff">0x3</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">4</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">switch</span>(c) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;0&#39;</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>        reg3 <span style="color:#f92672">|=</span> (<span style="color:#ae81ff">0</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">4</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">printf</span>(<span style="color:#e6db74">&#34;Sample rate = 0</span><span style="color:#ae81ff">\r\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// other cases not shown
+</span></span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">FINAL_OSCOPE_mWriteReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET, reg3);
+</span></span></code></pre></div><h3 id="toggling-oscilloscope-modes" class="relative group">Toggling Oscilloscope Modes <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#toggling-oscilloscope-modes" aria-label="Anchor">#</a></span></h3><p>The user can change the oscilloscope mode between trigger and forced using the <code>t</code> command. The mode is controlled by bit 1 in the memory mapped <code>slv_reg3</code>. This bit selects between trigger and forced mode. A <code>FORCED_MASK (1&lt;&lt;1)</code> is used to isolate the corresponding control bit without affecting the other bits in the control register.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-C" data-lang="C"><span style="display:flex;"><span>u32 slv3_read <span style="color:#f92672">=</span> <span style="color:#a6e22e">FINAL_OSCOPE_mReadReg</span>(XPAR_FINAL_OSCOPE_0_BASEADDR, FINAL_OSCOPE_S00_AXI_SLV_REG3_OFFSET);
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>u32 updated_reg <span style="color:#f92672">=</span> slv3_read <span style="color:#f92672">^</span> FORCED_MASK;
@@ -1235,14 +1249,33 @@
       <div class="flex justify-between pt-3">
         <span>
           
-        </span>
-        <span>
-          
-            <a class="group flex text-right" href="http://localhost:1313/projects/qpsk-ekf/">
+            <a class="group flex" href="https://scast3.github.io/projects/wifi-attack/">
+              <span
+                class="me-2 text-neutral-700 transition-transform group-hover:-translate-x-[2px] group-hover:text-primary-600 dark:text-neutral dark:group-hover:text-primary-400"
+                ><span class="ltr:inline rtl:hidden">&larr;</span
+                ><span class="ltr:hidden rtl:inline">&rarr;</span></span
+              >
               <span class="flex flex-col">
                 <span
                   class="mt-[0.1rem] leading-6 group-hover:underline group-hover:decoration-primary-500"
-                  >Extended Kalman Filter Receiver for Carrier Synchronization in QPSK Systems</span
+                  >Wifi Deauthentication Attack Detection/Localization</span
+                >
+                <span class="mt-[0.1rem] text-xs text-neutral-500 dark:text-neutral-400">
+                  
+                    <time datetime="2025-11-10 00:00:00 &#43;0000 UTC">10 November 2025</time>
+                  
+                </span>
+              </span>
+            </a>
+          
+        </span>
+        <span>
+          
+            <a class="group flex text-right" href="https://scast3.github.io/projects/qpsk-ekf/">
+              <span class="flex flex-col">
+                <span
+                  class="mt-[0.1rem] leading-6 group-hover:underline group-hover:decoration-primary-500"
+                  >QPSK Carrier Synchronization using Extended Kalman Filter</span
                 >
                 <span class="mt-[0.1rem] text-xs text-neutral-500 dark:text-neutral-400">
                   

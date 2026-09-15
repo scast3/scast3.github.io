@@ -1,0 +1,740 @@
+
+
+
+
+
+
+<!doctype html>
+<html
+  lang="en-us"
+  dir="ltr"
+  class="scroll-smooth"
+  data-default-appearance="light"
+  data-auto-appearance="true"
+><head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#FFFFFF" />
+  
+  <title>Wifi Deauthentication Attack Detection/Localization &middot; Santiago&#39;s Engineering Portfolio</title>
+    <meta name="title" content="Wifi Deauthentication Attack Detection/Localization &middot; Santiago&#39;s Engineering Portfolio" />
+  
+  
+  
+  
+  
+  <script
+    type="text/javascript"
+    src="https://scast3.github.io/js/appearance.min.8a082f81b27f3cb2ee528df0b0bdc39787034cf2cc34d4669fbc9977c929023c.js"
+    integrity="sha256-iggvgbJ/PLLuUo3wsL3Dl4cDTPLMNNRmn7yZd8kpAjw="
+  ></script>
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="https://scast3.github.io/css/main.bundle.min.0e2ce03a8e4fe0b90a645486cb1b60e4cce678b0b8d0adef6fcd862cf35286fa.css"
+    integrity="sha256-DizgOo5P4LkKZFSGyxtg5MzmeLC40K3vb82GLPNShvo="
+  />
+  
+  
+  
+  
+  
+  
+  
+  <meta
+    name="description"
+    content="
+      
+        Overview #Along with with W. Schageman, developed an intrusion detection system to detect and triangulate the source of WiFi jamming via deauthentication attacks, common in network disruptions. ESP32(s) scan for deauth/dissoc packets in promiscuous mode, relaying alerts to a Raspberry Pi server for logging and analysis. Use Flipper Zero (with WiFi module/ESP32 marauder) to simulate deauthentication attacks in a lab environment. RSSI localization done via least squares multilateration.
+      
+    "
+  />
+  
+  
+  
+  
+    <link rel="canonical" href="https://scast3.github.io/projects/wifi-attack/" />
+  
+  
+  
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+  
+  
+  
+  
+  
+  
+  
+  
+  <meta property="og:url" content="https://scast3.github.io/projects/wifi-attack/">
+	<meta property="og:site_name" content="Santiago&#39;s Engineering Portfolio">
+	<meta property="og:title" content="Wifi Deauthentication Attack Detection/Localization">
+	<meta property="og:description" content="Overview #Along with with W. Schageman, developed an intrusion detection system to detect and triangulate the source of WiFi jamming via deauthentication attacks, common in network disruptions. ESP32(s) scan for deauth/dissoc packets in promiscuous mode, relaying alerts to a Raspberry Pi server for logging and analysis. Use Flipper Zero (with WiFi module/ESP32 marauder) to simulate deauthentication attacks in a lab environment. RSSI localization done via least squares multilateration.">
+	<meta property="og:locale" content="en_us">
+	<meta property="og:type" content="article">
+		<meta property="article:section" content="projects">
+		<meta property="article:published_time" content="2025-11-10T00:00:00+00:00">
+		<meta property="article:modified_time" content="2025-11-10T00:00:00+00:00">
+		<meta property="article:tag" content="Wifi">
+		<meta property="article:tag" content="ESP32">
+		<meta property="article:tag" content="Raspberry Pi">
+
+  
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Wifi Deauthentication Attack Detection/Localization">
+	<meta name="twitter:description" content="Overview #Along with with W. Schageman, developed an intrusion detection system to detect and triangulate the source of WiFi jamming via deauthentication attacks, common in network disruptions. ESP32(s) scan for deauth/dissoc packets in promiscuous mode, relaying alerts to a Raspberry Pi server for logging and analysis. Use Flipper Zero (with WiFi module/ESP32 marauder) to simulate deauthentication attacks in a lab environment. RSSI localization done via least squares multilateration.">
+
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "articleSection": "Projects",
+    "name": "Wifi Deauthentication Attack Detection\/Localization",
+    "headline": "Wifi Deauthentication Attack Detection\/Localization",
+    
+    "abstract": "\u003ch2 id=\u0022overview\u0022 class=\u0022relative group\u0022\u003eOverview \u003cspan class=\u0022absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100\u0022\u003e\u003ca class=\u0022group-hover:text-primary-300 dark:group-hover:text-neutral-700\u0022 style=\u0022text-decoration-line: none !important;\u0022 href=\u0022#overview\u0022 aria-label=\u0022Anchor\u0022\u003e#\u003c\/a\u003e\u003c\/span\u003e\u003c\/h2\u003e\u003cp\u003eAlong with with \u003ca href=\u0022https:\/\/github.com\/wallyschag\u0022 target=\u0022_blank\u0022 rel=\u0022noreferrer\u0022\u003eW. Schageman\u003c\/a\u003e, developed an intrusion detection system to detect and triangulate the source of WiFi jamming via deauthentication attacks, common in network disruptions. ESP32(s) scan for deauth\/dissoc packets in promiscuous mode, relaying alerts to a Raspberry Pi server for logging and analysis. Use Flipper Zero (with WiFi module\/ESP32 marauder) to simulate deauthentication attacks in a lab environment. RSSI localization done via least squares multilateration.\u003c\/p\u003e",
+    "inLanguage": "en-us",
+    "url" : "https:\/\/scast3.github.io\/projects\/wifi-attack\/",
+    "author" : {
+      "@type": "Person",
+      "name": ""
+    },
+    "copyrightYear": "2025",
+    "dateCreated": "2025-11-10T00:00:00\u002b00:00",
+    "datePublished": "2025-11-10T00:00:00\u002b00:00",
+    
+    "dateModified": "2025-11-10T00:00:00\u002b00:00",
+    
+    "keywords": ["Wifi","ESP32","Raspberry Pi"],
+    
+    "mainEntityOfPage": "true",
+    "wordCount": "682"
+  }
+  </script>
+    
+    <script type="application/ld+json">
+    {
+   "@context": "https://schema.org",
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+     {
+       "@type": "ListItem",
+       "item": "https://scast3.github.io/",
+       "name": "Portfolio Page 1",
+       "position": 1
+     },
+     {
+       "@type": "ListItem",
+       "item": "https://scast3.github.io/projects/",
+       "name": "Projects",
+       "position": 2
+     },
+     {
+       "@type": "ListItem",
+       "name": "Wifi Deauthentication Attack Detection Localization",
+       "position": 3
+     }
+   ]
+ }
+  </script>
+
+  
+  
+  
+  
+  
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+  
+
+
+  
+  
+    
+  
+</head>
+<body
+    class="m-auto flex h-screen max-w-7xl flex-col bg-neutral px-6 text-lg leading-7 text-neutral-900 dark:bg-neutral-800 dark:text-neutral sm:px-14 md:px-24 lg:px-32"
+  >
+    <div id="the-top" class="absolute flex self-center">
+      <a
+        class="-translate-y-8 rounded-b-lg bg-primary-200 px-3 py-1 text-sm focus:translate-y-0 dark:bg-neutral-600"
+        href="#main-content"
+        ><span class="pe-2 font-bold text-primary-600 dark:text-primary-400">&darr;</span
+        >Skip to main content</a
+      >
+    </div>
+    
+    
+      <header class="py-6 font-semibold text-neutral-900 dark:text-neutral sm:py-10 print:hidden">
+  <nav class="flex items-start justify-between sm:items-center">
+    
+    <div class="flex flex-row items-center">
+      
+  <a
+    class="decoration-primary-500 hover:underline hover:decoration-2 hover:underline-offset-2"
+    rel="me"
+    href="/"
+    >Santiago&rsquo;s Engineering Portfolio</a
+  >
+
+    </div>
+    
+    
+      <ul class="flex list-none flex-col text-end sm:flex-row">
+        
+          
+            
+            <li class="group mb-1 sm:mb-0 sm:me-7 sm:last:me-0.5">
+              
+                <a
+                  href="/projects/"
+                  title="Projects"
+                  
+                  
+                  ><span
+                      class="decoration-primary-500 group-hover:underline group-hover:decoration-2 group-hover:underline-offset-2"
+                      >Projects</span
+                    >
+                  </a
+                >
+              
+            </li>
+          
+            
+            <li class="group mb-1 sm:mb-0 sm:me-7 sm:last:me-0.5">
+              
+                <a
+                  href="/about/"
+                  title="About"
+                  
+                  
+                  ><span
+                      class="decoration-primary-500 group-hover:underline group-hover:decoration-2 group-hover:underline-offset-2"
+                      >About</span
+                    >
+                  </a
+                >
+              
+            </li>
+          
+          
+        
+      </ul>
+    
+  </nav>
+</header>
+
+    
+    <div class="relative flex grow flex-col">
+      <main id="main-content" class="grow">
+        
+  <article>
+    <header class="max-w-prose">
+      
+      <h1 class="mb-8 mt-0 text-4xl font-extrabold text-neutral-900 dark:text-neutral">
+        Wifi Deauthentication Attack Detection/Localization
+      </h1>
+      
+        <div class="mb-10 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
+          
+
+
+
+
+
+  
+  
+
+
+
+  
+
+  
+  
+    
+  
+
+  
+
+  
+
+  
+    
+  
+
+  
+
+
+  <div class="flex flex-row flex-wrap items-center">
+    
+    
+      <time datetime="2025-11-10 00:00:00 &#43;0000 UTC">10 November 2025</time><span class="px-2 text-primary-500">&middot;</span><span title="Reading time">4 mins</span>
+    
+
+    
+    
+  </div>
+
+  
+  
+
+
+        </div>
+      
+      
+    </header>
+    <section class="prose mt-0 flex max-w-full flex-col dark:prose-invert lg:flex-row">
+      
+      <div class="min-h-0 min-w-0 max-w-prose grow">
+        <h2 id="overview" class="relative group">Overview <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#overview" aria-label="Anchor">#</a></span></h2><p>Along with with <a href="https://github.com/wallyschag" target="_blank" rel="noreferrer">W. Schageman</a>, developed an intrusion detection system to detect and triangulate the source of WiFi jamming via deauthentication attacks, common in network disruptions. ESP32(s) scan for deauth/dissoc packets in promiscuous mode, relaying alerts to a Raspberry Pi server for logging and analysis. Use Flipper Zero (with WiFi module/ESP32 marauder) to simulate deauthentication attacks in a lab environment. RSSI localization done via least squares multilateration.</p>
+<p><a href="images/WifiSentry.pdf" download>Download Full Report</a></p>
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            srcset="https://scast3.github.io/projects/wifi-attack/images/diagram_hu_e6186e57e7dac42a.webp 330w,https://scast3.github.io/projects/wifi-attack/images/diagram_hu_ac8ac1098b65c30.webp 660w
+            
+              
+                ,https://scast3.github.io/projects/wifi-attack/images/diagram_hu_e5ca808db85fdf45.webp 950w
+              
+            
+            
+              
+                ,https://scast3.github.io/projects/wifi-attack/images/diagram_hu_e5ca808db85fdf45.webp 950w
+              
+            "
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="950"
+        height="540"
+        class="mx-auto my-0 rounded-md"
+        alt="diagram"
+        loading="lazy" decoding="async"
+        
+          src="https://scast3.github.io/projects/wifi-attack/images/diagram_hu_26f1a9e977625866.png" srcset="https://scast3.github.io/projects/wifi-attack/images/diagram_hu_6987250754061676.png 330w,https://scast3.github.io/projects/wifi-attack/images/diagram_hu_26f1a9e977625866.png 660w
+          
+            ,https://scast3.github.io/projects/wifi-attack/images/diagram.png 950w
+          
+          
+            ,https://scast3.github.io/projects/wifi-attack/images/diagram.png 950w
+          "
+          sizes="100vw"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
+<h2 id="components" class="relative group">Components <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#components" aria-label="Anchor">#</a></span></h2><p>The system is divided into a distributed data acquisition network and a centralized processing core.</p>
+<ul>
+<li><strong>Attacker Simulation Node</strong>: A Flipper Zero equipped with an ESP32 WiFi Development Board running the ESP32 WiFi Marauder firmware. This node simulates real world network disruptions by generating thousands of spoofed 802.11 deauthentication packets per second.</li>
+<li><strong>Distributed Sensor Network</strong>: Three separate ESP32 sensors powered by portable battery packs. These nodes scan the RF spectrum in promiscuous mode to intercept raw 802.11 frames and harvest critical RSSI data.</li>
+<li><strong>ESP32 Gateway</strong>: A localized receiver hub that receives incoming ESP-NOW packets from the sensor nodes and forwards them to the primary compute module over a hardware UART serial interface.</li>
+<li><strong>Central Compute Module (Raspberry Pi 3B+)</strong>: The core server responsible for asynchronous data ingestion, timestamp synchronization, in-memory storage, and spatial localization calculations.</li>
+</ul>
+<div style="width: 500px; margin: 0 auto; text-align: center;">
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            
+              srcset="https://scast3.github.io/projects/wifi-attack/images/flipper_hu_c4a21da132c84642.webp"
+            
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="227"
+        height="303"
+        class="mx-auto my-0 rounded-md"
+        alt="flipper"
+        loading="lazy" decoding="async"
+        
+          src="https://scast3.github.io/projects/wifi-attack/images/flipper.png"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
+</div>
+<p>DISCLAIMER: All testing was done on my home WiFi network as testing in any other public or private space without permission is prohibited and illegal.</p>
+<h3 id="sensor-firmware" class="relative group">Sensor Firmware <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#sensor-firmware" aria-label="Anchor">#</a></span></h3><p>The firmware for the ESP32s is implemented in C utilizing the ESP-IDF</p>
+<ul>
+<li><strong>Promiscuous Mode Interception</strong>: Sensors bypass standard MAC filtering to capture raw management frames across specified WiFi channels.</li>
+<li><strong>Sliding Window Detection</strong>: Rather than flooding the network with individual alerts, sensors use a temporal sliding window to detect spikes in deauthentication/disassociation frame frequencies.</li>
+<li><strong>Event Struct Serialization</strong>: When an attack threshold is crossed, the sensor constructs an &lsquo;Event&rsquo; data structure. This aggregated payload is transmitted over the ESP-NOW protocol directly to the gateway, optimizing bandwidth and power consumption.</li>
+<li><strong>Gateway Stream Ingestion</strong>: The ESP32 Gateway receives the ESP-NOW payloads, casts the raw bytes back into the standardized &lsquo;Event&rsquo; data type, appends a timestamp, and pushes the data into the hardware UART stream.</li>
+</ul>
+<h3 id="raspberry-pi-processing-pipeline" class="relative group">Raspberry Pi Processing Pipeline <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#raspberry-pi-processing-pipeline" aria-label="Anchor">#</a></span></h3><p>The server software on the Pi is written in C++ and has a multithreaded architecture for guarantee real-time processing without blocking high-frequency UART data ingestion.</p>
+<div style="width: 500px; margin: 0 auto; text-align: center;">
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            
+              srcset="https://scast3.github.io/projects/wifi-attack/images/setup_hu_ea90b767c3359eff.webp"
+            
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="252"
+        height="253"
+        class="mx-auto my-0 rounded-md"
+        alt="setup"
+        loading="lazy" decoding="async"
+        
+          src="https://scast3.github.io/projects/wifi-attack/images/setup.jpg"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
+</div>
+<p>The system splits execution across 3 threads:</p>
+<p>The producer thread reads the raw incoming byte stream from the UART interface, casts them to &lsquo;Event&rsquo;, and pushes them into a thread-safe shared queue.</p>
+<p>The consumer thread pops items off the shared queue, bucket-sorts the events based on their timestamps within an established window, and performs efficient batch insertions into an in-memory DuckDB database.</p>
+<p>The main thread queries the structured data out of DuckDB to do the localization matrix math and trigger active alerting mechanisms.</p>
+<h2 id="threat-localization" class="relative group">Threat Localization <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#threat-localization" aria-label="Anchor">#</a></span></h2><p>To pinpoint the spatial location of the attacker, the main thread extracts synchronized RSSI signatures registered by the three discrete ESP32 sensor coordinates during the same attack window.</p>
+<div style="width: 500px; margin: 0 auto; text-align: center;">
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            
+              srcset="https://scast3.github.io/projects/wifi-attack/images/triang_hu_886c878e381ceff3.webp"
+            
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="336"
+        height="312"
+        class="mx-auto my-0 rounded-md"
+        alt="triang"
+        loading="lazy" decoding="async"
+        
+          src="https://scast3.github.io/projects/wifi-attack/images/triang.png"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
+</div>
+<ul>
+<li><strong>Signal Propagation Modeling</strong>: RSSI values are converted into relative distance estimates using the Log-Distance Path Loss model.</li>
+<li><strong>Least Squares Multilateration</strong>: The system treats the estimated distances as intersecting circles centered at each known sensor coordinate. It formulates an overdetermined system of non-linear geometric equations and resolves the optimal (x,y) coordinate of the attacker using a least-squares optimization matrix.</li>
+</ul>
+<h2 id="results" class="relative group">Results <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#results" aria-label="Anchor">#</a></span></h2><div style="width: 500px; margin: 0 auto; text-align: center;">
+<p>
+
+
+
+
+
+<figure>
+    
+    
+
+
+
+
+
+
+
+
+  
+    <picture
+      class="mx-auto my-0 rounded-md"
+      
+    >
+      
+      
+      
+      
+        <source
+          
+            
+              srcset="https://scast3.github.io/projects/wifi-attack/images/good-result_hu_a6c82c0aca78dc19.webp"
+            
+          
+          sizes="100vw"
+          type="image/webp"
+        />
+      
+      <img
+        width="387"
+        height="389"
+        class="mx-auto my-0 rounded-md"
+        alt="res"
+        loading="lazy" decoding="async"
+        
+          src="https://scast3.github.io/projects/wifi-attack/images/good-result.png"
+        
+      />
+    </picture>
+  
+
+
+</figure>
+</p>
+</div>
+<h2 id="conclusion" class="relative group">Conclusion <span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100"><a class="group-hover:text-primary-300 dark:group-hover:text-neutral-700" style="text-decoration-line: none !important;" href="#conclusion" aria-label="Anchor">#</a></span></h2><p>This project successfully demonstrated that RSSI-based localization using ESP32 receivers can achieve sub-meter accuracy when both sensor geometry and path-loss parameters are properly calibrated. Our experiments showed that geometric layout plays a critical role in determining localization stability, with the equilateral configuration consistently outperforming right-triangle and isosceles arrangements. Additionally, we found that a path-loss exponent of $n = 4$ provided significantly more accurate distance estimates than $n = 3$, highlighting the importance of environment-specific calibration. While RSSI measurements remain inherently noisy, the use of least-squares trilateration combined with stable sensor placement allowed the system to achieve localization errors as low as $0.09$~m. These results indicate that low-cost receivers, when configured correctly, can provide reliable spatial awareness for indoor tracking and intrusion detection applications.</p>
+<p><a href="https://github.com/scast3/deauth_detect" target="_blank" rel="noreferrer">View on GitHub →</a></p>
+
+      </div>
+    </section>
+    <footer class="max-w-prose pt-8 print:hidden">
+      
+  <div class="flex">
+    
+    
+    
+    <div class="place-self-center">
+      
+      
+      <div class="text-2xl sm:text-lg">
+</div>
+    </div>
+  </div>
+
+
+      
+
+      
+  
+    
+    
+    
+    <div class="pt-8">
+      <hr class="border-dotted border-neutral-300 dark:border-neutral-600" />
+      <div class="flex justify-between pt-3">
+        <span>
+          
+        </span>
+        <span>
+          
+            <a class="group flex text-right" href="https://scast3.github.io/projects/fpga-oscilloscope/">
+              <span class="flex flex-col">
+                <span
+                  class="mt-[0.1rem] leading-6 group-hover:underline group-hover:decoration-primary-500"
+                  >FPGA Signal Acquisition on Zynq SoC</span
+                >
+                <span class="mt-[0.1rem] text-xs text-neutral-500 dark:text-neutral-400">
+                  
+                    <time datetime="2025-12-10 00:00:00 &#43;0000 UTC">10 December 2025</time>
+                  
+                </span>
+              </span>
+              <span
+                class="ms-2 text-neutral-700 transition-transform group-hover:-translate-x-[-2px] group-hover:text-primary-600 dark:text-neutral dark:group-hover:text-primary-400"
+                ><span class="ltr:inline rtl:hidden">&rarr;</span
+                ><span class="ltr:hidden rtl:inline">&larr;</span></span
+              >
+            </a>
+          
+        </span>
+      </div>
+    </div>
+  
+
+
+      
+    </footer>
+  </article>
+
+      </main>
+      
+        <div
+          class="pointer-events-none absolute bottom-0 end-0 top-[100vh] w-12"
+          id="to-top"
+          hidden="true"
+        >
+          <a
+            href="#the-top"
+            class="pointer-events-auto sticky top-[calc(100vh-5.5rem)] flex h-12 w-12 items-center justify-center rounded-full bg-neutral/50 text-xl text-neutral-700 backdrop-blur hover:text-primary-600 dark:bg-neutral-800/50 dark:text-neutral dark:hover:text-primary-400"
+            aria-label="Scroll to top"
+            title="Scroll to top"
+          >
+            &uarr;
+          </a>
+        </div>
+      <footer class="py-10 print:hidden">
+  
+  
+  <div class="flex items-center justify-between">
+    <div>
+      
+      
+        <p class="text-sm text-neutral-500 dark:text-neutral-400">
+            &copy;
+            2026
+            
+        </p>
+      
+      
+      
+        <p class="text-xs text-neutral-500 dark:text-neutral-400">
+          
+          
+          Powered by <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500"
+            href="https://gohugo.io/" target="_blank" rel="noopener noreferrer">Hugo</a> &amp; <a class="hover:underline hover:decoration-primary-400 hover:text-primary-500" href="https://github.com/jpanther/congo" target="_blank" rel="noopener noreferrer">Congo</a>
+        </p>
+      
+    </div>
+    <div class="flex flex-row items-center">
+      
+      
+      
+      
+    </div>
+  </div>
+  
+  
+</footer>
+
+    </div>
+  </body>
+</html>

@@ -2,7 +2,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>Communications on Santiago&#39;s Engineering Portfolio</title>
-		<link>http://localhost:1313/tags/communications/</link>
+		<link>https://scast3.github.io/tags/communications/</link>
 		<description>Recent content in Communications on Santiago&#39;s Engineering Portfolio</description>
 		<generator>Hugo</generator>
 		<language>en-us</language>
@@ -12,12 +12,12 @@
 		
 			<lastBuildDate>Thu, 30 Apr 2026 00:00:00 +0000</lastBuildDate>
 		
-			<atom:link href="http://localhost:1313/tags/communications/index.xml" rel="self" type="application/rss+xml" />
+			<atom:link href="https://scast3.github.io/tags/communications/index.xml" rel="self" type="application/rss+xml" />
 			<item>
-				<title>Extended Kalman Filter Receiver for Carrier Synchronization in QPSK Systems</title>
-				<link>http://localhost:1313/projects/qpsk-ekf/</link>
+				<title>QPSK Carrier Synchronization using Extended Kalman Filter</title>
+				<link>https://scast3.github.io/projects/qpsk-ekf/</link>
 				<pubDate>Thu, 30 Apr 2026 00:00:00 +0000</pubDate>
-				<guid>http://localhost:1313/projects/qpsk-ekf/</guid>
+				<guid>https://scast3.github.io/projects/qpsk-ekf/</guid>
 				<description>test</description>
 			</item>
 	</channel>
